@@ -4,6 +4,7 @@ import Header from "../components/common/Header"
 import ProveedorFilter from "../components/proveedor/ProveedorFilter"
 import ProveedorTable from "../components/proveedor/ProveedorTable"
 import ProveedorModel from "../components/proveedor/ProveedorModel"
+import ProveedorModelDelete from "../components/proveedor/ProveedorModelDelete"
 
 
 const PRODUCT_DATA = [
@@ -30,6 +31,8 @@ const ProveedorPage = () => {
   /*Model */
   const [showModal, setShowModal] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
+  const [showModalDelete, setShowModalDelete] = useState(false)
+  const [idModalDelete, setIdModalDelete] = useState(0)
 
   useEffect(()=> {
     getProducts()
@@ -80,7 +83,13 @@ const ProveedorPage = () => {
   }
   // Función para eliminar un producto
   const eliminarProducto = (id) => {
-    setFilteredProducts(filteredProducts.filter(producto => producto.id !== id))
+    setIdModalDelete(id)
+    setShowModalDelete(true)
+  }
+  const handleShowModelDelete = (data) =>{
+    if(data.id == 0) return setShowModalDelete(false)
+    setFilteredProducts(filteredProducts.filter(producto => producto.id !== data.id))
+    setShowModalDelete(false)
   }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
@@ -99,6 +108,7 @@ const ProveedorPage = () => {
             </button>
           </div>
           {showModal ? ( <ProveedorModel onShowModel={handleShowModel} data={selectedRowData} />  ) : null}
+          {showModalDelete ? ( <ProveedorModelDelete onShowModel={handleShowModelDelete} data={idModalDelete}/>): null}
         </main>
     </div>
   )
