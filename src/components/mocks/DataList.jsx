@@ -22,3 +22,32 @@ export const TIERRA_DATA = [
     { id: 9,  uc: 'UC121', campo: 'Guayaquil 9',  sector: 'Molino Larco 9', valle:'Chicama 9', ha:0.9, activo: false},
     { id: 10,  uc: 'UC452', campo: 'Guayaquil 10',  sector: 'Molino Larco 10', valle:'Chicama 10', ha:0, activo: true},
 ]
+ const dataOriginal = [
+    { id: 1,  uc: 'UC123', ut: "UT123", fecha: '16/11/2024', activo: false},
+    { id: 2,  uc: 'UC456', ut: "UT456", fecha: '01/11/2024', activo: true},
+    { id: 3,  uc: 'UC125', ut: "UT125", fecha: '10/11/2024', activo: true},
+    { id: 4,  uc: 'UC455', ut: "UT455", fecha: '15/11/2024', activo: false},
+    { id: 5,  uc: 'UC126', ut: "UT126", fecha: '18/11/2024', activo: true},
+    { id: 6,  uc: 'UC457', ut: "UT457", fecha: '16/11/2024', activo: false},
+    { id: 7,  uc: 'UC128', ut: "UT128", fecha: '19/11/2024', activo: false},
+    { id: 8,  uc: 'UC459', ut: "UT459", fecha: '21/11/2024', activo: true},
+    { id: 9,  uc: 'UC121', ut: "UT121", fecha: '04/11/2024', activo: false},
+    { id: 10,  uc: 'UC452', ut: "UT452", fecha: '09/11/2024', activo: true},
+]
+const convertirFecha = (fechaString) => {
+    const [day, month, year] = fechaString.split('/');
+    // Crear fecha sin el ajuste automático de zona horaria
+    return new Date(`${year}-${month}-${day}T00:00:00`);
+  };
+export const TIERRAASIGNADA_DATA = dataOriginal.map(item => ({
+    ...item,
+    fecha: convertirFecha(item.fecha) // Convertir DD/MM/YYYY a YYYY-MM-DD y luego a Date
+  }));
+
+export const convertirFechaISOParaInput = (fechaISO) => {
+    const fecha = new Date(fechaISO); // Crear un objeto Date
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
