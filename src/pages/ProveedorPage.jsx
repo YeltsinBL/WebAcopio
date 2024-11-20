@@ -5,20 +5,7 @@ import ProveedorFilter from "../components/proveedor/ProveedorFilter"
 import ProveedorTable from "../components/proveedor/ProveedorTable"
 import ProveedorModel from "../components/proveedor/ProveedorModel"
 import ProveedorModelDelete from "../components/proveedor/ProveedorModelDelete"
-
-
-const PRODUCT_DATA = [
-  { id: 1, ut: "UT123", dni: "12345678", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
-  { id: 2, ut: "UT456", dni: "87654320", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
-  { id: 3, ut: "UT125", dni: "12345671", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
-  { id: 4, ut: "UT455", dni: "87654322", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
-  { id: 5, ut: "UT126", dni: "12345673", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
-  { id: 6, ut: "UT457", dni: "87654324", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
-  { id: 7, ut: "UT128", dni: "12345675", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
-  { id: 8, ut: "UT459", dni: "87654326", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
-  { id: 9, ut: "UT121", dni: "12345677", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
-  { id: 10, ut: "UT452", dni: "87654329", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
-]
+import { PROVEEDOR_DATA } from "../components/mocks/DataList"
 
 const ProveedorPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
@@ -38,7 +25,7 @@ const ProveedorPage = () => {
     getProducts()
   }, [])
   const getProducts = () => {
-    setFilteredProducts(PRODUCT_DATA)
+    setFilteredProducts(PROVEEDOR_DATA)
   }
   // Función que se pasará al hijo
   const handleDataFromChild = (data) => {
@@ -46,7 +33,7 @@ const ProveedorPage = () => {
     if(ut=='' & dni=='' & nombre==''){
       return getProducts()
     }
-    const filtered = PRODUCT_DATA.filter((product) => {
+    const filtered = PROVEEDOR_DATA.filter((product) => {
       const matchesUT = ut ? product.ut.toLowerCase().includes(ut.toLowerCase()) : true
       const matchesDNI = dni ? product.dni.toLowerCase().includes(dni.toLowerCase()) : true
       const matchesNombre = nombre
@@ -71,7 +58,6 @@ const ProveedorPage = () => {
       updatedList[existingIndex] = data
       setFilteredProducts(updatedList)
     } else {
-      // PRODUCT_DATA.push(data)
       setFilteredProducts([...filteredProducts, data])
     }
     setShowModal(false)
@@ -96,7 +82,7 @@ const ProveedorPage = () => {
         <Header title='Proveedor'/>
         <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
           <ProveedorFilter onUTValue={handleDataFromChild} />
-          <ProveedorTable PRODUCT_DATA={filteredProducts} onRowSelect={handleRowSelect} eliminarProducto={eliminarProducto}/>
+          <ProveedorTable PROVEEDOR_DATA={filteredProducts} onRowSelect={handleRowSelect} eliminarProducto={eliminarProducto}/>
           <div className="flex justify-end gap-2">
             <button className="bg-[#313395] text-white py-2 px-4 rounded hover:bg-gray-700"
             onClick={handleRowSelect}>

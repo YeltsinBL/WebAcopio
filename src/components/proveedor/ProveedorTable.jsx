@@ -1,7 +1,7 @@
 
 import { Edit, Trash2 } from "lucide-react"
 
-const ProveedorTable = ({PRODUCT_DATA, onRowSelect, eliminarProducto}) => {
+const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
     return (
 		<div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 			<div className='flex justify-between items-center mb-6'>
@@ -42,7 +42,7 @@ const ProveedorTable = ({PRODUCT_DATA, onRowSelect, eliminarProducto}) => {
 					</thead>
 
 					<tbody className='divide-y divide-gray-700'>
-						{PRODUCT_DATA.map((product) => (
+						{PROVEEDOR_DATA.map((product) => (
 							<tr key={product.id} >
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
 									{product.id}
