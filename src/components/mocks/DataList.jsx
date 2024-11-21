@@ -51,3 +51,20 @@ export const convertirFechaISOParaInput = (fechaISO) => {
     const day = String(fecha.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
+const dataCosecha = [
+    { id: 1, fecha: '16/11/2024', uc: 'UC123', valle:'Chicama 1', sector: 'Molino Larco 1', ut: "UT123", supervisor: 'Jose Vigo', campo: 'Guayaquil 1', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: true },
+    { id: 2, fecha: '01/11/2024', uc: 'UC456', valle:'Chicama 2', sector: 'Molino Larco 2', ut: "UT456", supervisor: 'Jose Vigo', campo: 'Guayaquil 2', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: false },
+    { id: 3, fecha: '10/11/2024', uc: 'UC125', valle:'Chicama 3', sector: 'Molino Larco 3', ut: "UT125", supervisor: 'Jose Vigo', campo: 'Guayaquil 3', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'No Cosecha', activo: true },
+    { id: 4, fecha: '15/11/2024', uc: 'UC455', valle:'Chicama 4', sector: 'Molino Larco 4', ut: "UT455", supervisor: 'Jose Vigo', campo: 'Guayaquil 4', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: true },
+    { id: 5, fecha: '18/11/2024', uc: 'UC126', valle:'Chicama 5', sector: 'Molino Larco 5', ut: "UT126", supervisor: 'Jose Vigo', campo: 'Guayaquil 5', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: false },
+    { id: 6, fecha: '16/11/2024', uc: 'UC457', valle:'Chicama 6', sector: 'Molino Larco 6', ut: "UT457", supervisor: 'Jose Vigo', campo: 'Guayaquil 6', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Rechazado', activo: false },
+    { id: 7, fecha: '19/11/2024', uc: 'UC128', valle:'Chicama 7', sector: 'Molino Larco 7', ut: "UT128", supervisor: 'Jose Vigo', campo: 'Guayaquil 7', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: true },
+    { id: 8, fecha: '21/11/2024', uc: 'UC459', valle:'Chicama 8', sector: 'Molino Larco 8', ut: "UT459", supervisor: 'Jose Vigo', campo: 'Guayaquil 8', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: false },
+    { id: 9, fecha: '04/11/2024', uc: 'UC121', valle:'Chicama 9', sector: 'Molino Larco 9', ut: "UT121", supervisor: 'Jose Vigo', campo: 'Guayaquil 9', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: true },
+    { id: 10, fecha: '09/11/2024', uc: 'UC452', valle:'Chicama 10', sector: 'Molino Larco 10', ut: "UT452", supervisor: 'Jose Vigo', campo: 'Guayaquil 10', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: true },
+]
+export const COSECHA_DATA = dataCosecha.map(item => ({
+    ...item,
+    fecha: convertirFecha(item.fecha)
+}))

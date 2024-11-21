@@ -1,11 +1,91 @@
+import { useEffect, useState } from "react"
 import Header from "../components/common/Header"
+import CosechaFilter from "../components/cosecha/CosechaFilter"
+import { useNavigate } from "react-router-dom"
+import { COSECHA_DATA } from "../components/mocks/DataList"
+import CosechaTable from "../components/cosecha/CosechaTable"
+import CosechaModel from "../components/cosecha/CosechaModel"
 
 const CosechaPage = () => {
+  const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
+
+
+  const handleGoBack = () => {
+    navigate('/')
+  }
+  /* FILTRO */
+	const [filteredProducts, setFilteredProducts] = useState([])
+  /* Model */
+  const [showModel, setShowModel] = useState(true)
+  const [selectedRowData, setSelectedRowData] = useState(null)
+
+  useEffect(()=> {
+    getProducts()
+  }, [])
+  const getProducts = () => {
+    setFilteredProducts(COSECHA_DATA)
+  }
+
+  const handleDataFromChild = (data) => {
+    const {ut, uc, fechaDesde, fechaHasta, cosecha} = data
+    if(ut=='' & uc=='' & fechaDesde=='' & fechaHasta=='' & cosecha==''){
+      return getProducts()
+    }
+    const filtered = COSECHA_DATA.filter((product) => {
+      const matchesUC = uc ? product.uc.toLowerCase().includes(uc.toLowerCase()) : true
+      const matchesUT = ut ? product.ut.toLowerCase().includes(ut.toLowerCase()) : true
+      const matchesFechaDesde = fechaDesde ? product.fecha >= new Date(fechaDesde) : true
+      const matchesFechaHasta = fechaHasta ? product.fecha <= new Date(fechaHasta) : true
+      const matchesCosecha = cosecha ? product.cosecha.toLowerCase() == cosecha.toLowerCase() : true
+      // Devuelve verdadero si el producto coincide con todos los filtros aplicados
+      return matchesUC && matchesUT && matchesFechaDesde && matchesFechaHasta && matchesCosecha
+    })
+    setFilteredProducts(filtered)
+  }
+  // Funciones para manejar botones de la tabla
+  const handleRowSelect = (rowData) => {
+    setSelectedRowData(rowData)
+    setShowModel(false)
+  }
+  const handleShowModel = (data) => {
+    if(data.id==0) {
+      return setShowModel(true)
+    }
+    data.fecha = new Date(`${data.fecha}T00:00:00`) // Formatear Fecha
+    const existingIndex = filteredProducts.findIndex((item) => item.id === data.id)
+    if (existingIndex >= 0) {
+      // Reemplazar datos si el ID existe
+      const updatedList = [...filteredProducts]
+      updatedList[existingIndex] = data
+      setFilteredProducts(updatedList)
+    } else {
+      setFilteredProducts([...filteredProducts, data])
+    }
+    setShowModel(true)
+  }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
-        <Header title='Tierras'/>
+        <Header title='Cosecha'/>
         <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
-          Contenido Cosecha
+          {showModel ? 
+          <>
+            <CosechaFilter onFiltersValue={handleDataFromChild} />
+            <CosechaTable Cosecha_DATA={filteredProducts} onRowSelect={handleRowSelect} />
+            <div className="flex justify-end gap-2">
+              <button className="bg-[#313395] text-white py-2 px-4 rounded hover:bg-gray-700"
+              onClick={handleRowSelect}
+              >
+                Nuevo
+              </button>
+              <button className="bg-[#313395] text-white py-2 px-4 rounded hover:bg-gray-700"
+              onClick={handleGoBack} >
+                Salir
+              </button>
+            </div>
+          </> : 
+          <>
+            <CosechaModel onShowModel={handleShowModel} data={selectedRowData} />
+          </> }
         </main>
     </div>
   )
