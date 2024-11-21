@@ -55,7 +55,7 @@ const TierraModel = ({ onShowModel, data }) => {
             </div>
             {/*body*/}
             <form action="" className="space-y-4 p-5">
-              <div className='grid grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <div className='space-y-2'>
                   <label htmlFor="TierraIdModal" className="text-black">ID</label>
                   <input
@@ -136,9 +136,9 @@ const TierraModel = ({ onShowModel, data }) => {
               </div>
             </form>
             {/*footer*/}
-            <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+            <div className="flex items-center justify-center p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button
-                  className="bg-black text-white active:bg-gray-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="bg-[#313395] text-white active:bg-gray-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
                   onClick={ handleGuardar}
                 >
