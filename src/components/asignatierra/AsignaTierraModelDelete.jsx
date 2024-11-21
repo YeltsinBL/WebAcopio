@@ -30,7 +30,7 @@ const AsignaTierraModelDelete = ({onShowModel, data}) => {
             {/*footer*/}
             <div className="flex items-center justify-center p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button
-                  className="bg-black text-white active:bg-gray-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  className="bg-[#313395] text-white active:bg-gray-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
                   onClick={ handleGuardar}
                 >

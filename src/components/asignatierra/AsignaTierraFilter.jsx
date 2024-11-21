@@ -13,7 +13,7 @@ const AsignaTierraFilter = ({onFiltersValue}) => {
   return (
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 		<form action="">
-            <div className='firstDiv flex justify-between items-center '>
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-4 '>
                 <div className='flex flex-col gap-1 w-1/8'>
                     <label htmlFor="AsignaTierraUC" className="text-white">UC</label>
                     <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
@@ -47,7 +47,8 @@ const AsignaTierraFilter = ({onFiltersValue}) => {
                     />
                 </div>
                 <button 
-                    className="bg-[#313395] text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="bg-[#313395] text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg outline-none 
+                    focus:outline-none mr-1 mt-6 md:w-28 ease-linear transition-all duration-150 "
                     onClick={sendDataToParent}>
                     Buscar
                 </button>
