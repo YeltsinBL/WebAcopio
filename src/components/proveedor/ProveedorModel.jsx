@@ -14,7 +14,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
 
   const validarCampos = () => {
     const nuevosErrores = {}
-    if (!id) nuevosErrores.id = "El campo ID es obligatorio."
+    //if (!id) nuevosErrores.id = "El campo ID es obligatorio."
     if (!ut) nuevosErrores.ut = "El campo UT es obligatorio."
     if (!dni) nuevosErrores.dni = "El campo DNI es obligatorio."
     if (!nombre) nuevosErrores.nombre = "El campo Nombre es obligatorio."
