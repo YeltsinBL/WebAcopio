@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { TIERRA_DATA } from "../components/mocks/DataList"
 import Header from "../components/common/Header"
 import TierrasFilter from "../components/tierras/TierraFilter"
 import TierrasTable from "../components/tierras/TierraTable"
 import TierraModel from "../components/tierras/TierraModel"
 import TierraModelDelete from "../components/tierras/TierraModelDelete"
+import { searchTierras, tierraGetById } from "../services/tierra"
 
 const TierrasPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
@@ -24,15 +24,16 @@ const TierrasPage = () => {
   useEffect(()=> {
     getTierras()
   }, [])
-  const getTierras = () => {
-    setFilteredTierras(TIERRA_DATA)
+  const getTierras = async () => {
+    const searchTierra = await searchTierras({})
+    setFilteredTierras(searchTierra)
   }
   const handleDataFromChild = (data) => {
     const {uc, campo, sector, valle} = data
     if(uc=='' & campo=='' & sector=='' & valle == ''){
       return getTierras()
     }
-    const filtered = TIERRA_DATA.filter((product) => {
+    const filtered = filteredTierras.filter((product) => {
       const matchesUC = uc ? product.uc.toLowerCase().includes(uc.toLowerCase()) : true
       const matchesCampo = campo ? product.campo.toLowerCase().includes(campo.toLowerCase()) : true
       const matchesSector = sector ? product.sector.toLowerCase().includes(sector.toLowerCase()) : true
@@ -44,9 +45,7 @@ const TierrasPage = () => {
     setFilteredTierras(filtered)
   }
   const handleShowModel = (data) => {
-    if(data.id == undefined) {
-      return setShowModal(false)
-    }
+    if(data.id == 0) return setShowModal(false)
     const existingIndex = filteredTierras.findIndex((item) => item.id === data.id)
     if (existingIndex >= 0) {
       // Reemplazar datos si el ID existe
@@ -59,8 +58,13 @@ const TierrasPage = () => {
     setShowModal(false)
   }
   // Función para manejar la selección de una fila desde la tabla
-  const handleRowSelect = (rowData) => {
-    setSelectedRowData(rowData)
+  const handleRowSelect = async(rowData) => {
+    if(rowData.id != null){
+      const tierraById = await tierraGetById({id:rowData.id})
+      setSelectedRowData(tierraById)
+    }else {
+      setSelectedRowData(rowData)
+    }    
     setShowModal(true)
   }
   // Función para eliminar un producto
@@ -69,8 +73,7 @@ const TierrasPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.id == 0) return setShowModalDelete(false)
-    setFilteredTierras(filteredTierras.filter(producto => producto.id !== data.id))
+    if(data.id > 0) getTierras()
     setShowModalDelete(false)
   }
   return (

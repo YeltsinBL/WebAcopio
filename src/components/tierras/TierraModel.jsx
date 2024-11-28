@@ -1,18 +1,30 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { tierraSave, tierraUpdate } from "../../services/tierra"
+import { localISOString } from "../mocks/DataList"
 
 const TierraModel = ({ onShowModel, data }) => {
-  const [id, setId] = useState(data.id)
-  const [uc, setUc] = useState(data.uc)
-  const [campo, setCampo] = useState(data.campo)
-  const [sector, setSector] = useState(data.sector)
-  const [valle, setValle] = useState(data.valle)
-  const [ha, setHA] = useState(data.ha)
-  const [activo, setActivo] = useState(data.activo)
+  const [id, setId] = useState('')
+  const [uc, setUc] = useState('')
+  const [campo, setCampo] = useState('')
+  const [sector, setSector] = useState('')
+  const [valle, setValle] = useState('')
+  const [ha, setHA] = useState('')
+  const [activo, setActivo] = useState(true)
   const [errores, setErrores] = useState({})
+
+  useEffect(() => {
+    setId(data.id || 0)
+    setUc(data.uc || '')
+    setCampo(data.campo || '')
+    setSector(data.sector || '')
+    setValle(data.valle || '')
+    setHA(data.ha || '')
+    setActivo(data.activo || true)
+  }, [data])
 
   const validarCampos = () => {
     const nuevosErrores = {}
-    if (!id) nuevosErrores.id = "El campo ID es obligatorio."
+    //if (!id) nuevosErrores.id = "El campo ID es obligatorio."
     if (!uc) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!campo) nuevosErrores.campo = "El campo Campo es obligatorio."
     if (!sector) nuevosErrores.sector = "El campo Sector es obligatorio."
@@ -23,17 +35,44 @@ const TierraModel = ({ onShowModel, data }) => {
   
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
-  const handleGuardar = (e) => {
+  const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
-      sendDataDismissModel()
+      if(id > 0) {
+        const tierra = await tierraUpdate({
+          tierraId: id,
+          tierraUc: uc,
+          tierraCampo: campo,
+          tierraSector: sector,
+          tierraValle: valle,
+          tierraHa: ha,
+          tierraStatus: activo,
+          userModifiedName: "ADMIN",
+          userModifiedAt: localISOString.split('T')[0]
+        })
+        return onShowModel({id:tierra.id, uc:tierra.uc, campo:tierra.campo,
+          sector:tierra.sector, valle:tierra.valle,
+          ha: tierra.ha, activo:tierra.activo
+        })
+      }
+      const tierra = await tierraSave({
+        tierraUc: uc,
+        tierraCampo: campo,
+        tierraSector: sector,
+        tierraValle: valle,
+        tierraHa: ha,
+        tierraStatus: activo,
+        userCreatedName: "ADMIN",
+        userCreatedAt: localISOString.split('T')[0]
+      })
+      return onShowModel({id:tierra.id, uc:tierra.uc, campo:tierra.campo,
+        sector:tierra.sector, valle:tierra.valle,
+        ha: tierra.ha, activo:tierra.activo
+      })
     }
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    sendDataDismissModel()
-  }
-  const sendDataDismissModel = () => {
     onShowModel({id:id, uc:uc, campo:campo,
         sector:sector, valle:valle,
         ha: ha, activo:activo
@@ -71,7 +110,7 @@ const TierraModel = ({ onShowModel, data }) => {
                   {errores.id && <p className="text-red-500 text-sm">{errores.id}</p>}
                 </div>
                 <div className='space-y-2'>
-                  <label htmlFor="TierraUCModal" className="text-black">UT</label>
+                  <label htmlFor="TierraUCModal" className="text-black">UC</label>
                   <input 
                       type='text' 
                       className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
@@ -110,7 +149,7 @@ const TierraModel = ({ onShowModel, data }) => {
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.valle ? "border-red-500" : ""
                     }`}
-                        name='query' placeholder='Ingrese el apellido paterno' 
+                        name='query' placeholder='Ingrese el valle' 
                         value={valle}
                         onChange={(e) => setValle(e.target.value)}
                     />
@@ -121,7 +160,7 @@ const TierraModel = ({ onShowModel, data }) => {
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.ha ? "border-red-500" : ""
                     }`}
-                        name='query' placeholder='Ingrese el apellido materno'
+                        name='query' placeholder='Ingrese el H.A.'
                         value={ha}
                         onChange={(e) => setHA(e.target.value)}
                     />

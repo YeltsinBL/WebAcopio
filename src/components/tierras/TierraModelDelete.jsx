@@ -1,13 +1,16 @@
+import { tierraDelete } from "../../services/tierra"
 
 const TierraModelDelete = ({onShowModel, data}) => {
-    const handleGuardar = (e) => {
+    const handleGuardar = async(e) => {
         e.preventDefault()
-        sendDataDismissModel(data)
-      }
-      const handleCancelar = (e) => {
+        const tierra = await tierraDelete({id:data})
+        if(tierra) return sendDataDismissModel(data)
+        return sendDataDismissModel(0)
+    }
+     const handleCancelar = (e) => {
         e.preventDefault()
         sendDataDismissModel(0)
-      }
+    }
       const sendDataDismissModel = (valor) => {
         onShowModel({id:valor})
       }

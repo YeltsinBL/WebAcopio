@@ -40,7 +40,8 @@ const TierrasTable = ({TIERRA_DATA, onRowSelect, eliminarTierra}) => {
 					</thead>
 
 					<tbody className='divide-y divide-gray-700'>
-						{TIERRA_DATA.map((tierra) => (
+						{TIERRA_DATA?.length > 0 ? (
+							TIERRA_DATA.map((tierra) => (
 							<tr key={tierra.id} >
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
 									{tierra.id}
@@ -79,7 +80,15 @@ const TierrasTable = ({TIERRA_DATA, onRowSelect, eliminarTierra}) => {
 									</button>
 								</td>
 							</tr>
-						))}
+							))
+						): (
+							<tr>
+							  <td colSpan={5} className="text-center py-4">
+								No hay tierras registradas
+							  </td>
+							</tr>
+						  )}
+						
 					</tbody>
 				</table>
 			</div>
