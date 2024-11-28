@@ -127,33 +127,3 @@ export const proveedorDelete = async({id}) => {
     throw new Error('Error al obtener el proveedor')
   }
 }
-
-
-/***
- * [
-  {
-    "proveedorId": 1,
-    "proveedorUT": "CODProv1",
-    "personDNI": "12345677",
-    "proveedorNombre": "Proveedor1 Prove Salvador",
-    "proveedorStatus": true
-  },
-  {
-    "proveedorId": 2,
-    "proveedorUT": "CODProv2",
-    "personDNI": "88888888",
-    "proveedorNombre": "string 2 string 2 string 2",
-    "proveedorStatus": false
-  }
-]
-  { id: 1, 
-   ut: "UT123", 
-   dni: "12345678", 
-   nombre: "Juan", 
-   apellidoPaterno:'Pérez',
-   apellidoMaterno:'Leon', 
-   activo: true },
-    
- * 
- * 
- */
