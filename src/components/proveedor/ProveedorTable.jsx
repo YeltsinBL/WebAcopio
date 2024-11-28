@@ -26,12 +26,12 @@ const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Nombre
 							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+							{/* <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Apellido Paterno
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Apellido Materno
-							</th>
+							</th> */}
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Activo
 							</th>
@@ -42,7 +42,8 @@ const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
 					</thead>
 
 					<tbody className='divide-y divide-gray-700'>
-						{PROVEEDOR_DATA.map((product) => (
+					{PROVEEDOR_DATA?.length > 0 ? (
+						PROVEEDOR_DATA.map(product => (
 							<tr key={product.id} >
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
 									{product.id}
@@ -55,12 +56,6 @@ const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
 									{product.nombre}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									{product.apellidoPaterno}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									{product.apellidoMaterno}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
 									{product.activo ? "Sí" : "No"}
@@ -81,7 +76,14 @@ const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
 									</button>
 								</td>
 							</tr>
-						))}
+						))
+					) : (
+						<tr>
+						  <td colSpan={5} className="text-center py-4">
+							No hay proveedores registrados
+						  </td>
+						</tr>
+					  )}
 					</tbody>
 				</table>
 			</div>

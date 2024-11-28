@@ -1,8 +1,12 @@
+import { proveedorDelete } from "../../services/proveedor"
 
 const ProveedorModelDelete = ({onShowModel, data}) => {
-    const handleGuardar = (e) => {
+    const handleGuardar = async (e) => {
         e.preventDefault()
-        sendDataDismissModel(data)
+        console.log(data)
+        const proveedor = await proveedorDelete({id:data})
+        if (proveedor) sendDataDismissModel(data)
+        else sendDataDismissModel(0)
       }
       const handleCancelar = (e) => {
         e.preventDefault()

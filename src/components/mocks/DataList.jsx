@@ -68,3 +68,8 @@ export const COSECHA_DATA = dataCosecha.map(item => ({
     ...item,
     fecha: convertirFecha(item.fecha)
 }))
+
+const now = new Date()
+export const localISOString = new Date(
+  now.getTime() - now.getTimezoneOffset() * 60000
+).toISOString()

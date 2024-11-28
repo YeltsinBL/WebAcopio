@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { proveedorSave, proveedorUpdate } from "../../services/proveedor"
+import { localISOString } from "../mocks/DataList"
 
 const ProveedorModel = ({ onShowModel, data }) => {
   const [id, setId] = useState(data.id)
@@ -23,19 +25,33 @@ const ProveedorModel = ({ onShowModel, data }) => {
   
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
-  const handleGuardar = () => {
+  const handleGuardar = async(e) => {
+    e.preventDefault()
     if (validarCampos()) {
-      sendDataDismissModel() // Llama a la función original solo si los campos son válidos
+      if(id > 0) {
+        const proveedor = await proveedorUpdate({proveedorId:id, proveedorUT:ut, personDNI:dni,
+          personName:nombre, personPaternalSurname:apePat,
+          personMaternalSurname: apeMat, proveedorStatus:activo,
+          userModifiedName:"ADMIN", userModifiedAt:localISOString
+        })
+        return onShowModel({id:proveedor.id, ut:ut, dni:dni,
+          nombre:proveedor.nombre, activo:activo
+        })
+      }
+      const proveedor = await proveedorSave({proveedorUT:ut, personDNI:dni,
+        personName:nombre, personPaternalSurname:apePat,
+        personMaternalSurname: apeMat, person_Type: 2, proveedorStatus:activo,
+        userCreatedName:"ADMIN", userCreatedAt:localISOString
+      })
+      return onShowModel({id:proveedor.id, ut:ut, dni:dni,
+        nombre:proveedor.nombre, activo:activo
+      })
     }
   }
-  const handleCancelar = () => {
-    sendDataDismissModel() // No hay validación, se descarta sin verificar
-  }
-  const sendDataDismissModel = () => {
-    //e.preventDefault()
+  const handleCancelar = (e) => {
+    e.preventDefault()
     onShowModel({id:id, ut:ut, dni:dni,
-        nombre:nombre, apellidoPaterno:apePat,
-        apellidoMaterno: apeMat, activo:activo
+        nombre:nombre + ' ' + apePat+ ' ' + apeMat, activo:activo
     }) // Llama a la función del padre con el valor
   }
   return (

@@ -5,7 +5,7 @@ import ProveedorFilter from "../components/proveedor/ProveedorFilter"
 import ProveedorTable from "../components/proveedor/ProveedorTable"
 import ProveedorModel from "../components/proveedor/ProveedorModel"
 import ProveedorModelDelete from "../components/proveedor/ProveedorModelDelete"
-import { PROVEEDOR_DATA } from "../components/mocks/DataList"
+import { proveedorGetById, searchProveedor } from "../services/proveedor"
 
 const ProveedorPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
@@ -24,8 +24,9 @@ const ProveedorPage = () => {
   useEffect(()=> {
     getProducts()
   }, [])
-  const getProducts = () => {
-    setFilteredProducts(PROVEEDOR_DATA)
+  const getProducts = async () => {
+    const searchProveedores = await searchProveedor({})
+    setFilteredProducts(Array.isArray(searchProveedores) ? searchProveedores : [])
   }
   // Función que se pasará al hijo
   const handleDataFromChild = (data) => {
@@ -33,13 +34,11 @@ const ProveedorPage = () => {
     if(ut=='' & dni=='' & nombre==''){
       return getProducts()
     }
-    const filtered = PROVEEDOR_DATA.filter((product) => {
+    const filtered = filteredProducts.filter((product) => {
       const matchesUT = ut ? product.ut.toLowerCase().includes(ut.toLowerCase()) : true
       const matchesDNI = dni ? product.dni.toLowerCase().includes(dni.toLowerCase()) : true
       const matchesNombre = nombre
-        ? product.nombre.toLowerCase().includes(nombre.toLowerCase()) ||
-          product.apellidoPaterno.toLowerCase().includes(nombre.toLowerCase()) ||
-          product.apellidoMaterno.toLowerCase().includes(nombre.toLowerCase())
+        ? product.nombre.toLowerCase().includes(nombre.toLowerCase()) 
         : true
   
       // Devuelve verdadero si el producto coincide con todos los filtros aplicados
@@ -63,8 +62,13 @@ const ProveedorPage = () => {
     setShowModal(false)
   }
   // Función para manejar la selección de una fila desde la tabla
-  const handleRowSelect = (rowData) => {
-    setSelectedRowData(rowData)
+  const handleRowSelect = async(rowData) => {
+    if(rowData.id != null){
+      const proveedorById = await proveedorGetById({id:rowData.id})
+      setSelectedRowData(proveedorById)
+    }else {
+      setSelectedRowData(rowData)
+    }
     setShowModal(true)
   }
   // Función para eliminar un producto
@@ -73,8 +77,8 @@ const ProveedorPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.id == 0) return setShowModalDelete(false)
-    setFilteredProducts(filteredProducts.filter(producto => producto.id !== data.id))
+    if(data.id > 0)
+      getProducts()
     setShowModalDelete(false)
   }
   return (
