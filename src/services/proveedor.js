@@ -32,6 +32,31 @@ export const searchProveedor = async({search}) => {
     throw new Error('Error al buscar proveedores')
   }
 }
+export const searchProveedorAvailable = async() => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Proveedor/Available`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const proveedores = await response.json()
+    const formatter= proveedores?.map(proveedor => ({
+      id : proveedor.proveedorId,
+      ut : proveedor.proveedorUT,
+      dni : proveedor.personDNI,
+      nombre : proveedor.proveedorNombre,
+      activo : proveedor.proveedorStatus
+    })) 
+    return formatter
+  } catch (error) {
+    console.log('searchProveedorAvailable:', error.message)
+    throw new Error('Error al buscar proveedores disponibles')
+  }
+}
 
 export const proveedorGetById = async({id}) => {
   try {
@@ -86,7 +111,6 @@ export const proveedorSave = async(proveedor) => {
   }
 }
 export const proveedorUpdate = async(proveedor) => {
-  console.log(proveedor)
   try {
     const response = await fetch(`${appSetting.apiUrl}Proveedor`, {
       method: 'PUT',
@@ -99,7 +123,6 @@ export const proveedorUpdate = async(proveedor) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json()
-    console.log(data)
     return {
       id : data.proveedorId,
       ut : data.proveedorUT,
@@ -114,7 +137,6 @@ export const proveedorUpdate = async(proveedor) => {
 }
 export const proveedorDelete = async({id}) => {
   try {
-    console.log(id)
     const response = await fetch(`${appSetting.apiUrl}Proveedor/${id}`, {
       method: 'DELETE'
     });
