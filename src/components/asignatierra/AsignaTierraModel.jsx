@@ -1,26 +1,57 @@
 import { useEffect, useState } from "react"
-import { convertirFechaISOParaInput, PROVEEDOR_DATA, TIERRA_DATA } from "../mocks/DataList"
+import { localISOString } from "../mocks/DataList"
+import { asignaTierraSave, asignaTierraUpdate } from "../../services/asignartierra"
+import { searchTierrasAvailable } from "../../services/tierra"
+import { searchProveedorAvailable } from "../../services/proveedor"
+import ComboBox from "./Combobox"
 
 const AsignaTierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
   const [ut, setUt] = useState('')
-  const [uc, setUC] = useState('')
+  const [uc, setUC] = useState(null)
   const [fecha, setFecha] = useState('')
-//   const [activo, setActivo] = useState(data.activo)
+  const [tierras, setTierras] = useState([])
+  const [provedores, setProveedores] = useState([])
+ 
+  const [errores, setErrores] = useState({})
+  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, uc: data.ut } : null
+  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
   useEffect(() => {
     if (data) {
+      fetchOptionsTierras()
+      fetchOptionsProveedor()
       setId(data.id || 0);
-      setUt(data.ut || "");
-      setUC(data.uc || "");
-      setFecha(data.fecha ? convertirFechaISOParaInput(data.fecha) : ""); // Convertir la fecha
+      setUt(data.proveedorId || 0)
+      setUC(data.tierraId || 0)
+      setFecha(data.fecha || localISOString.split('T')[0]);
     }
-  }, [data]);
-
-  const [errores, setErrores] = useState({})
+  }, []);
+  const fetchOptionsTierras = async () => {
+    try {
+      const responseTierra = await searchTierrasAvailable()
+      // Combina la opción seleccionada actual con los datos de la API (si no existe en la lista)      
+      const updatedOptions = seleccionTierra ?
+      [seleccionTierra, ...responseTierra.filter((option) => option.id !== seleccionTierra.id)]
+      : responseTierra
+      setTierras(updatedOptions)
+    } catch (error) {
+      console.error('Error al cargar las opciones:', error);
+    }
+  }
+  const fetchOptionsProveedor = async () => {
+    try {
+      const responseProveedor = await searchProveedorAvailable()
+      const updatedProveedor =  seleccionProveedor ?
+      [seleccionProveedor, ...responseProveedor.filter((option) => option.id !== seleccionProveedor.id)]
+      : responseProveedor
+      setProveedores(updatedProveedor)
+    } catch (error) {
+      console.error('Error al cargar las opciones:', error);
+    }
+  }
 
   const validarCampos = () => {
     const nuevosErrores = {}
-    if (!id) nuevosErrores.id = "El campo ID es obligatorio."
     if (!ut) nuevosErrores.ut = "El campo UT es obligatorio."
     if (!uc) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!fecha) nuevosErrores.fecha = "El campo Fecha es obligatorio."
@@ -29,19 +60,44 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
   
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
-  const handleGuardar = (e) => {
+  const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
-      sendDataDismissModel()
+      if(id > 0){
+        const asigna = await asignaTierraUpdate({
+          asignarTierraId: id,
+          asignarTierraProveedorId: ut,
+          asignarTierraTierraId: uc,
+          asignarTierraFecha: fecha,
+          userModifiedName: "ADMIN",
+          userModifiedAt: localISOString
+        })
+        return retorna(asigna)
+      }
+      const asigna = await asignaTierraSave({
+        asignarTierraProveedorId: ut,
+        asignarTierraTierraId: uc,
+        asignarTierraFecha: fecha,
+        userCreatedName: "ADMIN",
+        userCreatedAt: localISOString.split('T')[0]
+      })
+      return retorna(asigna)
     }
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    sendDataDismissModel(true)
+    onShowModel({id:0, ut:ut, uc:uc, fecha:fecha, activo:true })
   }
-  const sendDataDismissModel = (cancel=false) => {
-    onShowModel({id:cancel ? 0: id, ut:ut, uc:uc, fecha:fecha, activo:true })
+  const retorna = (asigna) => {
+    return onShowModel({id:asigna.id, ut:asigna.ut, 
+      uc:asigna.uc, fecha:fecha, activo:asigna.activo })
   }
+  const handleSelectionChangeProveedor = (option) => {
+    setUt(option)
+  };
+  const handleSelectionChangeTierra = (option) => {
+    setUC(option)
+  };
   return (
     <>
       <div
@@ -52,14 +108,14 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <h3 className="text-3xl font-semibold text-black">
+              <h3 className="text-3xl font-bold text-[#313395]">
                 {data.id >0 ? 'Editar' : 'Registrar'} Asignar Tierra
               </h3>
             </div>
             {/*body*/}
             <form action="" className="space-y-4 p-5">
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div className='space-y-2'>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                <div className='space-y-2 hidden'>
                   <label htmlFor="AsignaTierraIdModal" className="text-black">ID</label>
                   <input
                       type="text"
@@ -74,44 +130,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
                   {errores.id && <p className="text-red-500 text-sm">{errores.id}</p>}
                 </div>
                 <div className='space-y-2'>
-                  <label htmlFor="AsignaTierraUCModal" className="text-black">UC/Tierra</label>
-                  <select
-                        id="tierra"
-                        value={uc}
-                        onChange={(e) => setUC(e.target.value)}
-                        className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                            errores.uc ? "border-red-500" : ""
-                          }`}>
-                        <option value="">Selecciona la Tierra</option>
-                        {TIERRA_DATA.map((tierra) => (
-                            <option key={tierra.id} value={tierra.uc}>
-                            {tierra.uc}
-                            </option>
-                        ))}
-                        </select>
-                  {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
-                </div>
-                <div className='space-y-2'>
-                  <label htmlFor="AsignaTierraUTModal" className="text-black">UT/Proveedor</label>
-                  <select
-                    id="proveedor"
-                    value={ut}
-                    onChange={(e) => setUt(e.target.value)}
-                    className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.ut ? "border-red-500" : ""
-                      }`}
-                    >
-                    <option value="">Selecciona al Proveedor</option>
-                    {PROVEEDOR_DATA.map((proveedor) => (
-                        <option key={proveedor.id} value={proveedor.ut}>
-                        {proveedor.ut}
-                        </option>
-                    ))}
-                    </select>
-                  {errores.ut && <p className="text-red-500 text-sm">{errores.ut}</p>}
-                </div>
-                <div className='space-y-2'>
-                    <label htmlFor="AsignaTierraFechaModal" className="text-black">Fecha</label>
+                    <label htmlFor="AsignaTierraFechaModal" className="text-black font-semibold">Fecha</label>
                     <input type='date' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.fecha ? "border-red-500" : ""
                     }`}
@@ -120,6 +139,26 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
                         onChange={(e) => setFecha(e.target.value)}
                     />
                     {errores.fecha && <p className="text-red-500 text-sm">{errores.fecha}</p>}
+                </div>
+                <div className='space-y-2'>
+                  <label htmlFor="AsignaTierraUTModal" className="text-black font-semibold">UT/Proveedor</label>
+                  <ComboBox initialOptions={provedores} selectedOption={seleccionProveedor} 
+                    onSelectionChange={handleSelectionChangeProveedor}
+                    className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                      errores.fecha ? "border-red-500" : ""
+                  }`}
+                  />
+                  {errores.ut && <p className="text-red-500 text-sm">{errores.ut}</p>}
+                </div>
+                <div className='space-y-2'>
+                  <label htmlFor="AsignaTierraUTModal" className="text-black font-semibold">UC/Tierra</label>
+                  <ComboBox initialOptions={tierras} selectedOption={seleccionTierra} 
+                    onSelectionChange={handleSelectionChangeTierra}
+                    className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                      errores.fecha ? "border-red-500" : ""
+                  }`}
+                  />
+                  {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
                 </div>
               </div>
             </form>

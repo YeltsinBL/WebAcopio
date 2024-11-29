@@ -34,7 +34,8 @@ const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProducto}) =
 					</thead>
 
 					<tbody className='divide-y divide-gray-700'>
-						{AsignaTierra_DATA.map((product) => (
+						{AsignaTierra_DATA?.length > 0 ? (
+							AsignaTierra_DATA.map((product) => (
 							<tr key={product.id} >
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
 									{product.id}
@@ -67,7 +68,16 @@ const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProducto}) =
 									</button>
 								</td>
 							</tr>
-						))}
+							))
+						): (
+							<tr>
+							  <td colSpan={5} className="text-center py-4">
+								No hay tierras registradas
+							  </td>
+							</tr>
+						)
+						
+						}
 					</tbody>
 				</table>
 			</div>

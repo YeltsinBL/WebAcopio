@@ -1,16 +1,24 @@
+import { asignaTierraDelete } from "../../services/asignartierra"
+import { localISOString } from "../mocks/DataList"
 
 const AsignaTierraModelDelete = ({onShowModel, data}) => {
-    const handleGuardar = (e) => {
+    const handleGuardar = async(e) => {
         e.preventDefault()
-        sendDataDismissModel(data)
-      }
-      const handleCancelar = (e) => {
+        const asigna = await asignaTierraDelete({
+          asignarTierraId:data,
+          userModifiedName: "ADMIN",
+          userModifiedAt: localISOString
+        })
+        if(asigna) return sendDataDismissModel(data)
+        return sendDataDismissModel(0)
+    }
+    const handleCancelar = (e) => {
         e.preventDefault()
         sendDataDismissModel(0)
-      }
-      const sendDataDismissModel = (valor) => {
+    }
+    const sendDataDismissModel = (valor) => {
         onShowModel({id:valor})
-      }
+    }
   return (
     <>
       <div

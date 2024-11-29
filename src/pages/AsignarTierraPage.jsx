@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import AsignaTierraFilter from "../components/asignatierra/AsignaTierraFilter"
 import Header from "../components/common/Header"
-import { TIERRAASIGNADA_DATA } from "../components/mocks/DataList"
+// import { TIERRAASIGNADA_DATA } from "../components/mocks/DataList"
 import { useNavigate } from "react-router-dom"
 import AsignaTierraTable from "../components/asignatierra/AsignaTierraTable"
 import AsignaTierraModel from "../components/asignatierra/AsignaTierraModel"
 import AsignaTierraModelDelete from "../components/asignatierra/AsignaTierraModelDelete"
+import { asignaTierraGetById, searchAsignaTierra } from "../services/asignartierra"
 
 const AsignarTierraPage = () => {
 
@@ -25,8 +26,9 @@ const AsignarTierraPage = () => {
   useEffect(()=> {
     getProducts()
   }, [])
-  const getProducts = () => {
-    setFilteredProducts(TIERRAASIGNADA_DATA)
+  const getProducts = async() => {
+    const searchAsignaTierras = await searchAsignaTierra({})
+    setFilteredProducts(searchAsignaTierras)
   }
   const handleDataFromChild = (data) => {
     const {ut, uc, fechaDesde, fechaHasta} = data
@@ -44,8 +46,11 @@ const AsignarTierraPage = () => {
     setFilteredProducts(filtered)
   }
   // Funciones para manejar botones de la tabla
-  const handleRowSelect = (rowData) => {
-    setSelectedRowData(rowData)
+  const handleRowSelect = async(rowData) => {
+    if(rowData.id != null) {
+       const asignartierraId = await asignaTierraGetById({id:rowData.id})
+       setSelectedRowData(asignartierraId)
+    } else setSelectedRowData(rowData)
     setShowModal(true)
   }
   const eliminarProducto = (id) => {
@@ -69,8 +74,7 @@ const AsignarTierraPage = () => {
     setShowModal(false)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.id == 0) return setShowModalDelete(false)
-    setFilteredProducts(filteredProducts.filter(producto => producto.id !== data.id))
+    if(data.id > 0) getProducts()
     setShowModalDelete(false)
   }
   return (
