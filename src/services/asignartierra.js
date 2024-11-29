@@ -3,7 +3,7 @@ import { appSetting } from "../settings/appsetting";
 export const searchAsignaTierra = async({search}) => {
     if(search == null) console.log("Sin parametros", `${appSetting.apiUrl}AsignaTierra`)
     else {
-      const {uc, it, fechaDesde, fechaHasta} = search
+      const {uc, ut, fechaDesde, fechaHasta} = search
       console.log("Con parametros", `${appSetting.apiUrl}AsignaTierra?uc=${uc}&ut=${ut}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`)
     }
   
@@ -23,7 +23,9 @@ export const searchAsignaTierra = async({search}) => {
         uc : tierra.asignarTierraTierraUC,
         ut : tierra.asignarTierraProveedorUT,
         fecha : new Date(`${tierra.asignarTierraFecha}T00:00:00`),
-        activo : tierra.asignarTierraStatus
+        activo : tierra.asignarTierraStatus,
+        proveedorId: tierra.asignarTierraProveedorId,
+        tierraId: tierra.asignarTierraTierraId
       }))    
       return formatter
   
