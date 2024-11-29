@@ -22,7 +22,7 @@ export const searchAsignaTierra = async({search}) => {
         id : tierra.asignarTierraId,
         uc : tierra.asignarTierraTierraUC,
         ut : tierra.asignarTierraProveedorUT,
-        fecha : new Date(`${tierra.asignarTierraFecha}`),
+        fecha : new Date(`${tierra.asignarTierraFecha}T00:00:00`),
         activo : tierra.asignarTierraStatus
       }))    
       return formatter
