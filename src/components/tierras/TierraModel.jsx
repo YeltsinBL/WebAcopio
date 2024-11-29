@@ -88,14 +88,14 @@ const TierraModel = ({ onShowModel, data }) => {
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <h3 className="text-3xl font-semibold text-black">
+              <h3 className="text-3xl font-bold text-[#313395]">
                 {data.id >0 ? 'Editar' : 'Registrar'} Tierra
               </h3>
             </div>
             {/*body*/}
             <form action="" className="space-y-4 p-5">
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div className='space-y-2'>
+                <div className='space-y-2 hidden'>
                   <label htmlFor="TierraIdModal" className="text-black">ID</label>
                   <input
                       type="text"
@@ -110,7 +110,7 @@ const TierraModel = ({ onShowModel, data }) => {
                   {errores.id && <p className="text-red-500 text-sm">{errores.id}</p>}
                 </div>
                 <div className='space-y-2'>
-                  <label htmlFor="TierraUCModal" className="text-black">UC</label>
+                  <label htmlFor="TierraUCModal" className="text-black font-semibold">UC</label>
                   <input 
                       type='text' 
                       className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
@@ -123,7 +123,7 @@ const TierraModel = ({ onShowModel, data }) => {
                   {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="TierraCampoModal" className="text-black">Campo</label>
+                    <label htmlFor="TierraCampoModal" className="text-black font-semibold">Campo</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.campo ? "border-red-500" : ""
                     }`}
@@ -134,7 +134,7 @@ const TierraModel = ({ onShowModel, data }) => {
                     {errores.campo && <p className="text-red-500 text-sm">{errores.campo}</p>}
                 </div>
                 <div className='w-full'>
-                    <label htmlFor="TierraSectorModal" className="text-black">Sector</label>
+                    <label htmlFor="TierraSectorModal" className="text-black font-semibold">Sector</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.sector ? "border-red-500" : ""
                     }`}
@@ -145,7 +145,7 @@ const TierraModel = ({ onShowModel, data }) => {
                     {errores.sector && <p className="text-red-500 text-sm">{errores.sector}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="TierraValleModal" className="text-black">Valle</label>
+                    <label htmlFor="TierraValleModal" className="text-black font-semibold">Valle</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.valle ? "border-red-500" : ""
                     }`}
@@ -156,7 +156,7 @@ const TierraModel = ({ onShowModel, data }) => {
                     {errores.valle && <p className="text-red-500 text-sm">{errores.valle}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="TierraHAModal" className="text-black">H.A.</label>
+                    <label htmlFor="TierraHAModal" className="text-black font-semibold">H.A.</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.ha ? "border-red-500" : ""
                     }`}
@@ -167,7 +167,7 @@ const TierraModel = ({ onShowModel, data }) => {
                     {errores.ha && <p className="text-red-500 text-sm">{errores.ha}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="TierraActivoModal" className="text-black pr-3">Activo</label>
+                    <label htmlFor="TierraActivoModal" className="text-black pr-3 font-semibold">Activo</label>
                     <input type="checkbox" id="activo" 
                     checked={activo}
                     onChange={(e) => setActivo(e.target.checked)}/>
