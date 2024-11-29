@@ -1,16 +1,26 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { proveedorSave, proveedorUpdate } from "../../services/proveedor"
 import { localISOString } from "../mocks/DataList"
 
 const ProveedorModel = ({ onShowModel, data }) => {
-  const [id, setId] = useState(data.id)
-  const [ut, setUt] = useState(data.ut)
-  const [dni, setDni] = useState(data.dni)
-  const [nombre, setNombre] = useState(data.nombre)
-  const [apePat, setApePat] = useState(data.apellidoPaterno)
-  const [apeMat, setApeMat] = useState(data.apellidoMaterno)
-  const [activo, setActivo] = useState(data.activo)
+  const [id, setId] = useState('')
+  const [ut, setUt] = useState('')
+  const [dni, setDni] = useState('')
+  const [nombre, setNombre] = useState('')
+  const [apePat, setApePat] = useState('')
+  const [apeMat, setApeMat] = useState('')
+  const [activo, setActivo] = useState(true)
   const [errores, setErrores] = useState({})
+
+  useEffect(() => {
+    setId(data.id || 0)
+    setUt(data.ut || '')
+    setDni(data.dni || '')
+    setNombre(data.nombre || '')
+    setApePat(data.apellidoPaterno || '')
+    setApeMat(data.apellidoMaterno || '')
+    setActivo(data.activo || true)
+  }, [data])
 
   const validarCampos = () => {
     const nuevosErrores = {}
@@ -64,14 +74,14 @@ const ProveedorModel = ({ onShowModel, data }) => {
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-              <h3 className="text-3xl font-semibold text-black">
+              <h3 className="text-3xl font-bold text-[#313395]">
                 {data.id >0 ? 'Editar' : 'Registrar'} Proveedor
               </h3>
             </div>
             {/*body*/}
             <form action="" className="space-y-4 p-5">
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 '>
-                <div className='space-y-2'>
+                <div className='space-y-2 hidden'>
                   <label htmlFor="ProveedorIdModal" className="text-black">ID</label>
                   <input
                       type="text"
@@ -86,7 +96,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
                   {errores.id && <p className="text-red-500 text-sm">{errores.id}</p>}
                 </div>
                 <div className='space-y-2'>
-                  <label htmlFor="ProveedorUTModal" className="text-black">UT</label>
+                  <label htmlFor="ProveedorUTModal" className="text-black font-semibold">UT</label>
                   <input 
                       type='text' 
                       className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
@@ -99,7 +109,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
                   {errores.ut && <p className="text-red-500 text-sm">{errores.ut}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="ProveedorDNIModal" className="text-black">DNI</label>
+                    <label htmlFor="ProveedorDNIModal" className="text-black font-semibold">DNI</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.dni ? "border-red-500" : ""
                     }`}
@@ -110,7 +120,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
                     {errores.dni && <p className="text-red-500 text-sm">{errores.dni}</p>}
                 </div>
                 <div className='w-full'>
-                    <label htmlFor="ProveedorNombreModal" className="text-black">Nombre</label>
+                    <label htmlFor="ProveedorNombreModal" className="text-black font-semibold">Nombre</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.nombre ? "border-red-500" : ""
                     }`}
@@ -121,7 +131,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
                     {errores.nombre && <p className="text-red-500 text-sm">{errores.nombre}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="ProveedorApePatModal" className="text-black">Apellido Paterno</label>
+                    <label htmlFor="ProveedorApePatModal" className="text-black font-semibold">Apellido Paterno</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.apePat ? "border-red-500" : ""
                     }`}
@@ -132,7 +142,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
                     {errores.apePat && <p className="text-red-500 text-sm">{errores.apePat}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="ProveedorApeMatModal" className="text-black">Apellido Materno</label>
+                    <label htmlFor="ProveedorApeMatModal" className="text-black font-semibold">Apellido Materno</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.apeMat ? "border-red-500" : ""
                     }`}
@@ -143,7 +153,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
                     {errores.apeMat && <p className="text-red-500 text-sm">{errores.apeMat}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="ProveedorActivoModal" className="text-black pr-3">Activo</label>
+                    <label htmlFor="ProveedorActivoModal" className="text-black pr-3 font-semibold">Activo</label>
                     <input type="checkbox" id="activo" 
                     checked={activo}
                     onChange={(e) => setActivo(e.target.checked)}/>
