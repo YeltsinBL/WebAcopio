@@ -14,7 +14,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
   const [provedores, setProveedores] = useState([])
  
   const [errores, setErrores] = useState({})
-  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, uc: data.ut } : null
+  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, ut: data.ut } : null
   const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
   useEffect(() => {
     if (data) {
@@ -145,7 +145,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
                   <ComboBox initialOptions={provedores} selectedOption={seleccionProveedor} 
                     onSelectionChange={handleSelectionChangeProveedor}
                     className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                      errores.fecha ? "border-red-500" : ""
+                      errores.ut ? "border-red-500" : ""
                   }`}
                   />
                   {errores.ut && <p className="text-red-500 text-sm">{errores.ut}</p>}
@@ -155,7 +155,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
                   <ComboBox initialOptions={tierras} selectedOption={seleccionTierra} 
                     onSelectionChange={handleSelectionChangeTierra}
                     className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                      errores.fecha ? "border-red-500" : ""
+                      errores.uc ? "border-red-500" : ""
                   }`}
                   />
                   {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
