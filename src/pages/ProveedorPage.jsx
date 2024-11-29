@@ -47,9 +47,8 @@ const ProveedorPage = () => {
     setFilteredProducts(filtered)
   }
   const handleShowModel = (data) => {
-    if(data.id == undefined) {
-      return setShowModal(false)
-    }
+    if(data.id == 0) return setShowModal(false)
+    
     const existingIndex = filteredProducts.findIndex((item) => item.id === data.id)
     if (existingIndex >= 0) {
       // Reemplazar datos si el ID existe
