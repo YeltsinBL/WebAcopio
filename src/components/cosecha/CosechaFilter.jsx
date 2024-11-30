@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { searchCosechaTipo } from "../../services/cosecha"
+import ComboBox from "../asignatierra/Combobox"
 
 const CosechaFilter = ({onFiltersValue}) => {
     const [ucFilter, setUCFilter] = useState('')
@@ -6,7 +8,11 @@ const CosechaFilter = ({onFiltersValue}) => {
     const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
     const [fechaHastaFilter, setFechaHastaFilter] = useState('')
     const [cosechaFilter, setCosechaFilter] = useState('')
+    const [cosechaTipo, setCosechaTipo] = useState([])
 
+    useEffect(() => {
+        fetchOptionCosechaTipo()
+    }, [])
     const sendDataToParent = (event) => {
         event.preventDefault()
         onFiltersValue({uc:ucFilter, ut:utFilter, 
@@ -14,6 +20,21 @@ const CosechaFilter = ({onFiltersValue}) => {
             cosecha:cosechaFilter
         })
     }
+    const fetchOptionCosechaTipo = async() => {
+      try {
+        const responseTipo = await searchCosechaTipo()
+        const formatter= responseTipo?.map(tipo =>({
+          id: tipo.cosechaTipoId,
+          uc:tipo.descripcion
+        }))
+        setCosechaTipo(formatter)
+      } catch (error) {
+        console.error('Error al cargar fetchOptionCosechaTipo:', error);
+      }
+    }
+    const handleSelectionChangeCosechaTipo = (option) => {
+      setCosechaFilter(option)
+    };
   return (
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 		<form action="">
@@ -52,15 +73,11 @@ const CosechaFilter = ({onFiltersValue}) => {
                 </div>
                 <div className='flex flex-col gap-1 w-1/8'>
                     <label htmlFor="CosechaTipo" className="text-white">Cosecha</label>
-                    <select id='cosechaFilter'
-                        value={cosechaFilter}
-                        onChange={(e) => setCosechaFilter(e.target.value)}
-                        className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}>
-                        <option value="">Selecciona la Tierra</option>
-                        <option key={1} value='Cosecha'>Cosecha</option>
-                        <option key={2} value='No Cosecha'>No Cosecha</option>
-                        <option key={3} value='Rechazado'>Rechazado</option>
-                        </select>
+                    <ComboBox initialOptions={cosechaTipo} disabled={false}
+                      onSelectionChange={handleSelectionChangeCosechaTipo}
+                      className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
+                      colorOptions={"text-black"}
+                    />
                 </div>
                 
                 <button 

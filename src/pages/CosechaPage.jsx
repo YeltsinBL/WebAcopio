@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import Header from "../components/common/Header"
 import CosechaFilter from "../components/cosecha/CosechaFilter"
 import { useNavigate } from "react-router-dom"
-import { COSECHA_DATA } from "../components/mocks/DataList"
 import CosechaTable from "../components/cosecha/CosechaTable"
 import CosechaModel from "../components/cosecha/CosechaModel"
+import { cosechaGetById, searchCosecha } from "../services/cosecha"
 
 const CosechaPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
@@ -22,29 +22,33 @@ const CosechaPage = () => {
   useEffect(()=> {
     getProducts()
   }, [])
-  const getProducts = () => {
-    setFilteredProducts(COSECHA_DATA)
+  const getProducts = async() => {
+    const cosechas = await searchCosecha({})
+    setFilteredProducts(cosechas)
   }
 
   const handleDataFromChild = (data) => {
     const {ut, uc, fechaDesde, fechaHasta, cosecha} = data
-    if(ut=='' & uc=='' & fechaDesde=='' & fechaHasta=='' & cosecha==''){
+    if(ut=='' & uc=='' & fechaDesde=='' & fechaHasta=='' & (cosecha=='' || isNaN(data.cosecha))){
       return getProducts()
     }
-    const filtered = COSECHA_DATA.filter((product) => {
+    const filtered = filteredProducts.filter((product) => {
       const matchesUC = uc ? product.uc.toLowerCase().includes(uc.toLowerCase()) : true
       const matchesUT = ut ? product.ut.toLowerCase().includes(ut.toLowerCase()) : true
       const matchesFechaDesde = fechaDesde ? product.fecha >= new Date(fechaDesde) : true
       const matchesFechaHasta = fechaHasta ? product.fecha <= new Date(fechaHasta) : true
-      const matchesCosecha = cosecha ? product.cosecha.toLowerCase() == cosecha.toLowerCase() : true
+      const matchesCosecha = cosecha ? product.tipoCosechaId == cosecha : true
       // Devuelve verdadero si el producto coincide con todos los filtros aplicados
       return matchesUC && matchesUT && matchesFechaDesde && matchesFechaHasta && matchesCosecha
     })
     setFilteredProducts(filtered)
   }
   // Funciones para manejar botones de la tabla
-  const handleRowSelect = (rowData) => {
-    setSelectedRowData(rowData)
+  const handleRowSelect = async(rowData) => {
+    if(rowData.id != null){
+      const cosechaById = await cosechaGetById({id:rowData.id})
+      setSelectedRowData(cosechaById)
+    } else setSelectedRowData(rowData)
     setShowModel(false)
   }
   const handleShowModel = (data) => {

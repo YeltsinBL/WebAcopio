@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
-import { convertirFechaISOParaInput, TIERRA_DATA } from '../mocks/DataList'
+import { localISOString } from '../mocks/DataList'
+import { searchAsignaTierra } from '../../services/asignartierra'
+import ComboBox from '../asignatierra/Combobox'
+import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../services/cosecha'
 
 const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -13,30 +16,42 @@ const CosechaModel = ({ onShowModel, data }) => {
   const [humedadModel, setHumedadModel] = useState('')
   const [cosechaModel, setCosechaModel] = useState('')
 
+  const [tierras, setTierras] = useState([])
+  const [cosechaTipo, setCosechaTipo] = useState([])
+  const [listAsigna, setListAsigna] = useState([])
+  
+  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
+  const seleccionProveedor = data.proveedorId ? {proveedorId: data.proveedorId, ut: data.ut } : null
+  const seleccionCosechaTipo = data.tipoCosecha ? {id: data.tipoCosecha, uc: data.cosecha } : null
+
+
   const [errores, setErrores] = useState({})
 
   useEffect(() => {
+    fetchListAsigna()
+    fetchOptionsTierras()
+    fetchOptionCosechaTipo()
     if (data) {
       setIdModel(data.id || 0);
-      setUCModel(data.uc || "");
-      setUTModel(data.ut || "");
-      setFechaModel(data.fecha ? convertirFechaISOParaInput(data.fecha) : ""); // Convertir la fecha
+      setUCModel(data.tierraId || 0);
+      setUTModel(seleccionProveedor);
+      setFechaModel(data.fecha || localISOString.split('T')[0])
       setSupervisorModel(data.supervisor || "");
       setHasModel(data.has || "");
       setSacModel(data.sac || "");
       setRedModel(data.red || "");
       setHumedadModel(data.humedad || "");
-      setCosechaModel(data.cosecha || "");
+      setCosechaModel(data.tipoCosecha || 0);
     }
-  }, [data]);
+  }, []);
 
   const validarCampos = () => {
     const nuevosErrores = {}
-    if (!idModel) nuevosErrores.id = "El campo ID es obligatorio."
+    //if (!idModel) nuevosErrores.id = "El campo ID es obligatorio."
     if (!utModel) nuevosErrores.ut = "El campo UT es obligatorio."
     if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo Fecha es obligatorio."
-    if (!supervisorModel) nuevosErrores.supervisor = "El campo Supervisor es obligatorio."
+    //if (!supervisorModel) nuevosErrores.supervisor = "El campo Supervisor es obligatorio."
     if (!hasModel) nuevosErrores.has = "El campo HAS es obligatorio."
     if (!sacModel) nuevosErrores.sac = "El campo SAC es obligatorio."
     if (!redModel) nuevosErrores.red = "El campo RED es obligatorio."
@@ -47,20 +62,88 @@ const CosechaModel = ({ onShowModel, data }) => {
   
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
-  const handleGuardar = (e) => {
+  const fetchListAsigna= async() => {
+    try {
+      const responseTierra = await searchAsignaTierra({})
+      setListAsigna(responseTierra)
+    } catch (error) {
+      console.error('Error al cargar fetchOptionsTierras:', error);
+    }
+  }
+  const fetchOptionsTierras = async () => {
+    try {
+      const responseTierra = await searchAsignaTierra({})
+      const formatter= responseTierra?.map(tipo =>({
+        id: tipo.tierraId,
+        uc: tipo.uc
+      }))    
+      setTierras(formatter)
+    } catch (error) {
+      console.error('Error al cargar fetchOptionsTierras:', error);
+    }
+  }
+  const fetchOptionCosechaTipo = async() => {
+    try {
+      const responseTipo = await searchCosechaTipo()
+      const formatter= responseTipo?.map(tipo =>({
+        id: tipo.cosechaTipoId,
+        uc:tipo.descripcion
+      }))
+      setCosechaTipo(formatter)
+    } catch (error) {
+      console.error('Error al cargar fetchOptionCosechaTipo:', error);
+    }
+  }
+  const handleSelectionChangeTierra = (option) => {
+    setUCModel(option)
+    const selected = listAsigna.find(tierra => tierra.tierraId === option)
+    setUTModel({proveedorId:selected.proveedorId, ut:selected.ut})
+  };
+  const handleSelectionChangeCosechaTipo = (option) => {
+    setCosechaModel(option)
+  };
+  const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
-      sendDataDismissModel()
+      if(idModel > 0){
+        const resp = await cosechaUpdate({
+          cosechaId: idModel,
+          cosechaHas: hasModel,
+          cosechaSac: sacModel,
+          cosechaRed: redModel,
+          cosechaHumedad: humedadModel,
+          cosechaCosechaTipoId: cosechaModel,
+          userModifiedName: "ADMIN",
+          userModifiedAt: localISOString.split('T')[0]
+       })
+       return retorna(resp)
+      }
+      const resp = await cosechaSave({
+        cosechaFecha: fechaModel,
+        cosechaSupervisor: supervisorModel,
+        cosechaHas: hasModel,
+        cosechaSac: sacModel,
+        cosechaRed: redModel,
+        cosechaHumedad: humedadModel,
+        cosechaCosechaTipoId: cosechaModel,
+        cosechaTierraId: ucModel,
+        cosechaProveedorId: utModel.proveedorId,
+        userCreatedName: "ADMIN",
+        userCreatedAt: localISOString.split('T')[0]
+      })
+      return retorna(resp)
     }
+  }
+  const retorna = (resp) => {
+    return onShowModel({
+      id:resp.id, ut:resp.ut, uc:resp.uc, fecha:fechaModel, supervisor:supervisorModel, 
+      has: hasModel, sac:sacModel, red:redModel, humedad:humedadModel, cosecha:resp.cosecha,
+      valle:resp.valle, sector: resp.sector, campo: resp.campo
+    })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    sendDataDismissModel(true)
-  }
-  const sendDataDismissModel = (cancel=false) => {
-    onShowModel({id:cancel ? 0: idModel, ut:utModel, uc:ucModel, fecha:fechaModel, supervisor:supervisorModel, has: hasModel,
-        sac:sacModel, red:redModel, humedad:humedadModel, cosecha:cosechaModel
-     })
+    onShowModel({id:0})
   }
 
   return (
@@ -83,25 +166,16 @@ const CosechaModel = ({ onShowModel, data }) => {
                         readOnly={data.id > 0}
                     />
                   {errores.id && <p className="text-red-500 text-sm">{errores.id}</p>}
-                </div>
+                </div>           
                 <div className='space-y-2'>
-                  <label htmlFor="CosechaUC" className="text-white">UC</label>
-                  <select
-                        id="tierra"
-                        className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                            errores.uc ? "border-red-500" : ""
-                          }`}
-                        value={ucModel}
-                        onChange={(e) => setUCModel(e.target.value)}
-                        disabled={data.id > 0}
-                        >
-                        <option value="">Selecciona la Tierra</option>
-                        {TIERRA_DATA.map((tierra) => (
-                            <option key={tierra.id} value={tierra.uc}>
-                            {tierra.uc}
-                            </option>
-                        ))}
-                        </select>
+                  <label htmlFor="AsignaTierraUTModal" className="text-white font-semibold">UC/Tierra</label>
+                  <ComboBox initialOptions={tierras} selectedOption={seleccionTierra} 
+                    onSelectionChange={handleSelectionChangeTierra}
+                    className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                      errores.uc ? "border-red-500" : ""
+                    }`}
+                    colorOptions={"text-black"}
+                  />
                   {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
                 </div>
                 <div className='space-y-2'>
@@ -109,10 +183,9 @@ const CosechaModel = ({ onShowModel, data }) => {
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.uc ? "border-red-500" : ""
                     }`}
-                        name='query' placeholder='Ingrese el código UT'
-                        value={utModel}
-                        onChange={(e) => setUTModel(e.target.value)}
-                        readOnly={data.id > 0}
+                        name='query' placeholder='Automático el código UT'
+                        value={utModel?.ut || ''}
+                        readOnly
                     />
                 </div>
                 <div className='space-y-2'>
@@ -185,17 +258,13 @@ const CosechaModel = ({ onShowModel, data }) => {
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaTipo" className="text-white">Tipo Cosecha</label>
-                    <select id='cosechaModel'
-                        value={cosechaModel}
-                        onChange={(e) => setCosechaModel(e.target.value)}
-                        className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                            errores.uc ? "border-red-500" : ""
-                        } `}>
-                        <option value="">Selecciona la Tierra</option>
-                        <option key={1} value='Cosecha'>Cosecha</option>
-                        <option key={2} value='No Cosecha'>No Cosecha</option>
-                        <option key={3} value='Rechazado'>Rechazado</option>
-                        </select>
+                    <ComboBox initialOptions={cosechaTipo} selectedOption={seleccionCosechaTipo} 
+                      onSelectionChange={handleSelectionChangeCosechaTipo}
+                      className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                        errores.uc ? "border-red-500" : ""
+                      }`}
+                      colorOptions={"text-black"}
+                    />
                         {errores.cosecha && <p className="text-red-500 text-sm">{errores.cosecha}</p>}
                 </div>
             </div>
