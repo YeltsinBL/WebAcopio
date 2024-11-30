@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ComboBox = ({ initialOptions, selectedOption, onSelectionChange, className, colorOptions }) => {
+const ComboBox = ({ initialOptions, disabled=true, selectedOption, onSelectionChange, className, colorOptions }) => {
   const [options, setOptions] = useState([]);
   const [selectedValue, setSelectedValue] = useState(selectedOption);
 
@@ -26,7 +26,7 @@ const ComboBox = ({ initialOptions, selectedOption, onSelectionChange, className
         onChange={handleChange} 
         className={className}
     >
-        <option value="" disabled>-- Selecciona una opción --</option>
+        <option value="" disabled={disabled} className={!disabled ? colorOptions:''}>-- Selecciona una opción --</option>
         {options.map((option) => (
           <option key={option.id} value={option.id} className={colorOptions}>
             {option.uc || option.ut}
