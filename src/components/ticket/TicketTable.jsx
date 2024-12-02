@@ -3,7 +3,7 @@ import Table from '../common/Table'
 import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
 
-const TicketTable = ({TICKET_DATA, onRowSelect}) => {
+const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
       'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto', 'Estado', 'Acciones']
   return (
@@ -11,7 +11,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect}) => {
 	{TICKET_DATA ? (
 	  TICKET_DATA.map((ticket) => (
         <tr key={ticket.id} >
-          <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
+          <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center '>
               {ticket.id}
           </td>
           <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
@@ -52,6 +52,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect}) => {
               <Edit size={18} />
           </button>
           <button className='text-red-400 hover:text-red-300'
+            onClick={() => onDeleteSelect(ticket.id)}
              >
               <Trash2 size={18} />
           </button>

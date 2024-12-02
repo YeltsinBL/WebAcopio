@@ -7,6 +7,7 @@ import { TICKET_DATA } from '../components/mocks/DataList'
 import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
 import TicketModel from '../components/ticket/TicketModel'
+import TicketModalDelete from '../components/ticket/TicketModalDelete'
 
 const TicketPage = () => {
   const [listTicket, setListTicket] = useState([])
@@ -14,6 +15,8 @@ const TicketPage = () => {
   /* Model */
   const [showModel, setShowModel] = useState(true)
   const [selectedRowData, setSelectedRowData] = useState(null)
+  const [showModalDelete, setShowModalDelete] = useState(false)
+  const [idModalDelete, setIdModalDelete] = useState(0)
 
   useEffect(() => {
     getTickets()
@@ -24,6 +27,7 @@ const TicketPage = () => {
   const handleGoBack = () => {
     navigate('/')
   }
+  // Listado Filtro
   const handleDataFromChild = (data) => {
     const {
         ingenio, transportista, viaje, fechaDesde, fechaHasta, estado
@@ -45,10 +49,12 @@ const TicketPage = () => {
     })
     setListTicket(filtered)
   }
+  // Obtener
   const handleRowSelect = async(rowData) => {
     setSelectedRowData(rowData)
     setShowModel(false)
   }
+  // Guardar
   const handleShowModel = (data) => {
     if(data.id==0) return setShowModel(true)
     data.fecha = new Date(`${data.fecha}T00:00:00`) // Formatear Fecha
@@ -63,6 +69,15 @@ const TicketPage = () => {
     }
     setShowModel(true)
   }
+  // Eliminar
+  const eliminarTicket = (id) => {
+    setIdModalDelete(id)
+    setShowModalDelete(true)
+  }
+  const handleShowModelDelete = (data) =>{
+    if(data.id > 0) setListTicket(listTicket.filter(producto => producto.id !== data.id))
+    setShowModalDelete(false)
+  }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
         <Header title='Tickets'/>
@@ -70,7 +85,7 @@ const TicketPage = () => {
         {showModel ?
           <>
             <TicketFilter onFiltersValue={handleDataFromChild}/>
-            <TicketTable TICKET_DATA={listTicket} onRowSelect={handleRowSelect} />    
+            <TicketTable TICKET_DATA={listTicket} onRowSelect={handleRowSelect} onDeleteSelect={eliminarTicket} />    
             <Footer>
               <FooterButton accion={handleRowSelect} name={"Nuevo"}/>
               <FooterButton accion={handleGoBack} name={"Salir"}/>
@@ -79,7 +94,8 @@ const TicketPage = () => {
           <>
             <TicketModel onShowModel={handleShowModel} data={selectedRowData}/>
           </>
-        }          
+        }       
+        {showModalDelete ? <TicketModalDelete onShowModel={handleShowModelDelete} data={idModalDelete}/> : ''}
         </main>
     </div>
   )
