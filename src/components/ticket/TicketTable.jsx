@@ -3,10 +3,9 @@ import Table from '../common/Table'
 import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
 
-const TicketTable = ({TICKET_DATA}) => {
+const TicketTable = ({TICKET_DATA, onRowSelect}) => {
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
       'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto', 'Estado', 'Acciones']
-  console.log(TICKET_DATA)
   return (
   <Table nameTitle={"Lista de Tickets"} headers={headers} data={TICKET_DATA} rowKey={'id'} >
 	{TICKET_DATA ? (
@@ -48,6 +47,7 @@ const TicketTable = ({TICKET_DATA}) => {
           <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
           <button
               className="text-blue-500 hover:text-blue-700 px-3"
+              onClick={() => onRowSelect(ticket)}
           >
               <Edit size={18} />
           </button>

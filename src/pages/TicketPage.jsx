@@ -28,7 +28,6 @@ const TicketPage = () => {
     const {
         ingenio, transportista, viaje, fechaDesde, fechaHasta, estado
     } = data
-    console.log(ingenio=='', transportista=='', viaje=='', fechaDesde=='', fechaHasta=='', estado=='')
     if(ingenio=='' & transportista=='' & viaje=='' & fechaDesde=='' & fechaHasta=='' & estado==''){
       return getTickets()
     }
@@ -71,7 +70,7 @@ const TicketPage = () => {
         {showModel ?
           <>
             <TicketFilter onFiltersValue={handleDataFromChild}/>
-            <TicketTable TICKET_DATA={listTicket} />    
+            <TicketTable TICKET_DATA={listTicket} onRowSelect={handleRowSelect} />    
             <Footer>
               <FooterButton accion={handleRowSelect} name={"Nuevo"}/>
               <FooterButton accion={handleGoBack} name={"Salir"}/>
