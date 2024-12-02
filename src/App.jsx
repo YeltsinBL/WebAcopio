@@ -5,6 +5,7 @@ import TierrasPage from "./pages/TierrasPage"
 import AsignarTierraPage from "./pages/AsignarTierraPage"
 import CosechaPage from "./pages/CosechaPage"
 import Sidebar from "./components/Sidebar"
+import TicketPage from "./pages/TicketPage"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path='/tierras' element={<TierrasPage />} />
         <Route path='/asignartierra' element={<AsignarTierraPage />} />
         <Route path='/cosecha' element={<CosechaPage />} />
+        <Route path='/ticket' element={<TicketPage />} />
       </Routes>
     </div>
   )
