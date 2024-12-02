@@ -1,3 +1,5 @@
+import { FormatteDecimal } from "../common/FormatteData";
+
 export const PROVEEDOR_DATA = [
     { id: 1, ut: "UT123", dni: "12345678", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
     { id: 2, ut: "UT456", dni: "87654320", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
@@ -67,6 +69,26 @@ const dataCosecha = [
 export const COSECHA_DATA = dataCosecha.map(item => ({
     ...item,
     fecha: convertirFecha(item.fecha)
+}))
+
+const data_Ticket = [
+  { id: 1,  ingenio:'Casa Grande',fecha: '30/10/2024', viaje: '508689', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-Z3S930", caminoPeso: 19.590, vehiculo: 'PE-Z3S930', vehiculoPeso: 31.860, unidadPeso:'Kg', pesoBruto: 51.450, estado: 'Activo' },
+  { id: 2,  ingenio:'Casa Grande',fecha: '31/10/2024', viaje: '508707', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-B8X726", caminoPeso: 19.400, vehiculo: 'PE-Z3S930', vehiculoPeso: 28.560, unidadPeso:'Kg', pesoBruto: 47.960, estado: 'Activo' },
+  { id: 3,  ingenio:'Casa Grande',fecha: '31/10/2024', viaje: '508725', transportista:'Representante SHEFA', chofer: 'TRUCK DEL V.', camion: "PE-T3X896", caminoPeso: 19.860, vehiculo: 'PE-Z3S930', vehiculoPeso: 27.270, unidadPeso:'Kg', pesoBruto: 47.130, estado: 'Activo' },
+  { id: 4,  ingenio:'Casa Grande',fecha: '31/10/2024', viaje: '508760', transportista:'Representante SHEFA', chofer: 'TRUCK DEL V.', camion: "PE-B8F726", caminoPeso: 16.630, vehiculo: 'PE-Z3S930', vehiculoPeso: 28.230, unidadPeso:'Kg', pesoBruto: 44.860, estado: 'Activo' },
+  { id: 5,  ingenio:'Casa Grande',fecha: '31/10/2024', viaje: '508789', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-T1P890", caminoPeso: 20.610, vehiculo: 'PE-Z3S930', vehiculoPeso: 28.480, unidadPeso:'Kg', pesoBruto: 49.090, estado: 'Activo' },
+  { id: 6,  ingenio:'Casa Grande',fecha: '01/11/2024', viaje: '508794', transportista:'Representante SHEFA', chofer: 'TRUCK DEL V.', camion: "PE-B5I782", caminoPeso: 22.800, vehiculo: 'PE-Z3S930', vehiculoPeso: 28.040, unidadPeso:'Kg', pesoBruto: 50.840, estado: 'Activo' },
+  { id: 7,  ingenio:'Casa Grande',fecha: '01/11/2024', viaje: '508803', transportista:'Representante SHEFA', chofer: 'TRUCK DEL V.', camion: "PE-T3C820", caminoPeso: 16.710, vehiculo: 'PE-Z3S930', vehiculoPeso: 23.240, unidadPeso:'Kg', pesoBruto: 39.950, estado: 'Activo' },
+  { id: 8,  ingenio:'Casa Grande',fecha: '01/12/2024', viaje: '508690', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-Z3S930", caminoPeso: 19.590, vehiculo: 'PE-Z3S930', vehiculoPeso: 31.860, unidadPeso:'Kg', pesoBruto: 51.450, estado: 'Archivado' },
+  { id: 9,  ingenio:'Casa Grande',fecha: '01/12/2024', viaje: '508691', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-Z3S930", caminoPeso: 19.590, vehiculo: 'PE-Z3S930', vehiculoPeso: 31.860, unidadPeso:'Kg', pesoBruto: 51.450, estado: 'Tesoreria' },
+  { id: 10, ingenio:'Casa Grande',fecha: '01/12/2024', viaje: '508692', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-Z3S930", caminoPeso: 19.590, vehiculo: 'PE-Z3S930', vehiculoPeso: 31.860, unidadPeso:'Kg', pesoBruto: 51.450, estado: 'Activo' },
+]
+export const TICKET_DATA = data_Ticket.map(item => ({
+  ...item,
+  fecha: convertirFecha(item.fecha),
+  caminoPeso: FormatteDecimal(item.caminoPeso, 3),
+  vehiculoPeso: FormatteDecimal(item.vehiculoPeso, 3),
+  pesoBruto: FormatteDecimal(item.pesoBruto, 3)
 }))
 
 const now = new Date()
