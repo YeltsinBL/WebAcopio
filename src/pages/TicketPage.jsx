@@ -53,14 +53,14 @@ const TicketPage = () => {
   const handleShowModel = (data) => {
     if(data.id==0) return setShowModel(true)
     data.fecha = new Date(`${data.fecha}T00:00:00`) // Formatear Fecha
-    const existingIndex = filteredProducts.findIndex((item) => item.id === data.id)
+    const existingIndex = listTicket.findIndex((item) => item.id === data.id)
     if (existingIndex >= 0) {
       // Reemplazar datos si el ID existe
-      const updatedList = [...filteredProducts]
+      const updatedList = [...listTicket]
       updatedList[existingIndex] = data
       setListTicket(updatedList)
     } else {
-      setListTicket([...filteredProducts, data])
+      setListTicket([...listTicket, data])
     }
     setShowModel(true)
   }
@@ -73,13 +73,8 @@ const TicketPage = () => {
             <TicketFilter onFiltersValue={handleDataFromChild}/>
             <TicketTable TICKET_DATA={listTicket} />    
             <Footer>
-                <button 
-                    className="bg-[#313395] text-white active:bg-gray-700 
-                    hover:bg-gray-500 font-bold uppercase text-sm px-4 py-2 rounded-lg"
-                    onClick={handleRowSelect}>
-                Nuevo
-                </button>
-                <FooterButton accion={handleGoBack} name={"Salir"}/>
+              <FooterButton accion={handleRowSelect} name={"Nuevo"}/>
+              <FooterButton accion={handleGoBack} name={"Salir"}/>
             </Footer>
           </>:
           <>

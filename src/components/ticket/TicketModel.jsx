@@ -83,6 +83,21 @@ const TicketModel = ({ onShowModel, data }) => {
         pesoBruto: pesoBrutoModel,
         estado: estadoModel   
       })
+      onShowModel({
+        id: idModel,  
+        ingenio:ingenioModel,
+        fecha: fechaModel, 
+        viaje: viajeModel,
+        transportista:transportistaModel, 
+        chofer: choferModel,
+        camion: camionModel,
+        caminoPeso: camionPesoModel,
+        vehiculo: vehiculoModel,
+        vehiculoPeso: vehiculoPesoModel,
+        unidadPeso:unidadPesoModel,
+        pesoBruto: pesoBrutoModel,
+        estado: estadoModel   
+      })
     }
   }
   const handleCancelar = (e) => {
