@@ -155,7 +155,7 @@ const CosechaModel = ({ onShowModel, data }) => {
         </div>
         <form action="" >
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 '>
-                <div className='space-y-2 '>
+                <div className='space-y-2 hidden'>
                     <label htmlFor="CosechaId" className="text-white ">ID</label>
                     <input type='text' className={`bg-transparent  focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.id ? "border-red-500" : "" 
