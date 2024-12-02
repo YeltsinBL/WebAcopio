@@ -1,3 +1,4 @@
+import { FormatteDecimal } from "../components/common/FormatteData";
 import { appSetting } from "../settings/appsetting";
 
 export const searchCosecha = async({search}) => {
@@ -27,10 +28,10 @@ export const searchCosecha = async({search}) => {
       ut: cosecha.cosechaProveedorUT,
       supervisor: cosecha.cosechaSupervisor,
       campo : cosecha.cosechaTierraCampo,
-      has : cosecha.cosechaHAS,
-      sac : cosecha.cosechaSac,
-      red : cosecha.cosechaRed,
-      humedad : cosecha.cosechaHumedad,
+      has : FormatteDecimal(cosecha.cosechaHAS,2),
+      sac : FormatteDecimal(cosecha.cosechaSac,2),
+      red : FormatteDecimal(cosecha.cosechaRed,2),
+      humedad : FormatteDecimal(cosecha.cosechaHumedad,2),
       cosecha: cosecha.cosechaCosechaTipo,
       tipoCosechaId: cosecha.cosechaCosechaId,
       activo: true
