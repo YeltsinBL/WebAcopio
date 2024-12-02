@@ -6,10 +6,14 @@ import TicketTable from '../components/ticket/TicketTable'
 import { TICKET_DATA } from '../components/mocks/DataList'
 import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
+import TicketModel from '../components/ticket/TicketModel'
 
 const TicketPage = () => {
   const [listTicket, setListTicket] = useState([])
   const navigate = useNavigate()
+  /* Model */
+  const [showModel, setShowModel] = useState(true)
+  const [selectedRowData, setSelectedRowData] = useState(null)
 
   useEffect(() => {
     getTickets()
@@ -42,21 +46,46 @@ const TicketPage = () => {
     })
     setListTicket(filtered)
   }
+  const handleRowSelect = async(rowData) => {
+    setSelectedRowData(rowData)
+    setShowModel(false)
+  }
+  const handleShowModel = (data) => {
+    if(data.id==0) return setShowModel(true)
+    data.fecha = new Date(`${data.fecha}T00:00:00`) // Formatear Fecha
+    const existingIndex = filteredProducts.findIndex((item) => item.id === data.id)
+    if (existingIndex >= 0) {
+      // Reemplazar datos si el ID existe
+      const updatedList = [...filteredProducts]
+      updatedList[existingIndex] = data
+      setListTicket(updatedList)
+    } else {
+      setListTicket([...filteredProducts, data])
+    }
+    setShowModel(true)
+  }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
         <Header title='Tickets'/>
         <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
-          <TicketFilter onFiltersValue={handleDataFromChild}/>
-          <TicketTable TICKET_DATA={listTicket} />    
-          <Footer>
-            <button 
-                className="bg-[#313395] text-white active:bg-gray-700 
-                hover:bg-gray-500 font-bold uppercase text-sm px-4 py-2 rounded-lg"
-                onClick={() =>({})}>
-              Nuevo
-            </button>
-            <FooterButton accion={handleGoBack} name={"Salir"}/>
-          </Footer>
+        {showModel ?
+          <>
+            <TicketFilter onFiltersValue={handleDataFromChild}/>
+            <TicketTable TICKET_DATA={listTicket} />    
+            <Footer>
+                <button 
+                    className="bg-[#313395] text-white active:bg-gray-700 
+                    hover:bg-gray-500 font-bold uppercase text-sm px-4 py-2 rounded-lg"
+                    onClick={handleRowSelect}>
+                Nuevo
+                </button>
+                <FooterButton accion={handleGoBack} name={"Salir"}/>
+            </Footer>
+          </>:
+          <>
+            <TicketModel onShowModel={handleShowModel} data={selectedRowData}/>
+          </>
+        }          
         </main>
     </div>
   )
