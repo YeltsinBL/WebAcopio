@@ -82,8 +82,3 @@ export const TICKET_DATA = data_Ticket.map(item => ({
   vehiculoPeso: FormatteDecimal(item.vehiculoPeso, 3),
   pesoBruto: FormatteDecimal(item.pesoBruto, 3)
 }))
-
-const now = new Date()
-export const localISOString = new Date(
-  now.getTime() - now.getTimezoneOffset() * 60000
-).toISOString()

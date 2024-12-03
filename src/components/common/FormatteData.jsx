@@ -9,3 +9,10 @@ export const convertirFechaToYMD = (fechaISO) => {
   const day = String(fecha.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+export const obtenerFechaLocal = ({date}) => {
+  const fecha = new Date(date)
+  return new Date(
+    fecha.getTime() - fecha.getTimezoneOffset() * 60000
+  ).toISOString()
+}
