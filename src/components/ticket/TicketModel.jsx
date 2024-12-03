@@ -3,6 +3,7 @@ import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
 import { localISOString } from '../mocks/DataList'
 import { convertirFechaToYMD, FormatteDecimal } from '../common/FormatteData'
+import { ticketSave } from '../../services/ticket'
 
 const TicketModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -27,7 +28,7 @@ const TicketModel = ({ onShowModel, data }) => {
         setViajeModel(data.viaje || '')
         setTransportistaModel(data.transportista || '')
         setChoferModel(data.chofer || "")
-        setFechaModel(convertirFechaToYMD(data.fecha) || localISOString.split('T')[0])
+        setFechaModel(data.fecha? convertirFechaToYMD(data.fecha) : localISOString.split('T')[0])
         setCamionModel(data.camion || "")
         setCamionPesoModel(data.camionPeso || "")
         setVehiculoModel(data.vehiculo || "")
@@ -58,7 +59,7 @@ const TicketModel = ({ onShowModel, data }) => {
     if (!vehiculoModel) nuevosErrores.vehiculo = "El campo VEHÍCULO es obligatorio."
     if (!vehiculoPesoModel) nuevosErrores.vehiculoPeso = "El campo VEHÍCULO PESO es obligatorio."
     if (!unidadPesoModel) nuevosErrores.unidadPeso = "El campo UNIDAD PESO es obligatorio."
-    // if (!pesoBrutoModel) nuevosErrores.pesoBruto = "El campo PE es obligatorio."
+    if (!pesoBrutoModel) nuevosErrores.pesoBruto = "El campo PESO BRUTO es obligatorio."
   
     setErrores(nuevosErrores)
   
@@ -67,36 +68,22 @@ const TicketModel = ({ onShowModel, data }) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
-      console.log({
-        id: idModel,  
-        ingenio:ingenioModel,
-        fecha: fechaModel, 
-        viaje: viajeModel,
-        transportista:transportistaModel, 
-        chofer: choferModel,
-        camion: camionModel,
-        caminoPeso: camionPesoModel,
-        vehiculo: vehiculoModel,
-        vehiculoPeso: vehiculoPesoModel,
-        unidadPeso:unidadPesoModel,
-        pesoBruto: pesoBrutoModel,
-        estado: estadoModel   
+      const ticket = await ticketSave({
+        ticketIngenio:ingenioModel,
+        ticketFecha: fechaModel, 
+        ticketViaje: viajeModel,
+        ticketTransportista:transportistaModel, 
+        ticketChofer: choferModel,
+        ticketCamion: camionModel,
+        ticketCamionPeso: camionPesoModel,
+        ticketVehiculo: vehiculoModel,
+        ticketVehiculoPeso: vehiculoPesoModel,
+        ticketUnidadPeso:unidadPesoModel,
+        ticketPesoBruto: pesoBrutoModel,
+        userCreatedAt: localISOString,
+        userCreatedName: "ADMIN" 
       })
-      onShowModel({
-        id: idModel,  
-        ingenio:ingenioModel,
-        fecha: fechaModel, 
-        viaje: viajeModel,
-        transportista:transportistaModel, 
-        chofer: choferModel,
-        camion: camionModel,
-        caminoPeso: camionPesoModel,
-        vehiculo: vehiculoModel,
-        vehiculoPeso: vehiculoPesoModel,
-        unidadPeso:unidadPesoModel,
-        pesoBruto: pesoBrutoModel,
-        estado: estadoModel   
-      })
+      onShowModel({...ticket, fecha : new Date(ticket.fecha)})
     }
   }
   const handleCancelar = (e) => {

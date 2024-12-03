@@ -7,7 +7,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
       'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto', 'Estado', 'Acciones']
   return (
-  <Table nameTitle={"Lista de Tickets"} headers={headers} data={TICKET_DATA} rowKey={'id'} >
+  <Table nameTitle={"Lista de Tickets"} headers={headers} >
 	{TICKET_DATA ? (
 	  TICKET_DATA.map((ticket) => (
         <tr key={ticket.id} >

@@ -50,7 +50,6 @@ const TicketPage = () => {
   // Guardar
   const handleShowModel = (data) => {
     if(data.id==0) return setShowModel(true)
-    data.fecha = new Date(`${data.fecha}T00:00:00`) // Formatear Fecha
     const existingIndex = listTicket.findIndex((item) => item.id === data.id)
     if (existingIndex >= 0) {
       // Reemplazar datos si el ID existe

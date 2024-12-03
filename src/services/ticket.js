@@ -1,3 +1,4 @@
+import { FormatteDecimal } from "../components/common/FormatteData";
 import { appSetting } from "../settings/appsetting";
 
 export const searchTickets = async(search) => {
@@ -61,6 +62,25 @@ export const ticketGetById = async({id}) => {
     throw new Error('Error al obtener la ticket')
   }
 }
+export const ticketSave = async(ticket) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(ticket)
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json()
+    return formatterticket(data)
+  } catch (error) {
+    console.log('ticketsave:', error.message)
+    throw new Error('Error al guardar la ticket')
+  }
+}
 
 const formatterticket = (data) => {
   return {
@@ -71,11 +91,11 @@ const formatterticket = (data) => {
     transportista :  data.ticketTransportista ,
     chofer : data.ticketChofer,
     camion : data.ticketCamion,
-    camionPeso : data.ticketCamionPeso,
+    camionPeso : FormatteDecimal(data.ticketCamionPeso, 3),
     vehiculo : data.ticketVehiculo,
-    vehiculoPeso : data.ticketVehiculoPeso,
+    vehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
     unidadPeso : data.ticketUnidadPeso,
-    pesoBruto : data.ticketPesoBruto,
+    pesoBruto : FormatteDecimal(data.ticketPesoBruto, 3),
     estado : data.ticketEstadoDescripcion
   }
 }
