@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
-import { localISOString } from '../mocks/DataList'
-import { convertirFechaToYMD, FormatteDecimal } from '../common/FormatteData'
-import { ticketSave } from '../../services/ticket'
+import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../common/FormatteData'
+import { ticketSave, ticketUpdate } from '../../services/ticket'
 
 const TicketModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -28,7 +27,7 @@ const TicketModel = ({ onShowModel, data }) => {
         setViajeModel(data.viaje || '')
         setTransportistaModel(data.transportista || '')
         setChoferModel(data.chofer || "")
-        setFechaModel(data.fecha? convertirFechaToYMD(data.fecha) : localISOString.split('T')[0])
+        setFechaModel(data.fecha? convertirFechaToYMD(data.fecha) : obtenerFechaLocal({date: new Date()}).split('T')[0])
         setCamionModel(data.camion || "")
         setCamionPesoModel(data.camionPeso || "")
         setVehiculoModel(data.vehiculo || "")
@@ -68,6 +67,25 @@ const TicketModel = ({ onShowModel, data }) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
+      if(idModel > 0) {
+        const ticket = await ticketUpdate({
+          ticketId: idModel,
+          ticketIngenio:ingenioModel,
+          ticketFecha: fechaModel, 
+          ticketViaje: viajeModel,
+          ticketTransportista:transportistaModel, 
+          ticketChofer: choferModel,
+          ticketCamion: camionModel,
+          ticketCamionPeso: camionPesoModel,
+          ticketVehiculo: vehiculoModel,
+          ticketVehiculoPeso: vehiculoPesoModel,
+          ticketUnidadPeso:unidadPesoModel,
+          ticketPesoBruto: pesoBrutoModel,
+          userModifiedAt: obtenerFechaLocal({date: new Date()}),
+          userModifiedName: "ADMIN" 
+        })
+        return retorna(ticket)
+      }
       const ticket = await ticketSave({
         ticketIngenio:ingenioModel,
         ticketFecha: fechaModel, 
@@ -80,11 +98,14 @@ const TicketModel = ({ onShowModel, data }) => {
         ticketVehiculoPeso: vehiculoPesoModel,
         ticketUnidadPeso:unidadPesoModel,
         ticketPesoBruto: pesoBrutoModel,
-        userCreatedAt: localISOString,
+        userCreatedAt: obtenerFechaLocal({date: new Date()}),
         userCreatedName: "ADMIN" 
       })
-      onShowModel({...ticket, fecha : new Date(ticket.fecha)})
+      return retorna(ticket)
     }
+  }
+  const retorna = (ticket) => {
+    return onShowModel({...ticket, fecha : new Date(ticket.fecha)})
   }
   const handleCancelar = (e) => {
     e.preventDefault()
@@ -152,7 +173,6 @@ const TicketModel = ({ onShowModel, data }) => {
                         name='query' placeholder='Ingrese el nombre'
                         value={choferModel}
                         onChange={(e) => setChoferModel(e.target.value)}
-                        readOnly={data.id > 0}
                     />
                   {errores.chofer && <p className="text-red-500 text-sm">{errores.chofer}</p>}
                 </div>

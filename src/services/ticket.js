@@ -81,6 +81,25 @@ export const ticketSave = async(ticket) => {
     throw new Error('Error al guardar la ticket')
   }
 }
+export const ticketUpdate = async(ticket) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(ticket)
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json()
+    return formatterticket(data)
+  } catch (error) {
+    console.log('ticketUpdate:', error.message)
+    throw new Error('Error al modificar la ticket')
+  }
+}
 
 const formatterticket = (data) => {
   return {
