@@ -82,3 +82,20 @@ export const TICKET_DATA = data_Ticket.map(item => ({
   vehiculoPeso: FormatteDecimal(item.vehiculoPeso, 3),
   pesoBruto: FormatteDecimal(item.pesoBruto, 3)
 }))
+
+const data_Corte = [
+  { id: 1, fecha: '30/10/2024', uc: 'CodUC007', precio:4, cantidadTicket:7, pesoBruto: 331.280, total:4, estado: 'Activo' },
+  
+]
+export const CORTE_DATA = data_Corte.map(item => ({
+  ...item,
+  fecha: convertirFecha(item.fecha),
+  precio: FormatteDecimal(item.precio, 2),
+  pesoBruto: FormatteDecimal(item.pesoBruto, 3),
+  total: FormatteDecimal(item.total, 2)
+}))
+export const CORTEEstado_DATA = [
+  { id: 1, descripcion: 'Activo',},
+  { id: 2, descripcion: 'Pagado',},
+  
+]
