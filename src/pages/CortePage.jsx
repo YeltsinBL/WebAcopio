@@ -6,13 +6,16 @@ import Main from '../components/common/Main'
 import CorteFilter from '../components/corte/CorteFilter'
 import { CORTE_DATA } from '../components/mocks/DataList'
 import CorteTable from '../components/corte/CorteTable'
+import CorteModel from '../components/corte/CorteModel'
 
 const CortePage = () => {
   const [corteList, setCorteList] = useState([])
+  const [showModel, setShowModel] = useState(false)
+  const [selectedRowData, setSelectedRowData] = useState(null)
     
   useEffect(() => {
     getCortes()
-  })
+  },[])
   const getCortes = async(filter) =>{
     const tickets = CORTE_DATA
     setCorteList(tickets || [])
@@ -26,17 +29,39 @@ const CortePage = () => {
     }
     return getCortes({uc, fechaDesde, fechaHasta, estado})
   }
-
+  const handleRowSelect = async(rowData) => {
+    setSelectedRowData(rowData)  
+    setShowModel(true)
+  }
+  const handleShowModel = (data) => {
+    if(data.id ==0) return setShowModel(false)
+    console.log('handleShowModel',data)
+    const existingIndex = corteList.findIndex((item) => item.id === data.id)
+    
+    console.log('handleShowModel',existingIndex)
+    if (existingIndex >= 0) {
+      const updatedList = [...corteList]
+      updatedList[existingIndex] = data
+      setCorteList(updatedList)
+    } else setCorteList([...corteList, data])
+    
+    setShowModel(false)
+  }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
         <Header title={'Corte'} />
         <Main>
-            <CorteFilter onFiltersValue={handleDataFromChild}/>
-            <CorteTable CORTE_DATA={corteList} />
-            <Footer>
-                <FooterButton name={'Nuevo'} accion={()=>{}} /> 
+          {!showModel ?
+            <>
+              <CorteFilter onFiltersValue={handleDataFromChild}/>
+              <CorteTable CORTE_DATA={corteList} />
+              <Footer>
+                <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
                 <FooterButton name={'Salir'} accion={()=>{}} /> 
-            </Footer>
+              </Footer>
+            </>:
+            <CorteModel onShowModel={handleShowModel} data={selectedRowData}/>
+          }
         </Main>
     </div>
   )

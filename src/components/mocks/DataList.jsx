@@ -78,7 +78,7 @@ const data_Ticket = [
 export const TICKET_DATA = data_Ticket.map(item => ({
   ...item,
   fecha: convertirFecha(item.fecha),
-  caminoPeso: FormatteDecimal(item.caminoPeso, 3),
+  camionPeso: FormatteDecimal(item.caminoPeso, 3),
   vehiculoPeso: FormatteDecimal(item.vehiculoPeso, 3),
   pesoBruto: FormatteDecimal(item.pesoBruto, 3)
 }))
