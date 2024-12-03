@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { searchTicketsEstado } from '../../services/ticket'
+import ComboBox from '../asignatierra/Combobox'
 
 const TicketFilter = ({onFiltersValue}) => {
   const [ingenioFilter, setIngenioFilter] = useState('')
@@ -7,11 +9,29 @@ const TicketFilter = ({onFiltersValue}) => {
   const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
   const [fechaHastaFilter, setFechaHastaFilter] = useState('')
   const [estadoFilter, setEstadoFilter] = useState('')
+  
+  const [ticketEstado, setTicketEstado] = useState([])
+
+  useEffect(() => {
+    getTicketEstados()
+  }, [])
+  const getTicketEstados = async() => {
+    const estados = await searchTicketsEstado()
+    const formatter= estados?.map(tipo =>({
+        id: tipo.ticketEstadoId,
+        uc:tipo.ticketEstadoDescripcion
+      }))
+    setTicketEstado(formatter)
+  }
+  const handleSelectionChange = (option) => {
+    setEstadoFilter(option)
+  };
 
   const handleSearch = (e) => {
     e.preventDefault()
     onFiltersValue({ingenio:ingenioFilter, transportista:transportistaFilter, viaje:viajeFilter, 
-        fechaDesde: fechaDesdeFilter, fechaHasta: fechaHastaFilter, estado:estadoFilter})
+        fechaDesde: fechaDesdeFilter, fechaHasta: fechaHastaFilter, 
+        estado:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter})
 }
   return (
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
@@ -59,11 +79,16 @@ const TicketFilter = ({onFiltersValue}) => {
                 </div>
                 <div className='flex flex-col gap-1 w-1/8'>
                     <label htmlFor="EstadoFilter" className="text-white">Estado</label>
-                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+                    <ComboBox  initialOptions={ticketEstado} disabled={false}
+                      onSelectionChange={handleSelectionChange}
+                      className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
+                      colorOptions={"text-black"}
+                    />
+                    {/* <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
                         name='query' placeholder='Selecciona un estado'
                         value={estadoFilter}
                         onChange={(e) => setEstadoFilter(e.target.value)}
-                    />
+                    /> */}
                 </div>
                 <button 
                     className="bg-[#313395] text-white active:bg-gray-700 hover:bg-gray-500 font-bold uppercase text-sm px-4 py-2 rounded-lg shadow hover:shadow-lg outline-none 

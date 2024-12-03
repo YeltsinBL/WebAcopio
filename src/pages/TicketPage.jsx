@@ -8,6 +8,7 @@ import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
 import TicketModel from '../components/ticket/TicketModel'
 import TicketModalDelete from '../components/ticket/TicketModalDelete'
+import { searchTickets } from '../services/ticket'
 
 const TicketPage = () => {
   const [listTicket, setListTicket] = useState([])
@@ -21,8 +22,9 @@ const TicketPage = () => {
   useEffect(() => {
     getTickets()
   }, [])
-  const getTickets = () => {
-    setListTicket(TICKET_DATA || [])
+  const getTickets = async(filter) => {
+    const tickets = await searchTickets(filter)
+    setListTicket(tickets|| TICKET_DATA || [])
   }
   const handleGoBack = () => {
     navigate('/')
@@ -32,22 +34,10 @@ const TicketPage = () => {
     const {
         ingenio, transportista, viaje, fechaDesde, fechaHasta, estado
     } = data
-    if(ingenio=='' & transportista=='' & viaje=='' & fechaDesde=='' & fechaHasta=='' & estado==''){
+    if(ingenio=='' && transportista=='' && viaje=='' && fechaDesde=='' && fechaHasta=='' && estado==''){
       return getTickets()
     }
-    const filtered = TICKET_DATA.filter((product) => {
-      const matchesIngenio = ingenio ? product.ingenio.toLowerCase().includes(ingenio.toLowerCase()) : true
-      const matchesTransportista = transportista ? product.transportista.toLowerCase().includes(transportista.toLowerCase()) : true
-      const matchesViaje = viaje ? product.viaje.toLowerCase().includes(viaje.toLowerCase()) : true
-      const matchesFechaDesde = fechaDesde ? product.fecha >= new Date(fechaDesde) : true
-      const matchesFechaHasta = fechaHasta ? product.fecha <= new Date(fechaHasta) : true
-      const matchesEstado = estado ? product.estado.toLowerCase().includes(estado.toLowerCase()) : true
-  
-      // Devuelve verdadero si el producto coincide con todos los filtros aplicados
-      return matchesIngenio && matchesTransportista && matchesViaje
-        && matchesFechaDesde && matchesFechaHasta && matchesEstado
-    })
-    setListTicket(filtered)
+    return getTickets({ingenio, transportista, viaje, fechaDesde, fechaHasta, estado})
   }
   // Obtener
   const handleRowSelect = async(rowData) => {

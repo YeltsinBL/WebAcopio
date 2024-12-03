@@ -11,7 +11,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
 	{TICKET_DATA ? (
 	  TICKET_DATA.map((ticket) => (
         <tr key={ticket.id} >
-          <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center '>
+          <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
               {ticket.id}
           </td>
           <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
