@@ -30,7 +30,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
               {ticket.camion}
           </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-              {ticket.caminoPeso}
+              {ticket.camionPeso}
           </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
               {ticket.vehiculo}

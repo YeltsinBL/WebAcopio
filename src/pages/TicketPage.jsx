@@ -8,7 +8,7 @@ import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
 import TicketModel from '../components/ticket/TicketModel'
 import TicketModalDelete from '../components/ticket/TicketModalDelete'
-import { searchTickets } from '../services/ticket'
+import { searchTickets, ticketGetById } from '../services/ticket'
 
 const TicketPage = () => {
   const [listTicket, setListTicket] = useState([])
@@ -41,7 +41,10 @@ const TicketPage = () => {
   }
   // Obtener
   const handleRowSelect = async(rowData) => {
-    setSelectedRowData(rowData)
+    if(rowData.id != null){
+      const ticket = await ticketGetById({id:rowData.id})
+      setSelectedRowData(ticket)
+    }else setSelectedRowData(rowData)  
     setShowModel(false)
   }
   // Guardar

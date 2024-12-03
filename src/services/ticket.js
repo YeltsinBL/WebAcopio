@@ -43,6 +43,24 @@ export const searchTicketsEstado = async() => {
     throw new Error('Error al buscar tickets disponibles')
   }
 }
+export const ticketGetById = async({id}) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json()
+    return formatterticket(data)
+  } catch (error) {
+    console.log('ticketGetById:', error.message)
+    throw new Error('Error al obtener la ticket')
+  }
+}
 
 const formatterticket = (data) => {
   return {
@@ -53,7 +71,7 @@ const formatterticket = (data) => {
     transportista :  data.ticketTransportista ,
     chofer : data.ticketChofer,
     camion : data.ticketCamion,
-    caminoPeso : data.ticketCamionPeso,
+    camionPeso : data.ticketCamionPeso,
     vehiculo : data.ticketVehiculo,
     vehiculoPeso : data.ticketVehiculoPeso,
     unidadPeso : data.ticketUnidadPeso,

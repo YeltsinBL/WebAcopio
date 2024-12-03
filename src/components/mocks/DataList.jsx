@@ -46,14 +46,6 @@ export const TIERRAASIGNADA_DATA = dataOriginal.map(item => ({
     fecha: convertirFecha(item.fecha) // Convertir DD/MM/YYYY a YYYY-MM-DD y luego a Date
   }));
 
-export const convertirFechaISOParaInput = (fechaISO) => {
-    const fecha = new Date(fechaISO); // Crear un objeto Date
-    const year = fecha.getFullYear();
-    const month = String(fecha.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
-    const day = String(fecha.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
 const dataCosecha = [
     { id: 1, fecha: '16/11/2024', uc: 'UC123', valle:'Chicama 1', sector: 'Molino Larco 1', ut: "UT123", supervisor: 'Jose Vigo', campo: 'Guayaquil 1', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: true },
     { id: 2, fecha: '01/11/2024', uc: 'UC456', valle:'Chicama 2', sector: 'Molino Larco 2', ut: "UT456", supervisor: 'Jose Vigo', campo: 'Guayaquil 2', has:2.00, sac:12.99, red: 0.39, humedad:67.66, cosecha:'Cosecha', activo: false },

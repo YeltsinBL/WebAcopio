@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
 import { localISOString } from '../mocks/DataList'
-import { FormatteDecimal } from '../common/FormatteData'
+import { convertirFechaToYMD, FormatteDecimal } from '../common/FormatteData'
 
 const TicketModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -27,7 +27,7 @@ const TicketModel = ({ onShowModel, data }) => {
         setViajeModel(data.viaje || '')
         setTransportistaModel(data.transportista || '')
         setChoferModel(data.chofer || "")
-        setFechaModel(data.fecha || localISOString.split('T')[0])
+        setFechaModel(convertirFechaToYMD(data.fecha) || localISOString.split('T')[0])
         setCamionModel(data.camion || "")
         setCamionPesoModel(data.camionPeso || "")
         setVehiculoModel(data.vehiculo || "")
