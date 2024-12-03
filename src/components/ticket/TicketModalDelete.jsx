@@ -2,11 +2,19 @@ import React from 'react'
 import ModalDelete from '../common/ModalDelete'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
+import { ticketDelete } from '../../services/ticket'
+import { obtenerFechaLocal } from '../common/FormatteData'
 
 const TicketModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async (e) => {
     e.preventDefault()
-    sendDataDismissModel(data)
+    const resp = await ticketDelete({
+      id:data,
+      userModifiedName: "ADMIN",
+      userModifiedAt: obtenerFechaLocal({date: new Date()})
+    })
+    if(resp) return sendDataDismissModel(data)
+    return sendDataDismissModel(0)
   }
   const handleCancelar = (e) => {
     e.preventDefault()

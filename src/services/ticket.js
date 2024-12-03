@@ -100,6 +100,24 @@ export const ticketUpdate = async(ticket) => {
     throw new Error('Error al modificar la ticket')
   }
 }
+export const ticketDelete = async(ticket) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticket)
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return true
+  } catch (error) {
+    console.log('ticketDelete:', error.message)
+    throw new Error('Error al eliminar la ticket')
+  }
+}
 
 const formatterticket = (data) => {
   return {
