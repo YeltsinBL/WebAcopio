@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { localISOString } from "../mocks/DataList"
 import { asignaTierraSave, asignaTierraUpdate } from "../../services/asignartierra"
 import { searchTierrasAvailable } from "../../services/tierra"
 import { searchProveedorAvailable } from "../../services/proveedor"
 import ComboBox from "./Combobox"
+import { obtenerFechaLocal } from "../common/FormatteData"
 
 const AsignaTierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -23,7 +23,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
       setId(data.id || 0);
       setUt(data.proveedorId || 0)
       setUC(data.tierraId || 0)
-      setFecha(data.fecha || localISOString.split('T')[0]);
+      setFecha(data.fecha || obtenerFechaLocal({date: new Date()}).split('T')[0]);
     }
   }, []);
   const fetchOptionsTierras = async () => {
@@ -70,7 +70,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
           asignarTierraTierraId: uc,
           asignarTierraFecha: fecha,
           userModifiedName: "ADMIN",
-          userModifiedAt: localISOString
+          userModifiedAt: obtenerFechaLocal({date: new Date()})
         })
         return retorna(asigna)
       }
@@ -79,7 +79,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
         asignarTierraTierraId: uc,
         asignarTierraFecha: fecha,
         userCreatedName: "ADMIN",
-        userCreatedAt: localISOString.split('T')[0]
+        userCreatedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
       })
       return retorna(asigna)
     }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { localISOString } from '../mocks/DataList'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import ComboBox from '../asignatierra/Combobox'
 import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../services/cosecha'
+import { obtenerFechaLocal } from '../common/FormatteData'
 
 const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -35,7 +35,7 @@ const CosechaModel = ({ onShowModel, data }) => {
       setIdModel(data.id || 0);
       setUCModel(data.tierraId || 0);
       setUTModel(seleccionProveedor);
-      setFechaModel(data.fecha || localISOString.split('T')[0])
+      setFechaModel(data.fecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
       setSupervisorModel(data.supervisor || "");
       setHasModel(data.has || "");
       setSacModel(data.sac || "");
@@ -114,7 +114,7 @@ const CosechaModel = ({ onShowModel, data }) => {
           cosechaHumedad: humedadModel,
           cosechaCosechaTipoId: cosechaModel,
           userModifiedName: "ADMIN",
-          userModifiedAt: localISOString.split('T')[0]
+          userModifiedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
        })
        return retorna(resp)
       }
@@ -129,7 +129,7 @@ const CosechaModel = ({ onShowModel, data }) => {
         cosechaTierraId: ucModel,
         cosechaProveedorId: utModel.proveedorId,
         userCreatedName: "ADMIN",
-        userCreatedAt: localISOString.split('T')[0]
+        userCreatedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
       })
       return retorna(resp)
     }

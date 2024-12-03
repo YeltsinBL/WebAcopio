@@ -1,5 +1,5 @@
 import { asignaTierraDelete } from "../../services/asignartierra"
-import { localISOString } from "../mocks/DataList"
+import { obtenerFechaLocal } from "../common/FormatteData"
 
 const AsignaTierraModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async(e) => {
@@ -7,7 +7,7 @@ const AsignaTierraModelDelete = ({onShowModel, data}) => {
         const asigna = await asignaTierraDelete({
           asignarTierraId:data,
           userModifiedName: "ADMIN",
-          userModifiedAt: localISOString
+          userModifiedAt: obtenerFechaLocal({date: new Date()})
         })
         if(asigna) return sendDataDismissModel(data)
         return sendDataDismissModel(0)

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { tierraSave, tierraUpdate } from "../../services/tierra"
-import { localISOString } from "../mocks/DataList"
+import { obtenerFechaLocal } from "../common/FormatteData"
 
 const TierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -48,7 +48,7 @@ const TierraModel = ({ onShowModel, data }) => {
           tierraHa: ha,
           tierraStatus: activo,
           userModifiedName: "ADMIN",
-          userModifiedAt: localISOString.split('T')[0]
+          userModifiedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
         })
         return onShowModel({id:tierra.id, uc:tierra.uc, campo:tierra.campo,
           sector:tierra.sector, valle:tierra.valle,
@@ -63,7 +63,7 @@ const TierraModel = ({ onShowModel, data }) => {
         tierraHa: ha,
         tierraStatus: activo,
         userCreatedName: "ADMIN",
-        userCreatedAt: localISOString.split('T')[0]
+        userCreatedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
       })
       return onShowModel({id:tierra.id, uc:tierra.uc, campo:tierra.campo,
         sector:tierra.sector, valle:tierra.valle,

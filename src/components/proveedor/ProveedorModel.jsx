@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { proveedorSave, proveedorUpdate } from "../../services/proveedor"
-import { localISOString } from "../mocks/DataList"
+import { obtenerFechaLocal } from "../common/FormatteData"
 
 const ProveedorModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -42,7 +42,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
         const proveedor = await proveedorUpdate({proveedorId:id, proveedorUT:ut, personDNI:dni,
           personName:nombre, personPaternalSurname:apePat,
           personMaternalSurname: apeMat, proveedorStatus:activo,
-          userModifiedName:"ADMIN", userModifiedAt:localISOString
+          userModifiedName:"ADMIN", userModifiedAt:obtenerFechaLocal({date: new Date()})
         })
         return onShowModel({id:proveedor.id, ut:ut, dni:dni,
           nombre:proveedor.nombre, activo:activo
@@ -51,7 +51,7 @@ const ProveedorModel = ({ onShowModel, data }) => {
       const proveedor = await proveedorSave({proveedorUT:ut, personDNI:dni,
         personName:nombre, personPaternalSurname:apePat,
         personMaternalSurname: apeMat, person_Type: 2, proveedorStatus:activo,
-        userCreatedName:"ADMIN", userCreatedAt:localISOString
+        userCreatedName:"ADMIN", userCreatedAt:obtenerFechaLocal({date: new Date()})
       })
       return onShowModel({id:proveedor.id, ut:ut, dni:dni,
         nombre:proveedor.nombre, activo:activo
