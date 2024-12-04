@@ -1,19 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import Table from '../common/Table'
 import { NoRegistros } from '../common/NoRegistros'
 import { TICKET_DATA } from '../mocks/DataList'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
+import CorteTicketPopupTable from './CorteTicketPopupTable'
 
 const CorteTicketPopup = ({onShowModel, headers}) => {
   const [ticketList, setTICKET_DATA] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
+
   useEffect(()=> {
     setTICKET_DATA(TICKET_DATA)
   }, [])
+  const handleCheckboxChange = (row) => {
+    const isSelected = selectedRows.some((selectedRow) => selectedRow.id === row.id)
+    if (isSelected) {
+      // Si ya está seleccionado, eliminar de selectedRows
+      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.id !== row.id);
+      setSelectedRows(updatedRows);
+    } else {
+      // Si no está seleccionado, lo agregamos
+      setSelectedRows([...selectedRows, row]);
+    }
+  }
+  const handleAgregar = (e) => {
+    e.preventDefault()
+    console.log(selectedRows)
+    onShowModel(selectedRows)
+  }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({ id: 100, ingenio:'Casa Grande',fecha: '01/12/2024', viaje: '508692', transportista:'Representante SHEFA', chofer: 'TERCERO',      camion: "PE-Z3S930", caminoPeso: 19.590, vehiculo: 'PE-Z3S930', vehiculoPeso: 31.860, unidadPeso:'Kg', pesoBruto: 51.450, estado: 'Activo' },
-    )
+    onShowModel([])
   }
   return (
     <>
@@ -30,65 +47,10 @@ const CorteTicketPopup = ({onShowModel, headers}) => {
             </h3>
           </div>
           {/*body*/}
-          <div className='pl-6 pr-6'>
-            <div className="overflow-auto max-h-[350px] rounded-xl">
-              <table className="w-auto table-auto md:w-full divide-y divide-gray-700 ">
-                <thead className="bg-gray-800  sticky top-0 z-10">
-                  <tr>
-                    { headers.map((header, index) => (
-                      <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
-                        {header}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className='bg-gray-800 divide-y divide-gray-700'>
-                  {ticketList ? (
-                    ticketList.map((ticket) => (
-                      <tr key={ticket.id} >
-                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
-                            {ticket.id}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.ingenio}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.viaje}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.fecha.toLocaleDateString('es-PE')}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.transportista}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.camion}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.camionPeso}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.vehiculo}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.vehiculoPeso}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.pesoBruto}
-                        </td>
-                        <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                            {ticket.estado}
-                        </td>
-                      </tr>
-                    ))
-                  ): ( <NoRegistros /> )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <CorteTicketPopupTable headers={headers} ticketList={ticketList} selectedRows={selectedRows} handleCheckboxChange={handleCheckboxChange} />
           {/*footer*/}
           <Footer>
-            <FooterButton name={'Guardar'} accion={handleCancelar}/>
+            <FooterButton name={'Agregar'} accion={handleAgregar}/>
             <FooterButton name={'Cancelar'} accion={handleCancelar}/>
           </Footer>
         </div>

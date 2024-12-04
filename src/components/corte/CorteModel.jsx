@@ -7,7 +7,6 @@ import ComboBox from '../asignatierra/Combobox'
 import { searchTierrasAvailable } from '../../services/tierra'
 import ButtonCustom from '../common/ButtonCustom'
 import CorteTicketPopup from './CorteTicketPopup'
-import { TICKET_DATA } from '../mocks/DataList'
 import { NoRegistros } from '../common/NoRegistros'
 import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../common/FormatteData'
 
@@ -26,10 +25,9 @@ const CorteModel = ({ onShowModel, data }) => {
   
   const [ucLista, setUcLista] = useState([])
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto', 'Estado']
+    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
 
   useEffect(()=> {
-    setTicketSelected(TICKET_DATA)
     getListUC()
   },[])
   useEffect(()=>{
@@ -44,7 +42,7 @@ const CorteModel = ({ onShowModel, data }) => {
       setSumaPesoBrutoModel(data.sumaPesoBruto || '')
       setTotalModel(data.total || '')
       setEstadoModel(data.estado || 'Activo')
-      setTicketSelected(data.tickets || TICKET_DATA)
+      setTicketSelected(data.tickets || [])
     }
   }, [data])
   useEffect(() => {
@@ -81,13 +79,18 @@ const CorteModel = ({ onShowModel, data }) => {
   
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
-  const handleSelectionChange = (option) => {
-    setUcModel(option)
-  }
-  const handleShowModel = (data) => {
-    setShowPopup(true)
-  }
+  const handleSelectionChange = (option) => setUcModel(option)
+  const handleShowModel = () => setShowPopup(true)
   const resspuestaShowModel = (data) => {
+    if(data.length > 0) {
+      if(ticketSelected.length > 0){
+        const mergedArray = [
+          ...ticketSelected,
+          ...data.filter((item2) => !ticketSelected.some((item1) => item1.id === item2.id)),
+        ]
+        setTicketSelected(mergedArray)
+      }else setTicketSelected(data)
+    }
     setShowPopup(false)
   }
   const handleGuardar = async(e) => {
@@ -218,9 +221,6 @@ const CorteModel = ({ onShowModel, data }) => {
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                     {ticket.pesoBruto}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.estado}
                 </td>
               </tr>
             ))
