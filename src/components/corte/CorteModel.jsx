@@ -9,6 +9,7 @@ import ButtonCustom from '../common/ButtonCustom'
 import CorteTicketPopup from './CorteTicketPopup'
 import { NoRegistros } from '../common/NoRegistros'
 import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../common/FormatteData'
+import { Trash2 } from 'lucide-react'
 
 const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -110,6 +111,9 @@ const CorteModel = ({ onShowModel, data }) => {
     e.preventDefault()
     onShowModel({id:0})
   }
+  const onRowDelete= (data)=>{
+    setTicketSelected(ticketSelected.filter(ticket => ticket.id !== data.id))
+  }
   return (
     <>
     <SectionModel title={(data.id > 0 ? 'Editar': 'Registrar') + ' Corte'}>
@@ -173,62 +177,71 @@ const CorteModel = ({ onShowModel, data }) => {
     </SectionModel>
     <div>
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
-	  <div className='grid grid-cols-1 md:flex justify-between items-center mb-6'>
-	  	<h2 className='pb-6 text-xl font-semibold text-gray-100 md:pb-0'>Lista de Tickets Seleccionados</h2>
+      <div className='grid grid-cols-1 md:flex justify-between items-center mb-6'>
+        <h2 className='pb-6 text-xl font-semibold text-gray-100 md:pb-0'>Lista de Tickets Seleccionados</h2>
         <ButtonCustom name={'Agregar'} onClick={handleShowModel}/>
       </div>
-	  <div className="overflow-auto max-h-[350px]">
-	  	<table className="table-auto w-full divide-y divide-gray-700">
-          <thead className="bg-gray-900  sticky top-0 z-10">
-            <tr>
-              { headers.map((header, index) => (
-                <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
-	  		        {header}
-	  		    </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className='divide-y divide-gray-700'>
-          {ticketSelected.length > 0 ? (
-            ticketSelected.map((ticket) => (
-              <tr key={ticket.id} >
-                <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
-                    {ticket.id}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.ingenio}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.viaje}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.fecha.toLocaleDateString('es-PE')}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.transportista}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.camion}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.camionPeso}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.vehiculo}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.vehiculoPeso}
-                </td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    {ticket.pesoBruto}
-                </td>
+      <div className="overflow-auto max-h-[350px]">
+        <table className="table-auto w-full divide-y divide-gray-700">
+            <thead className="bg-gray-900  sticky top-0 z-10">
+              <tr>
+                { headers.map((header, index) => (
+                  <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
+                    {header}
+                  </th>
+                ))}
+                <th className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}>
+                  Acción
+                </th>
               </tr>
-            ))
-          ): ( <NoRegistros colSpan={headers.length -1}/> )}
-          </tbody>
-	  	</table>
-	  </div>
-
+            </thead>
+            <tbody className='divide-y divide-gray-700'>
+            {ticketSelected.length > 0 ? (
+              ticketSelected.map((ticket) => (
+                <tr key={ticket.id} >
+                  <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
+                      {ticket.id}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.ingenio}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.viaje}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.fecha.toLocaleDateString('es-PE')}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.transportista}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.camion}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.camionPeso}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.vehiculo}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.vehiculoPeso}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.pesoBruto}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
+                    <button className='text-red-400 hover:text-red-300'
+                      onClick={()=>onRowDelete(ticket)}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ): ( <NoRegistros colSpan={headers.length -1}/> )}
+            </tbody>
+        </table>
+      </div>
       <div className='grid grid-cols-1 pt-6 md:grid-cols-2 lg:grid-cols-4 gap-4 '>  
         <div className='space-y-2'>
           <label htmlFor="PesoBrutoModel" className="text-white">Suma Peso Bruto</label>
@@ -255,7 +268,7 @@ const CorteModel = ({ onShowModel, data }) => {
           {errores.total && <p className="text-red-500 text-sm">{errores.total}</p>}
         </div>
       </div>
-	</div>
+	  </div>
     </div> 
 
     <Footer>
