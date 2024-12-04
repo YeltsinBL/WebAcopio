@@ -4,8 +4,8 @@ import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
 
 const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
-  const headers = ['ID', 'Fecha', 'UC', 'precio', 
-    'cantidadTicket ', 'pesoBruto', 'total ', 'Estado', 'Acciones']
+  const headers = ['ID', 'Fecha', 'UC', 'Precio', 
+    'Cant. Ticket ', 'Peso Bruto', 'total ', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Cortes'} headers={headers}> 
       {CORTE_DATA ? (
@@ -50,7 +50,7 @@ const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
               </td>
             </tr>
           ))
-      ):( <NoRegistros />)}
+      ):( <NoRegistros colSpan={headers.length -1} />)}
     </Table>
   )
 }

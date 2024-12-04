@@ -175,11 +175,11 @@ const CorteModel = ({ onShowModel, data }) => {
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 	  <div className='grid grid-cols-1 md:flex justify-between items-center mb-6'>
 	  	<h2 className='pb-6 text-xl font-semibold text-gray-100 md:pb-0'>Lista de Tickets Seleccionados</h2>
-        <ButtonCustom name={'Agegar'} onClick={handleShowModel}/>
+        <ButtonCustom name={'Agregar'} onClick={handleShowModel}/>
       </div>
 	  <div className="overflow-auto max-h-[350px]">
 	  	<table className="table-auto w-full divide-y divide-gray-700">
-          <thead className="bg-gray-800  sticky top-0 z-10">
+          <thead className="bg-gray-900  sticky top-0 z-10">
             <tr>
               { headers.map((header, index) => (
                 <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
@@ -188,8 +188,8 @@ const CorteModel = ({ onShowModel, data }) => {
               ))}
             </tr>
           </thead>
-          <tbody className='bg-gray-800 divide-y divide-gray-700'>
-          {ticketSelected ? (
+          <tbody className='divide-y divide-gray-700'>
+          {ticketSelected.length > 0 ? (
             ticketSelected.map((ticket) => (
               <tr key={ticket.id} >
                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
@@ -224,7 +224,7 @@ const CorteModel = ({ onShowModel, data }) => {
                 </td>
               </tr>
             ))
-          ): ( <NoRegistros /> )}
+          ): ( <NoRegistros colSpan={headers.length -1}/> )}
           </tbody>
 	  	</table>
 	  </div>

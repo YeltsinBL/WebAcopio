@@ -37,12 +37,12 @@ const CorteTicketPopup = ({onShowModel, headers}) => {
       <div
         className="justify-center items-center md:flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
-      <div className="relative w-auto my-6 mx-auto max-w-3xl">
+      <div className="relative w-auto my-6 mx-auto md:max-w-3xl lg:max-w-6xl">
         {/*content*/}
-        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-gray-800 outline-none focus:outline-none">
           {/*header*/}
           <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-            <h3 className="text-3xl font-bold text-[#313395]">
+            <h3 className="text-3xl font-bold text-gray-100">
               Lista de Tickets Activos
             </h3>
           </div>

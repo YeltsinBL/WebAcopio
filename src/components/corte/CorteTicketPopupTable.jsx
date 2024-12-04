@@ -4,30 +4,24 @@ import { NoRegistros } from '../common/NoRegistros'
 const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
   return (
     <div className='pl-6 pr-6'>
-      <div className="overflow-auto max-h-[350px] rounded-xl">
+      <div className="overflow-auto max-h-[350px] ">
         <table className="w-auto table-auto md:w-full divide-y divide-gray-700 ">
-          <thead className="bg-gray-800  sticky top-0 z-10">
+          <thead className="bg-gray-900  sticky top-0 z-10">
             <tr>
-              <th>
-                Seleccionar
-              </th>
               { headers.map((header, index) => (
                 <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
                   {header}
                 </th>
               ))}
+              <th className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}>
+                Seleccionar
+              </th>
             </tr>
           </thead>
-          <tbody className='bg-gray-800 divide-y divide-gray-700'>
+          <tbody className='divide-y divide-gray-700'>
             {ticketList ? (
               ticketList.map((ticket) => (
                 <tr key={ticket.id} >
-                  <td>
-                    <input
-                    type="checkbox"
-                    onChange={() => handleCheckboxChange(ticket)}
-                    />
-                  </td>
                   <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
                       {ticket.id}
                   </td>
@@ -58,9 +52,15 @@ const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                       {ticket.pesoBruto}
                   </td>
+                  <td className=' px-14 py-4 whitespace-nowrap text-sm text-gray-300'>
+                    <input
+                    type="checkbox"
+                    onChange={() => handleCheckboxChange(ticket)}
+                    />
+                  </td>
                 </tr>
               ))
-            ): ( <NoRegistros /> )}
+            ): ( <NoRegistros colSpan={headers.length} /> )}
           </tbody>
         </table>
       </div>

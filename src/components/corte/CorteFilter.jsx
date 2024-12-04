@@ -60,7 +60,7 @@ const CorteFilter = ({onFiltersValue}) => {
         placeholder={'Ejm: 20/11/2024'} value={fechaDesdeFilter} onChange={setFechaDesdeFilter}/>
       <FilterOption htmlFor={'FechaHastaFilter'} name={'Fecha Hasta'} type={'date'}
         placeholder={'Ejm: 20/11/2024'} value={fechaHastaFilter} onChange={setFechaHastaFilter}/>
-      <FilterOption htmlFor={'UCFilter'} name={'UC'} >
+      <FilterOption htmlFor={'EstadoFilter'} name={'Estado'} >
         <ComboBox  initialOptions={estadoLista} disabled={false}
           onSelectionChange={handleSelectionChangeEstado}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}

@@ -59,7 +59,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
           </td>
         </tr>
 	  ))
-    ): ( <NoRegistros /> )}
+    ): ( <NoRegistros colSpan={headers.length -1}/> )}
   </Table>
 	)
 }

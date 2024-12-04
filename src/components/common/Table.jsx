@@ -6,7 +6,7 @@ const Table = ({nameTitle, headers, children }) => {
 	  <div className='flex justify-between items-center mb-6'>
 	  	<h2 className='text-xl font-semibold text-gray-100'>{nameTitle}</h2>
 	  </div>
-	  <div className="overflow-auto max-h-[350px]">
+	  <div className="overflow-auto h-[350px]">
 	  	<table className="table-auto w-full divide-y divide-gray-700">
           <thead className="bg-gray-800  sticky top-0 z-10">
             <tr>
