@@ -3,7 +3,7 @@ import Table from '../common/Table'
 import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
 
-const CorteTable = ({CORTE_DATA}) => {
+const CorteTable = ({CORTE_DATA, onRowSelect}) => {
   const headers = ['ID', 'Fecha', 'UC', 'precio', 
     'cantidadTicket ', 'pesoBruto', 'total ', 'Estado', 'Acciones']
   return (
@@ -38,7 +38,7 @@ const CorteTable = ({CORTE_DATA}) => {
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
                 <button
                   className="text-blue-500 hover:text-blue-700 px-3"
-                  onClick={() =>{}}
+                  onClick={()=>onRowSelect(corte)}
                 >
                   <Edit size={18} />
                 </button>

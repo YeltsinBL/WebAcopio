@@ -38,17 +38,16 @@ const CortePage = () => {
     setShowModel(true)
   }
   const handleShowModel = (data) => {
-    if(data.id ==0) return setShowModel(false)
     console.log('handleShowModel',data)
-    const existingIndex = corteList.findIndex((item) => item.id === data.id)
-    
-    console.log('handleShowModel',existingIndex)
-    if (existingIndex >= 0) {
-      const updatedList = [...corteList]
-      updatedList[existingIndex] = data
-      setCorteList(updatedList)
-    } else setCorteList([...corteList, data])
-    
+    if(data.id > 0){
+      const existingIndex = corteList.findIndex((item) => item.id === data.id)    
+      console.log('handleShowModel',existingIndex)
+      if (existingIndex >= 0) {
+        const updatedList = [...corteList]
+        updatedList[existingIndex] = data
+        setCorteList(updatedList)
+      } else setCorteList([...corteList, data])      
+    }
     setShowModel(false)
   }
   return (
@@ -58,7 +57,7 @@ const CortePage = () => {
           {!showModel ?
             <>
               <CorteFilter onFiltersValue={handleDataFromChild}/>
-              <CorteTable CORTE_DATA={corteList} />
+              <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect}/>
               <Footer>
                 <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
                 <FooterButton name={'Salir'} accion={handleGoBack} /> 
