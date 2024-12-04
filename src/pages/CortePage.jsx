@@ -8,12 +8,15 @@ import { CORTE_DATA } from '../components/mocks/DataList'
 import CorteTable from '../components/corte/CorteTable'
 import CorteModel from '../components/corte/CorteModel'
 import { useNavigate } from 'react-router-dom'
+import CorteModelDelete from '../components/corte/CorteModelDelete'
 
 const CortePage = () => {
   const navigate = useNavigate()
   const [corteList, setCorteList] = useState([])
   const [showModel, setShowModel] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
+  const [showModelDelete, setShowModelDelete] = useState(false)
+  const [idModelDelete, setIdModelDelete] = useState(false)
   const handleGoBack = () => {
     navigate('/')
   }
@@ -50,6 +53,14 @@ const CortePage = () => {
     }
     setShowModel(false)
   }
+  const handleRowDelete = (id) =>{
+    setIdModelDelete(id)
+    setShowModelDelete(true)
+  }
+  const handleShowModelDelete = (data) =>{
+    if(data.id > 0) setCorteList(corteList.filter(corte => corte.id !== data.id))
+    setShowModelDelete(false)
+  }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
         <Header title={'Corte'} />
@@ -57,7 +68,7 @@ const CortePage = () => {
           {!showModel ?
             <>
               <CorteFilter onFiltersValue={handleDataFromChild}/>
-              <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect}/>
+              <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete} />
               <Footer>
                 <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
                 <FooterButton name={'Salir'} accion={handleGoBack} /> 
@@ -65,6 +76,7 @@ const CortePage = () => {
             </>:
             <CorteModel onShowModel={handleShowModel} data={selectedRowData}/>
           }
+          {showModelDelete ? <CorteModelDelete onShowModel={handleShowModelDelete} data={idModelDelete} /> :'' }
         </Main>
     </div>
   )
