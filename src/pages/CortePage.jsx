@@ -7,12 +7,16 @@ import CorteFilter from '../components/corte/CorteFilter'
 import { CORTE_DATA } from '../components/mocks/DataList'
 import CorteTable from '../components/corte/CorteTable'
 import CorteModel from '../components/corte/CorteModel'
+import { useNavigate } from 'react-router-dom'
 
 const CortePage = () => {
+  const navigate = useNavigate()
   const [corteList, setCorteList] = useState([])
   const [showModel, setShowModel] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
-    
+  const handleGoBack = () => {
+    navigate('/')
+  }
   useEffect(() => {
     getCortes()
   },[])
@@ -57,7 +61,7 @@ const CortePage = () => {
               <CorteTable CORTE_DATA={corteList} />
               <Footer>
                 <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
-                <FooterButton name={'Salir'} accion={()=>{}} /> 
+                <FooterButton name={'Salir'} accion={handleGoBack} /> 
               </Footer>
             </>:
             <CorteModel onShowModel={handleShowModel} data={selectedRowData}/>
