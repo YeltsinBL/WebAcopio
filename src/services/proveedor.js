@@ -34,7 +34,7 @@ export const searchProveedor = async({search}) => {
 }
 export const searchProveedorAvailable = async() => {
   try {
-    const response = await fetch(`${appSetting.apiUrl}Proveedor/Available`, {
+    const response = await fetch(`${appSetting.apiUrl}Proveedor/Asignar/Available`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

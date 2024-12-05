@@ -36,7 +36,7 @@ export const searchTierras = async({search}) => {
   }
 export const searchTierrasAvailable = async() => {
   try {
-    const response = await fetch(`${appSetting.apiUrl}Tierra/Available`, {
+    const response = await fetch(`${appSetting.apiUrl}Tierra/Asignar/Available`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
