@@ -74,7 +74,7 @@ const CorteModel = ({ onShowModel, data }) => {
     if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo FECHA es obligatorio."
     if (!precioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
-    if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA es obligatorio."
+    if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA PESO BRUTO es obligatorio."
     if (!totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
   
     setErrores(nuevosErrores)
@@ -120,9 +120,9 @@ const CorteModel = ({ onShowModel, data }) => {
   }
   return (
     <>
-    <SectionModel title={(data.id > 0 ? 'Editar': 'Registrar') + ' Corte'}>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 '>
-        <div className='space-y-2 '>
+    <SectionModel title={(data.id > 0 ? 'Información del': 'Registrar') + ' Corte'}>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3'>
+        <div className='space-y-2 hidden'>
           <label htmlFor="IdModel" className="text-white ">ID</label>
           <input type='text' className={`bg-transparent  focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
             errores.id ? "border-red-500" : "" 
@@ -130,7 +130,6 @@ const CorteModel = ({ onShowModel, data }) => {
             name='query' placeholder='Automático'
             value={idModel}
             onChange={(e) => setIdModel(e.target.value)}
-            //readOnly={data.id > 0}
           />
         </div>
         <div className='space-y-2'>
@@ -141,10 +140,23 @@ const CorteModel = ({ onShowModel, data }) => {
             name='query' placeholder='Ejm: 20/11/2024'
             value={fechaModel}
             onChange={(e) => setFechaModel(e.target.value)}
+            readOnly={data.id > 0}
           />
           {errores.fecha && <p className="text-red-500 text-sm">{errores.fecha}</p>}
         </div>           
         <FilterOption htmlFor={'UCFilter'} name={'UC'} >
+          {data.id > 0 ?
+            (
+            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                errores.uc ? "border-red-500" : ""
+              }`}
+              name='query' 
+              value={ucModel}
+              readOnly
+            />
+            ):
+            (
+              <>
           <ComboBox  initialOptions={ucLista} selectedOption={seleccionTierra} 
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
@@ -153,6 +165,9 @@ const CorteModel = ({ onShowModel, data }) => {
             colorOptions={"text-black"}
           />
           {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
+              </>
+            )
+          }
         </FilterOption>
         <div className='space-y-2'>
           <label htmlFor="PrecioModel" className="text-white">Precio</label>
@@ -162,6 +177,7 @@ const CorteModel = ({ onShowModel, data }) => {
             name='query' placeholder='Ejm: 85.60'
             value={precioModel}
             onChange={(e) => setPrecioModel(e.target.value)}
+            readOnly={data.id > 0}
           />
           {errores.precio && <p className="text-red-500 text-sm">{errores.precio}</p>}
         </div>        
@@ -183,7 +199,7 @@ const CorteModel = ({ onShowModel, data }) => {
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
       <div className='grid grid-cols-1 md:flex justify-between items-center mb-6'>
         <h2 className='pb-6 text-xl font-semibold text-gray-100 md:pb-0'>Lista de Tickets Seleccionados</h2>
-        <ButtonCustom name={'Agregar'} onClick={handleShowModel}/>
+        <ButtonCustom name={'Agregar'} onClick={handleShowModel} extraClassName={data.id > 0 ? 'hidden' : ''}/>
       </div>
       <div className="overflow-auto max-h-[350px]">
         <table className="table-auto w-full divide-y divide-gray-700">
@@ -194,9 +210,11 @@ const CorteModel = ({ onShowModel, data }) => {
                     {header}
                   </th>
                 ))}
+                {data.id > 0 ?(''):(                    
                 <th className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}>
                   Acción
                 </th>
+                )}
               </tr>
             </thead>
             <tbody className='divide-y divide-gray-700'>
@@ -233,6 +251,7 @@ const CorteModel = ({ onShowModel, data }) => {
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                       {ticket.pesoBruto}
                   </td>
+                  {data.id > 0 ?(''):(
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
                     <button className='text-red-400 hover:text-red-300'
                       onClick={()=>onRowDelete(ticket)}
@@ -240,6 +259,7 @@ const CorteModel = ({ onShowModel, data }) => {
                       <Trash2 size={18} />
                     </button>
                   </td>
+                  )}                  
                 </tr>
               ))
             ): ( <NoRegistros colSpan={headers.length -1}/> )}
@@ -250,7 +270,7 @@ const CorteModel = ({ onShowModel, data }) => {
         <div className='space-y-2'>
           <label htmlFor="PesoBrutoModel" className="text-white">Suma Peso Bruto</label>
           <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.pesoBruto ? "border-red-500" : ""
+              errores.suma ? "border-red-500" : ""
             }`}
             name='query' placeholder='Automático'
             value={sumaPesoBrutoModel}
@@ -276,7 +296,10 @@ const CorteModel = ({ onShowModel, data }) => {
     </div> 
 
     <Footer>
-      <FooterButton accion={handleGuardar} name={"Guardar"}/>
+      {
+        data.id > 0 ?
+        (''):( <FooterButton accion={handleGuardar} name={"Guardar"}/> )
+      }
       <FooterButton accion={handleCancelar} name={"Cancelar"}/>
     </Footer>
     {showPopup ? <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers}/>    : ''}

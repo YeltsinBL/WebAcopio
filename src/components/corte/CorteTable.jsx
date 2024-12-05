@@ -42,11 +42,11 @@ const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
                 >
                   <Edit size={18} />
                 </button>
-                <button className='text-red-400 hover:text-red-300'
+                {/* <button className='text-red-400 hover:text-red-300'
                   onClick={() => onRowDelete(corte.id)}
                 >
                   <Trash2 size={18} />
-                </button>
+                </button> */}
               </td>
             </tr>
           ))

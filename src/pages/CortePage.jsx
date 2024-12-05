@@ -30,12 +30,12 @@ const CortePage = () => {
   }
   const handleDataFromChild = (data) => {
     const {
-        uc, fechaDesde, fechaHasta, estado
+      tierraId, fechaDesde, fechaHasta, estadoId
     } = data
-    if(uc=='' && fechaDesde=='' && fechaHasta=='' && estado==''){
+    if(tierraId=='' && fechaDesde=='' && fechaHasta=='' && estadoId==''){
       return getCortes()
     }
-    return getCortes({uc, fechaDesde, fechaHasta, estado})
+    return getCortes({tierraId, fechaDesde, fechaHasta, estadoId})
   }
   const handleRowSelect = async(rowData) => {
     if(rowData.id != null){

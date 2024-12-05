@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import SectionFilter from '../common/SectionFilter'
 import FilterOption from '../common/FilterOption'
 import ButtonCustom from '../common/ButtonCustom'
-import { searchTierrasAvailable } from '../../services/tierra'
 import ComboBox from '../asignatierra/Combobox'
-import { CORTEEstado_DATA } from '../mocks/DataList'
 import { searchCorteEstados } from '../../services/corte'
+import { searchAsignaTierra } from '../../services/asignartierra'
 
 const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')
@@ -20,9 +19,9 @@ const CorteFilter = ({onFiltersValue}) => {
     getListCombos()
   },[])
   const getListCombos = async() => {
-    const ucs = await searchTierrasAvailable()
+    const ucs = await searchAsignaTierra({})
     const formatter= ucs?.map(tipo =>({
-        id: tipo.id,
+        id: tipo.tierraId,
         uc:tipo.uc
       }))
     setUcLista(formatter)
@@ -43,9 +42,9 @@ const CorteFilter = ({onFiltersValue}) => {
   const handleSearch = (e) => {
     e.preventDefault()
     onFiltersValue({
-        uc:(ucFilter==''|| isNaN(ucFilter))?'':ucFilter, 
+      tierraId:(ucFilter==''|| isNaN(ucFilter))?'':ucFilter, 
         fechaDesde:fechaDesdeFilter, fechaHasta:fechaHastaFilter, 
-        estado:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter}
+        estadoId:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter}
     )
   }
   return (
