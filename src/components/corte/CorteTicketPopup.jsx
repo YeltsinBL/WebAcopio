@@ -4,14 +4,22 @@ import { TICKET_DATA } from '../mocks/DataList'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
 import CorteTicketPopupTable from './CorteTicketPopupTable'
+import { searchTickets } from '../../services/ticket'
 
 const CorteTicketPopup = ({onShowModel, headers}) => {
   const [ticketList, setTICKET_DATA] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
 
   useEffect(()=> {
-    setTICKET_DATA(TICKET_DATA)
+    getTicketActive()
   }, [])
+  const getTicketActive = async() => {
+    const tickets = await searchTickets(
+      {ingenio:'', transportista:'', viaje:'', fechaDesde:'', fechaHasta:'',estado:1}
+    )
+    setTICKET_DATA(tickets)
+  }
+
   const handleCheckboxChange = (row) => {
     const isSelected = selectedRows.some((selectedRow) => selectedRow.id === row.id)
     if (isSelected) {
@@ -25,7 +33,6 @@ const CorteTicketPopup = ({onShowModel, headers}) => {
   }
   const handleAgregar = (e) => {
     e.preventDefault()
-    console.log(selectedRows)
     onShowModel(selectedRows)
   }
   const handleCancelar = (e) => {

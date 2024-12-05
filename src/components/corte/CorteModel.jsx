@@ -10,6 +10,7 @@ import CorteTicketPopup from './CorteTicketPopup'
 import { NoRegistros } from '../common/NoRegistros'
 import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../common/FormatteData'
 import { Trash2 } from 'lucide-react'
+import { corteSave } from '../../services/corte'
 
 const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -23,7 +24,7 @@ const CorteModel = ({ onShowModel, data }) => {
   const [errores, setErrores] = useState({})
   const [showPopup, setShowPopup] = useState(false)
 
-  
+  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
   const [ucLista, setUcLista] = useState([])
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
@@ -48,7 +49,7 @@ const CorteModel = ({ onShowModel, data }) => {
   }, [data])
   useEffect(() => {
     const total = ticketSelected.reduce(getSum, 0)
-    if(total>0) return setSumaPesoBrutoModel(FormatteDecimal(total,2))
+    if(total>0) return setSumaPesoBrutoModel(FormatteDecimal(total,3))
     return setSumaPesoBrutoModel('')
   }, [ticketSelected])
   useEffect(()=>{
@@ -97,14 +98,17 @@ const CorteModel = ({ onShowModel, data }) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
-      console.log({
-        idModel, ucModel, fechaModel, precioModel, sumaPesoBrutoModel, totalModel, ticketSelected
+      const corte = await corteSave({
+        corteFecha: fechaModel,
+        tierraId: ucModel,
+        cortePrecio: precioModel,
+        cortePesoBrutoTotal: sumaPesoBrutoModel,
+        corteTotal: totalModel,
+        userCreatedName: 'ADMIN',
+        userCreatedAt: obtenerFechaLocal({date: new Date()}),
+        corteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.id}))
       })
-      onShowModel({
-        id: idModel, uc: ucModel, fecha: new Date(`${fechaModel}T00:00:00`) , 
-        precio: precioModel, pesoBruto: sumaPesoBrutoModel, total: totalModel, 
-        cantidadTicket: ticketSelected.length, estado: 'Activo'
-      })
+      onShowModel(corte)
     }
   }
   const handleCancelar = (e) => {
@@ -141,7 +145,7 @@ const CorteModel = ({ onShowModel, data }) => {
           {errores.fecha && <p className="text-red-500 text-sm">{errores.fecha}</p>}
         </div>           
         <FilterOption htmlFor={'UCFilter'} name={'UC'} >
-          <ComboBox  initialOptions={ucLista}
+          <ComboBox  initialOptions={ucLista} selectedOption={seleccionTierra} 
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.uc ? "border-red-500" : ""

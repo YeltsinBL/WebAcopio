@@ -5,6 +5,7 @@ import ButtonCustom from '../common/ButtonCustom'
 import { searchTierrasAvailable } from '../../services/tierra'
 import ComboBox from '../asignatierra/Combobox'
 import { CORTEEstado_DATA } from '../mocks/DataList'
+import { searchCorteEstados } from '../../services/corte'
 
 const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')
@@ -16,9 +17,9 @@ const CorteFilter = ({onFiltersValue}) => {
   const [estadoLista, setEstadoLista] = useState([])
 
   useEffect(()=> {
-    getListUC()
-  })
-  const getListUC = async() => {
+    getListCombos()
+  },[])
+  const getListCombos = async() => {
     const ucs = await searchTierrasAvailable()
     const formatter= ucs?.map(tipo =>({
         id: tipo.id,
@@ -26,10 +27,10 @@ const CorteFilter = ({onFiltersValue}) => {
       }))
     setUcLista(formatter)
 
-    const estados = CORTEEstado_DATA
+    const estados = await searchCorteEstados()
     const formatterEstados= estados?.map(tipo =>({
-        id: tipo.id,
-        uc:tipo.descripcion
+      id: tipo.corteTipoId,
+      uc:tipo.corteDescripcion
     }))
     setEstadoLista(formatterEstados)
   }

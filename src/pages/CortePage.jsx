@@ -9,6 +9,7 @@ import CorteTable from '../components/corte/CorteTable'
 import CorteModel from '../components/corte/CorteModel'
 import { useNavigate } from 'react-router-dom'
 import CorteModelDelete from '../components/corte/CorteModelDelete'
+import { corteGetById, searchCortes } from '../services/corte'
 
 const CortePage = () => {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ const CortePage = () => {
     getCortes()
   },[])
   const getCortes = async(filter) =>{
-    const tickets = CORTE_DATA
+    const tickets = await searchCortes(filter)
     setCorteList(tickets || [])
   }
   const handleDataFromChild = (data) => {
@@ -37,14 +38,15 @@ const CortePage = () => {
     return getCortes({uc, fechaDesde, fechaHasta, estado})
   }
   const handleRowSelect = async(rowData) => {
-    setSelectedRowData(rowData)  
+    if(rowData.id != null){
+      const resp = await corteGetById({id: rowData.id})
+      setSelectedRowData(resp)
+    }else setSelectedRowData(rowData)  
     setShowModel(true)
   }
   const handleShowModel = (data) => {
-    console.log('handleShowModel',data)
     if(data.id > 0){
-      const existingIndex = corteList.findIndex((item) => item.id === data.id)    
-      console.log('handleShowModel',existingIndex)
+      const existingIndex = corteList.findIndex((item) => item.id === data.id)
       if (existingIndex >= 0) {
         const updatedList = [...corteList]
         updatedList[existingIndex] = data
