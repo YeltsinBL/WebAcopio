@@ -33,6 +33,12 @@ export const SIDEBAR_ITEMS = [
       icon: AlignHorizontalDistributeCenter, 
       color: "#6366f1" 
     },
+    { 
+      name: "Carguillo", 
+      href: "/carguillo", 
+      icon: AlignHorizontalDistributeCenter, 
+      color: "#6366f1" 
+    },
     // { 
     //   name: "Reportes", 
     //   href: "/reports", 

@@ -7,6 +7,7 @@ import CosechaPage from "./pages/CosechaPage"
 import Sidebar from "./components/Sidebar"
 import TicketPage from "./pages/TicketPage"
 import CortePage from "./pages/CortePage"
+import CarguilloPage from "./pages/CarguilloPage"
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='/cosecha' element={<CosechaPage />} />
         <Route path='/ticket' element={<TicketPage />} />
         <Route path='/corte' element={<CortePage />} />
+        <Route path='/carguillo' element={<CarguilloPage />} />
       </Routes>
     </div>
   )

@@ -99,3 +99,12 @@ export const CORTEEstado_DATA = [
   { id: 2, descripcion: 'Pagado',},
   
 ]
+export const CARGUILLO_DATA = [
+  { "carguilloId": 1,"carguilloTitular": "Representante SHEFA","carguilloTipoDescripcion": "Transportista","carguilloEstado": true},
+  { "carguilloId": 2,"carguilloTitular": "Titular Pala 1","carguilloTipoDescripcion": "Pala","carguilloEstado": true},
+  { "carguilloId": 3,"carguilloTitular": "string","carguilloTipoDescripcion": "Transportista","carguilloEstado": true},
+  { "carguilloId": 4,"carguilloTitular": "string Pala Swagger","carguilloTipoDescripcion": "Transportista","carguilloEstado": true},
+  { "carguilloId": 5,"carguilloTitular": "string Prueba","carguilloTipoDescripcion": "Transportista","carguilloEstado": true},
+  { "carguilloId": 6,"carguilloTitular": "Update Transportista","carguilloTipoDescripcion": "Transportista","carguilloEstado": true},
+  { "carguilloId": 7,"carguilloTitular": "Update","carguilloTipoDescripcion": "Pala","carguilloEstado": true}
+]
