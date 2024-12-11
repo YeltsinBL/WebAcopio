@@ -22,6 +22,8 @@ const CarguilloModel = ({ onShowModel, data }) => {
   const [carguilloTipoList, setCarguilloTipoList] = useState([])
   const [carguilloTipoTransporteList, setCarguilloTipoTransporteList] = useState([])
   const [placasList, setPlacasList] = useState([])
+  const TIPO_TRANSPORTISTA = 2
+  const [isRequiredPlaca, setIsRequiredPlaca] = useState(false)
 
   useEffect(()=>{
     getCarguilloTipo()
@@ -51,7 +53,11 @@ const CarguilloModel = ({ onShowModel, data }) => {
     }))
     setCarguilloTipoTransporteList(formatter)
   }
-  const handleSelectionChange = (option) => setTipoId(option)
+  const handleSelectionChange = (option) => {
+    setTipoId(option)
+    if(option==TIPO_TRANSPORTISTA) setIsRequiredPlaca(true)
+    else setIsRequiredPlaca(false)
+  }
   const validarCampos = (isPlaca= false) => {
     const nuevosErrores = {}
     if (!titular) nuevosErrores.titular = "El campo TITULAR es obligatorio."
@@ -60,12 +66,21 @@ const CarguilloModel = ({ onShowModel, data }) => {
       if(!tipoTransporteId) nuevosErrores.tipoTransporteId = 'Seleccione un TRANSPORTE antes de agregar.'
       if(!placa) nuevosErrores.placa = 'Ingrese una PLACA antes de agregar.'
     }
+    if (!isPlaca && !verificarCantidadTipoTransporte(placasList)) 
+      nuevosErrores.isRequiredPlaca = "Agregue al menos una placa para cada Tipo de transporte"
     setErrores(nuevosErrores)  
     return Object.keys(nuevosErrores).length === 0
   }  
   const handleSelectionTipoTransporteChange = (option) => {
     setTipoTransporteId(option)
   }
+  const verificarCantidadTipoTransporte = (array) => {
+    if (isRequiredPlaca){
+      const uniqueTypes = new Set(array.map(item => item.carguilloTipoId));
+      return uniqueTypes.size >= 2;
+    }
+    return true
+  };
   const handleAgregarPlaca = (e) => {
     e.preventDefault()
     if (validarCampos(true)) {
@@ -252,6 +267,7 @@ const CarguilloModel = ({ onShowModel, data }) => {
             ):(<NoRegistros colSpan={4} />)}
           </tbody>
         </table>
+        {errores.isRequiredPlaca && <p className="text-red-500 text-sm">{errores.isRequiredPlaca}</p>}
       </div>
 	</div>
 
