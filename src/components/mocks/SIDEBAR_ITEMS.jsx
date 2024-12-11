@@ -1,4 +1,4 @@
-import { AlignHorizontalDistributeCenter, BarChart2, Home, MapIcon, RadarIcon, TicketCheck, Users, Waves } from "lucide-react"
+import { AlignHorizontalDistributeCenter, BarChart2, Bus, Home, MapIcon, RadarIcon, TicketCheck, Users } from "lucide-react"
 export const SIDEBAR_ITEMS = [
     {
         name:"Principal", icon:Home, color:"#6366f1", href:"/"
@@ -22,6 +22,12 @@ export const SIDEBAR_ITEMS = [
         name:"Cosecha", icon:BarChart2, color:"#6366f1", href:"/cosecha"
     },
     { 
+      name: "Carguillo", 
+      href: "/carguillo", 
+      icon: Bus, 
+      color: "#6366f1" 
+    },
+    { 
       name: "Ticket", 
       href: "/ticket", 
       icon: TicketCheck, 
@@ -30,12 +36,6 @@ export const SIDEBAR_ITEMS = [
     { 
       name: "Corte", 
       href: "/corte", 
-      icon: AlignHorizontalDistributeCenter, 
-      color: "#6366f1" 
-    },
-    { 
-      name: "Carguillo", 
-      href: "/carguillo", 
       icon: AlignHorizontalDistributeCenter, 
       color: "#6366f1" 
     },
