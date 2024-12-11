@@ -21,7 +21,7 @@ export const searchCarguilloList = async(filters) =>{
   try {
     let url=`${appSetting.apiUrl}Carguillo`
     if(filters != null)
-        url += `?tipoCarguilloId=${filters.tipoCarguilloId}&titular=${filters.titular}&estado=${filters.estado== 2 ? 0 : filters.estado}`
+      url += `?tipoCarguilloId=${filters.tipoCarguilloId}&titular=${filters.titular}&estado=${filters.estado== 2 ? false : filters.estado== 1 ? true : ''}`
     const response = await fetch(url, {
         method: 'GET',
         headers:{'Content-Type': 'application/json'}
@@ -42,7 +42,21 @@ export const getCarguillobyId = async(id) =>{
     if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
-    
+    console.log('getCarguillobyId:', error.message)
+    throw new Error('Error al buscar el carguillo')
+  }
+}
+export const getCarguilloPlacasList = async(carguilloId,carguilloTipoId)=>{
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Carguillo/${carguilloId}/Tipo/${carguilloTipoId}`,{
+      method:'GET',
+      headers:{'Content-Type': 'application/json'}
+    })
+    if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    return await response.json()
+  } catch (error) {
+    console.log('getCarguilloPlacasList:', error.message)
+    throw new Error('Error al buscar las placas del carguillo')
   }
 }
 export const saveCarguillo = async(method,carguillo) => {
