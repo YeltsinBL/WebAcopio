@@ -88,15 +88,12 @@ const formattercorte = (corte) => {
 
 const formatterCorteById = (corte) => {
   const formatter= corte.corteDetail?.map(ticket => (formatterticket(ticket)))
-  return {
-    id : corte.corteId,
-    fecha : new Date(corte.corteFecha),
-    tierraId: corte.tierraId,
-    uc : corte.tierraUC,
-    precio : FormatteDecimal(corte.cortePrecio,2),
-    pesoBruto : FormatteDecimal(corte.cortePesoBrutoTotal,3),
-    total : FormatteDecimal(corte.corteTotal,2) ,
-    estado : corte.corteEstadoDescripcion,
+  return {...corte,
+    corteFecha          : new Date(corte.corteFecha),
+    cortePrecio         : FormatteDecimal(corte.cortePrecio,2),
+    cortePesoBrutoTotal : FormatteDecimal(corte.cortePesoBrutoTotal,3),
+    corteTotal          : FormatteDecimal(corte.corteTotal,2),
+    carguilloPrecio     : FormatteDecimal(corte.carguilloPrecio, 2),
     tickets : formatter
   }
 }
