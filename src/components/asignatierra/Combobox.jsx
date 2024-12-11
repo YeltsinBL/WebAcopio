@@ -9,6 +9,7 @@ const ComboBox = ({ initialOptions, disabled=true, selectedOption, onSelectionCh
     if (selectedOption && !initialOptions.some(option => option.id === selectedOption.id)) {
       setOptions([selectedOption, ...initialOptions]);
     } else {
+      if(selectedOption == null && selectedValue != null) setSelectedValue(null)
       setOptions(initialOptions);
     }
   }, [initialOptions, selectedOption]);
