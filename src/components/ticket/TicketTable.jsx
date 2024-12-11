@@ -3,9 +3,9 @@ import Table from '../common/Table'
 import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
 
-const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
+export const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-      'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto', 'Estado', 'Acciones']
+      'Vehículo', 'Peso Bruto', 'Estado', 'Acciones']
   return (
   <Table nameTitle={"Lista de Tickets"} headers={headers} >
 	{TICKET_DATA ? (
@@ -30,13 +30,7 @@ const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
               {ticket.camion}
           </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-              {ticket.camionPeso}
-          </td>
-              <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
               {ticket.vehiculo}
-          </td>
-              <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-              {ticket.vehiculoPeso}
           </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
               {ticket.pesoBruto}
@@ -63,5 +57,3 @@ const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
   </Table>
 	)
 }
-
-export default TicketTable

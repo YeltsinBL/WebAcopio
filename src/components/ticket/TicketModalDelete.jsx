@@ -5,7 +5,7 @@ import FooterButton from '../common/FooterButton'
 import { ticketDelete } from '../../services/ticket'
 import { obtenerFechaLocal } from '../common/FormatteData'
 
-const TicketModalDelete = ({onShowModel, data}) => {
+export const TicketModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async (e) => {
     e.preventDefault()
     const resp = await ticketDelete({
@@ -32,5 +32,3 @@ const TicketModalDelete = ({onShowModel, data}) => {
     </ModalDelete> 
   )
 }
-
-export default TicketModalDelete

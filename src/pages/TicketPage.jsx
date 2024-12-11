@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/common/Header'
-import TicketFilter from '../components/ticket/ticketFilter'
-import TicketTable from '../components/ticket/TicketTable'
-import { TICKET_DATA } from '../components/mocks/DataList'
 import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
-import TicketModel from '../components/ticket/TicketModel'
-import TicketModalDelete from '../components/ticket/TicketModalDelete'
 import { searchTickets, ticketGetById } from '../services/ticket'
+import { TicketFilter, TicketModalDelete, TicketModel, TicketTable } from '../components/ticket'
 
 const TicketPage = () => {
   const [listTicket, setListTicket] = useState([])
@@ -24,7 +20,7 @@ const TicketPage = () => {
   }, [])
   const getTickets = async(filter) => {
     const tickets = await searchTickets(filter)
-    setListTicket(tickets|| TICKET_DATA || [])
+    setListTicket(tickets|| [])
   }
   const handleGoBack = () => {
     navigate('/')

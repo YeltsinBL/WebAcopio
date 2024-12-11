@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { searchTicketsEstado } from '../../services/ticket'
 import ComboBox from '../asignatierra/Combobox'
 
-const TicketFilter = ({onFiltersValue}) => {
+export const TicketFilter = ({onFiltersValue}) => {
   const [ingenioFilter, setIngenioFilter] = useState('')
   const [transportistaFilter, setTransportistaFilter] = useState('')
   const [viajeFilter, setviajeFilter] = useState('')
@@ -101,5 +101,3 @@ const TicketFilter = ({onFiltersValue}) => {
 	</div>
   )
 }
-
-export default TicketFilter

@@ -56,7 +56,7 @@ export const ticketGetById = async({id}) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json()
-    return formatterticket(data)
+    return newFormatterTicket(data)
   } catch (error) {
     console.log('ticketGetById:', error.message)
     throw new Error('Error al obtener la ticket')
@@ -134,5 +134,12 @@ const formatterticket = (data) => {
     unidadPeso : data.ticketUnidadPeso,
     pesoBruto : FormatteDecimal(data.ticketPesoBruto, 3),
     estado : data.ticketEstadoDescripcion
+  }
+}
+const newFormatterTicket = (data) => {
+  return {...data, ticketFecha: new Date(data.ticketFecha ),
+    ticketCamionPeso : FormatteDecimal(data.ticketCamionPeso, 3),
+    ticketVehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
+    ticketPesoBruto : FormatteDecimal(data.ticketPesoBruto, 3)
   }
 }
