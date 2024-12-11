@@ -1,4 +1,4 @@
-import { AlignHorizontalDistributeCenter, BarChart2, Bus, Home, MapIcon, RadarIcon, TicketCheck, Users } from "lucide-react"
+import { AlignHorizontalDistributeCenter, BarChart2, Bus, Home, MapIcon, RadarIcon, Sheet, TicketCheck, Users } from "lucide-react"
 export const SIDEBAR_ITEMS = [
     {
         name:"Principal", icon:Home, color:"#6366f1", href:"/"
@@ -37,6 +37,12 @@ export const SIDEBAR_ITEMS = [
       name: "Corte", 
       href: "/corte", 
       icon: AlignHorizontalDistributeCenter, 
+      color: "#6366f1" 
+    },
+    { 
+      name: "Recojo", 
+      href: "/recojo", 
+      icon: Sheet, 
       color: "#6366f1" 
     },
     // { 

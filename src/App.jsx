@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar"
 import TicketPage from "./pages/TicketPage"
 import CortePage from "./pages/CortePage"
 import CarguilloPage from "./pages/CarguilloPage"
+import RecojoPage from "./pages/RecojoPage"
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path='/ticket' element={<TicketPage />} />
         <Route path='/corte' element={<CortePage />} />
         <Route path='/carguillo' element={<CarguilloPage />} />
+        <Route path='/recojo' element={<RecojoPage />} />
       </Routes>
     </div>
   )
