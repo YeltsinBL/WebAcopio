@@ -8,7 +8,7 @@ import AsignaTierraModel from "../components/asignatierra/AsignaTierraModel"
 import AsignaTierraModelDelete from "../components/asignatierra/AsignaTierraModelDelete"
 import { asignaTierraGetById, searchAsignaTierra } from "../services/asignartierra"
 
-const AsignarTierraPage = () => {
+export const AsignarTierraPage = () => {
 
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
 
@@ -99,5 +99,3 @@ const AsignarTierraPage = () => {
     </div>
   )
 }
-
-export default AsignarTierraPage

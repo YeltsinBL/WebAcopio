@@ -7,7 +7,7 @@ import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
 import { useNavigate } from 'react-router-dom'
 
-const CarguilloPage = () => {
+export const CarguilloPage = () => {
   const navigate = useNavigate()
   const [carguilloList, setCarguilloList] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
@@ -67,5 +67,3 @@ const CarguilloPage = () => {
     </div>
   )
 }
-
-export default CarguilloPage

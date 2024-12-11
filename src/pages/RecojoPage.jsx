@@ -1,9 +1,7 @@
 import React from 'react'
 
-const RecojoPage = () => {
+export const RecojoPage = () => {
   return (
     <></>
   )
 }
-
-export default RecojoPage

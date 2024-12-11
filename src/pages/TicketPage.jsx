@@ -6,7 +6,7 @@ import FooterButton from '../components/common/FooterButton'
 import { searchTickets, ticketGetById } from '../services/ticket'
 import { TicketFilter, TicketModalDelete, TicketModel, TicketTable } from '../components/ticket'
 
-const TicketPage = () => {
+export const TicketPage = () => {
   const [listTicket, setListTicket] = useState([])
   const navigate = useNavigate()
   /* Model */
@@ -88,5 +88,3 @@ const TicketPage = () => {
     </div>
   )
 }
-
-export default TicketPage

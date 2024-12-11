@@ -1,14 +1,8 @@
 import { Route, Routes } from "react-router-dom"
-import HomePage from "./pages/HomePage"
-import ProveedorPage from "./pages/ProveedorPage"
-import TierrasPage from "./pages/TierrasPage"
-import AsignarTierraPage from "./pages/AsignarTierraPage"
-import CosechaPage from "./pages/CosechaPage"
 import Sidebar from "./components/Sidebar"
-import TicketPage from "./pages/TicketPage"
-import CortePage from "./pages/CortePage"
-import CarguilloPage from "./pages/CarguilloPage"
-import RecojoPage from "./pages/RecojoPage"
+import { AsignarTierraPage, CarguilloPage, CortePage, CosechaPage, 
+  HomePage, ProveedorPage, RecojoPage, TicketPage, TierrasPage 
+} from "./pages"
 
 function App() {
   return (

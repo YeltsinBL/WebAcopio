@@ -7,7 +7,7 @@ import TierraModel from "../components/tierras/TierraModel"
 import TierraModelDelete from "../components/tierras/TierraModelDelete"
 import { searchTierras, tierraGetById } from "../services/tierra"
 
-const TierrasPage = () => {
+export const TierrasPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
 
   const handleGoBack = () => {
@@ -98,5 +98,3 @@ const TierrasPage = () => {
     </div>
   )
 }
-
-export default TierrasPage

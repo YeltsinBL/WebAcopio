@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import CorteModelDelete from '../components/corte/CorteModelDelete'
 import { corteGetById, searchCortes } from '../services/corte'
 
-const CortePage = () => {
+export const CortePage = () => {
   const navigate = useNavigate()
   const [corteList, setCorteList] = useState([])
   const [showModel, setShowModel] = useState(false)
@@ -83,5 +83,3 @@ const CortePage = () => {
     </div>
   )
 }
-
-export default CortePage

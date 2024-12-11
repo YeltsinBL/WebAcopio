@@ -7,7 +7,7 @@ import ProveedorModel from "../components/proveedor/ProveedorModel"
 import ProveedorModelDelete from "../components/proveedor/ProveedorModelDelete"
 import { proveedorGetById, searchProveedor } from "../services/proveedor"
 
-const ProveedorPage = () => {
+export const ProveedorPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
 
   const handleGoBack = () => {
@@ -102,5 +102,3 @@ const ProveedorPage = () => {
     </div>
   )
 }
-
-export default ProveedorPage

@@ -6,7 +6,7 @@ import CosechaTable from "../components/cosecha/CosechaTable"
 import CosechaModel from "../components/cosecha/CosechaModel"
 import { cosechaGetById, searchCosecha } from "../services/cosecha"
 
-const CosechaPage = () => {
+export const CosechaPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
 
 
@@ -94,5 +94,3 @@ const CosechaPage = () => {
     </div>
   )
 }
-
-export default CosechaPage
