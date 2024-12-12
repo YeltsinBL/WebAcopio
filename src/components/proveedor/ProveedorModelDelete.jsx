@@ -1,6 +1,6 @@
 import { proveedorDelete } from "../../services/proveedor"
 
-const ProveedorModelDelete = ({onShowModel, data}) => {
+export const ProveedorModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async (e) => {
         e.preventDefault()
         console.log(data)
@@ -55,5 +55,3 @@ const ProveedorModelDelete = ({onShowModel, data}) => {
     </>
   )
 }
-
-export default ProveedorModelDelete

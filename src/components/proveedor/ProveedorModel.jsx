@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { proveedorSave, proveedorUpdate } from "../../services/proveedor"
 import { obtenerFechaLocal } from "../common/FormatteData"
 
-const ProveedorModel = ({ onShowModel, data }) => {
+export const ProveedorModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
   const [ut, setUt] = useState('')
   const [dni, setDni] = useState('')
@@ -189,5 +189,3 @@ const ProveedorModel = ({ onShowModel, data }) => {
     </>
   )
 }
-
-export default ProveedorModel

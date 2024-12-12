@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import Header from "../components/common/Header"
-import ProveedorFilter from "../components/proveedor/ProveedorFilter"
-import ProveedorTable from "../components/proveedor/ProveedorTable"
-import ProveedorModel from "../components/proveedor/ProveedorModel"
-import ProveedorModelDelete from "../components/proveedor/ProveedorModelDelete"
 import { proveedorGetById, searchProveedor } from "../services/proveedor"
+import { 
+  ProveedorFilter, ProveedorModel, ProveedorModelDelete, ProveedorTable 
+} from "../components/proveedor"
 
 export const ProveedorPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir

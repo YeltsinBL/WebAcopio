@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const ProveedorFilter = ({onUTValue}) => {
+export const ProveedorFilter = ({onUTValue}) => {
     const [utFilter, setUTFilter] = useState('')
     const [dniFilter, setDNIFilter] = useState('')
     const [nombreFilter, setNombreFilter] = useState('')
@@ -49,5 +49,3 @@ const ProveedorFilter = ({onUTValue}) => {
 	</div>
   )
 }
-
-export default ProveedorFilter
