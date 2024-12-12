@@ -1,6 +1,6 @@
 import { tierraDelete } from "../../services/tierra"
 
-const TierraModelDelete = ({onShowModel, data}) => {
+export const TierraModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async(e) => {
         e.preventDefault()
         const tierra = await tierraDelete({id:data})
@@ -54,5 +54,3 @@ const TierraModelDelete = ({onShowModel, data}) => {
     </>
   )
 }
-
-export default TierraModelDelete

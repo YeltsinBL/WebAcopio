@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { tierraSave, tierraUpdate } from "../../services/tierra"
 import { obtenerFechaLocal } from "../common/FormatteData"
 
-const TierraModel = ({ onShowModel, data }) => {
+export const TierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
   const [uc, setUc] = useState('')
   const [campo, setCampo] = useState('')
@@ -198,5 +198,3 @@ const TierraModel = ({ onShowModel, data }) => {
     </>
   )
 }
-
-export default TierraModel

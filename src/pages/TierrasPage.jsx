@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import Header from "../components/common/Header"
-import TierrasFilter from "../components/tierras/TierraFilter"
-import TierrasTable from "../components/tierras/TierraTable"
-import TierraModel from "../components/tierras/TierraModel"
-import TierraModelDelete from "../components/tierras/TierraModelDelete"
 import { searchTierras, tierraGetById } from "../services/tierra"
+import { 
+  TierraModel, TierraModelDelete, TierrasFilter, TierrasTable 
+} from "../components/tierras"
 
 export const TierrasPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir

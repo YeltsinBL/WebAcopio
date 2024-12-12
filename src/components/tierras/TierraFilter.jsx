@@ -1,7 +1,6 @@
 import { useState } from "react"
 
-
-const TierrasFilter = ({onFiltersValue}) => {
+export const TierrasFilter = ({onFiltersValue}) => {
     const [ucFilter, setUcFilter] = useState('')
     const [campoFilter, setCampoFilter] = useState('')
     const [sectorFilter, setSectorFilter] = useState('')
@@ -59,5 +58,3 @@ const TierrasFilter = ({onFiltersValue}) => {
 	</div>
   )
 }
-
-export default TierrasFilter
