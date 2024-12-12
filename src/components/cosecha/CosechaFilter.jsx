@@ -3,7 +3,7 @@ import { searchCosechaTipo } from "../../services/cosecha"
 import ComboBoxCustom from "../common/ComboBoxCustom"
 import { formatterDataCombo } from "../common/FormatteData"
 
-const CosechaFilter = ({onFiltersValue}) => {
+export const CosechaFilter = ({onFiltersValue}) => {
     const [ucFilter, setUCFilter] = useState('')
     const [utFilter, setUTFilter] = useState('')
     const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
@@ -90,5 +90,3 @@ const CosechaFilter = ({onFiltersValue}) => {
 	</div>
   )
 }
-
-export default CosechaFilter

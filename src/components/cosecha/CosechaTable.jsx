@@ -1,7 +1,7 @@
 
 import { Edit } from "lucide-react"
 
-const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
+export const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
     return (
 		<div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 			<div className='flex justify-between items-center mb-6'>
@@ -128,5 +128,3 @@ const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
 		</div>
 	)
 }
-
-export default CosechaTable

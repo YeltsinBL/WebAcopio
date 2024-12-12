@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import Header from "../components/common/Header"
-import CosechaFilter from "../components/cosecha/CosechaFilter"
 import { useNavigate } from "react-router-dom"
-import CosechaTable from "../components/cosecha/CosechaTable"
-import CosechaModel from "../components/cosecha/CosechaModel"
 import { cosechaGetById, searchCosecha } from "../services/cosecha"
+import { 
+  CosechaFilter, CosechaModel, CosechaTable
+} from "../components/cosecha"
 
 export const CosechaPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir

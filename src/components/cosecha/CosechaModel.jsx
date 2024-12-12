@@ -4,7 +4,7 @@ import ComboBoxCustom from "../common/ComboBoxCustom"
 import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../services/cosecha'
 import { formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
 
-const CosechaModel = ({ onShowModel, data }) => {
+export const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
   const [ucModel, setUCModel] = useState('')
   const [utModel, setUTModel] = useState('')
@@ -284,5 +284,3 @@ const CosechaModel = ({ onShowModel, data }) => {
 	</div>
   )
 }
-
-export default CosechaModel
