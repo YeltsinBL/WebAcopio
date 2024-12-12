@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { searchCorteEstados } from '../../services/corte'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { 
-  ButtonCustom, ComboBoxCustom, FilterOption, formatterDataCombo, SectionFilter
+  ButtonCustom, ComboBoxCustom, FilterOption, SectionFilter
 } from '../common'
+import { formatterDataCombo } from '../../utils'
 
 export const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')

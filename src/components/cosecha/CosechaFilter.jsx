@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { searchCosechaTipo } from "../../services/cosecha"
-import { ComboBoxCustom, formatterDataCombo } from "../common"
+import { ComboBoxCustom } from "../common"
+import { formatterDataCombo } from "../../utils"
 
 export const CosechaFilter = ({onFiltersValue}) => {
     const [ucFilter, setUCFilter] = useState('')

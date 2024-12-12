@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { asignaTierraSave, asignaTierraUpdate } from "../../services/asignartierra"
 import { searchTierrasAvailable } from "../../services/tierra"
 import { searchProveedorAvailable } from "../../services/proveedor"
-import { ComboBoxCustom, formatterDataCombo, obtenerFechaLocal } from "../common"
-
+import { ComboBoxCustom } from "../common"
+import { formatterDataCombo, obtenerFechaLocal } from "../../utils"
 export const AsignaTierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
   const [ut, setUt] = useState('')

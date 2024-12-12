@@ -5,9 +5,12 @@ import { corteSave } from '../../services/corte'
 import { searchCarguilloList } from '../../services/carguillo'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { 
-  ButtonCustom, ComboBoxCustom, convertirFechaToYMD, FilterOption, Footer, FooterButton, 
-  FormatteDecimal, formatterDataCombo, NoRegistros, obtenerFechaLocal, SectionModel 
+  ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
+  NoRegistros, SectionModel 
 } from '../common'
+import { 
+  convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
+} from '../../utils'
 
 export const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')

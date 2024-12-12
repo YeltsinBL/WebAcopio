@@ -1,4 +1,4 @@
-import { FormatteDecimal } from "../common/FormatteData";
+import { FormatteDecimal } from "../../utils";
 
 export const PROVEEDOR_DATA = [
     { id: 1, ut: "UT123", dni: "12345678", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },

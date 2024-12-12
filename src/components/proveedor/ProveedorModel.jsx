@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { proveedorSave, proveedorUpdate } from "../../services/proveedor"
-import { obtenerFechaLocal } from "../common"
+import { obtenerFechaLocal } from "../../utils"
 
 export const ProveedorModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -42,7 +42,7 @@ export const ProveedorModel = ({ onShowModel, data }) => {
         const proveedor = await proveedorUpdate({proveedorId:id, proveedorUT:ut, personDNI:dni,
           personName:nombre, personPaternalSurname:apePat,
           personMaternalSurname: apeMat, proveedorStatus:activo,
-          userModifiedName:"ADMIN", userModifiedAt:obtenerFechaLocal({date: new Date()})
+          userModifiedName:"ADMIN", userModifiedAt: obtenerFechaLocal({date: new Date()})
         })
         return onShowModel({id:proveedor.id, ut:ut, dni:dni,
           nombre:proveedor.nombre, activo:activo
@@ -51,7 +51,7 @@ export const ProveedorModel = ({ onShowModel, data }) => {
       const proveedor = await proveedorSave({proveedorUT:ut, personDNI:dni,
         personName:nombre, personPaternalSurname:apePat,
         personMaternalSurname: apeMat, person_Type: 2, proveedorStatus:activo,
-        userCreatedName:"ADMIN", userCreatedAt:obtenerFechaLocal({date: new Date()})
+        userCreatedName:"ADMIN", userCreatedAt: obtenerFechaLocal({date: new Date()})
       })
       return onShowModel({id:proveedor.id, ut:ut, dni:dni,
         nombre:proveedor.nombre, activo:activo

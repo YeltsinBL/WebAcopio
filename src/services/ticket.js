@@ -1,5 +1,5 @@
-import { FormatteDecimal } from "../components/common/FormatteData";
 import { appSetting } from "../settings/appsetting";
+import { FormatteDecimal } from "../utils";
 
 export const searchTickets = async(search) => {
   let url=`${appSetting.apiUrl}Ticket`

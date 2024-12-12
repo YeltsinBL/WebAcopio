@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { getCarguilloTipoList, saveCarguillo } from '../../services/carguillo'
 import { Power, Trash2 } from 'lucide-react'
 import { 
-  ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, formatterDataCombo,
-  NoRegistros, obtenerFechaLocal, SectionModel
+  ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton,
+  NoRegistros, SectionModel
 } from '../common'
+import { formatterDataCombo, obtenerFechaLocal } from '../../utils'
 
 const CarguilloModel = ({ onShowModel, data }) => {
   const [carguilloId, setCarguilloId] = useState('')

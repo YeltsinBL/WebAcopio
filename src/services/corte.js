@@ -1,5 +1,5 @@
-import { FormatteDecimal } from "../components/common/FormatteData";
 import { appSetting } from "../settings/appsetting";
+import { FormatteDecimal } from "../utils";
 
 export const searchCorteEstados = async() => {
   try {

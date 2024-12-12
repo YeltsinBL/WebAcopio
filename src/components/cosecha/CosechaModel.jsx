@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../services/cosecha'
-import { ComboBoxCustom, formatterDataCombo, obtenerFechaLocal} from '../common'
+import { ComboBoxCustom } from '../common'
+import { formatterDataCombo, obtenerFechaLocal } from '../../utils'
 
 export const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')

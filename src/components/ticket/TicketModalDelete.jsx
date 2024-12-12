@@ -1,5 +1,6 @@
 import { ticketDelete } from '../../services/ticket'
-import { Footer, FooterButton, ModalDelete, obtenerFechaLocal } from '../common'
+import { obtenerFechaLocal } from '../../utils'
+import { Footer, FooterButton, ModalDelete } from '../common'
 
 export const TicketModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async (e) => {

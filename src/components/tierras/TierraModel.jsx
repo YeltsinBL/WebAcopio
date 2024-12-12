@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { tierraSave, tierraUpdate } from "../../services/tierra"
-import { obtenerFechaLocal } from "../common"
+import { obtenerFechaLocal } from "../../utils"
 
 export const TierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')

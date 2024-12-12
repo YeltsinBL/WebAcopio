@@ -1,5 +1,5 @@
 import { asignaTierraDelete } from "../../services/asignartierra"
-import { obtenerFechaLocal } from "../common"
+import { obtenerFechaLocal } from "../../utils"
 
 export const AsignaTierraModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async(e) => {

@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { 
-  ComboBoxCustom, convertirFechaToYMD, FilterOption, Footer, FooterButton, 
-  FormatteDecimal, formatterDataCombo, obtenerFechaLocal, SectionModel 
+  ComboBoxCustom, FilterOption, Footer, FooterButton, 
+  SectionModel 
 } from '../common'
 import { ticketSave, ticketUpdate } from '../../services/ticket'
 import { getCarguilloPlacasList, searchCarguilloList } from '../../services/carguillo'
+import { 
+  convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
+} from '../../utils'
 
 export const TicketModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
