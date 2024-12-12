@@ -13,8 +13,8 @@ export const AsignaTierraModel = ({ onShowModel, data }) => {
   const [provedores, setProveedores] = useState([])
  
   const [errores, setErrores] = useState({})
-  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, nombre: data.ut } : null
-  const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.uc } : null
+  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, ut: data.ut } : null
+  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
   useEffect(() => {
     if (data) {
       fetchOptionsTierras()
