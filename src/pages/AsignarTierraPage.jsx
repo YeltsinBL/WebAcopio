@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react"
-import AsignaTierraFilter from "../components/asignatierra/AsignaTierraFilter"
 import Header from "../components/common/Header"
-// import { TIERRAASIGNADA_DATA } from "../components/mocks/DataList"
 import { useNavigate } from "react-router-dom"
-import AsignaTierraTable from "../components/asignatierra/AsignaTierraTable"
-import AsignaTierraModel from "../components/asignatierra/AsignaTierraModel"
-import AsignaTierraModelDelete from "../components/asignatierra/AsignaTierraModelDelete"
 import { asignaTierraGetById, searchAsignaTierra } from "../services/asignartierra"
+import { 
+  AsignaTierraFilter, AsignaTierraModel, AsignaTierraModelDelete, AsignaTierraTable 
+} from "../components/asignatierra"
 
 export const AsignarTierraPage = () => {
 

@@ -1,7 +1,7 @@
 import { asignaTierraDelete } from "../../services/asignartierra"
 import { obtenerFechaLocal } from "../common/FormatteData"
 
-const AsignaTierraModelDelete = ({onShowModel, data}) => {
+export const AsignaTierraModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async(e) => {
         e.preventDefault()
         const asigna = await asignaTierraDelete({
@@ -59,5 +59,3 @@ const AsignaTierraModelDelete = ({onShowModel, data}) => {
     </>
   )
 }
-
-export default AsignaTierraModelDelete

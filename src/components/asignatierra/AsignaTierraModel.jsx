@@ -5,7 +5,7 @@ import { searchProveedorAvailable } from "../../services/proveedor"
 import { formatterDataCombo, obtenerFechaLocal } from "../common/FormatteData"
 import ComboBoxCustom from "../common/ComboBoxCustom"
 
-const AsignaTierraModel = ({ onShowModel, data }) => {
+export const AsignaTierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
   const [ut, setUt] = useState('')
   const [uc, setUC] = useState(null)
@@ -188,5 +188,3 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
     </>
   )
 }
-
-export default AsignaTierraModel

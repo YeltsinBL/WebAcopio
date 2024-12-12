@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const AsignaTierraFilter = ({onFiltersValue}) => {
+export const AsignaTierraFilter = ({onFiltersValue}) => {
     const [ucFilter, setUCFilter] = useState('')
     const [utFilter, setUTFilter] = useState('')
     const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
@@ -57,5 +57,3 @@ const AsignaTierraFilter = ({onFiltersValue}) => {
 	</div>
   )
 }
-
-export default AsignaTierraFilter

@@ -1,7 +1,7 @@
 
 import { Edit, Trash2 } from "lucide-react"
 
-const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProducto}) => {
+export const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProducto}) => {
     return (
 		<div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 			<div className='flex justify-between items-center mb-6'>
@@ -84,5 +84,3 @@ const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProducto}) =
 		</div>
 	)
 }
-
-export default AsignaTierraTable
