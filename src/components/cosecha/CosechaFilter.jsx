@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { searchCosechaTipo } from "../../services/cosecha"
 import ComboBoxCustom from "../common/ComboBoxCustom"
+import { formatterDataCombo } from "../common/FormatteData"
 
 const CosechaFilter = ({onFiltersValue}) => {
     const [ucFilter, setUCFilter] = useState('')
@@ -23,10 +24,8 @@ const CosechaFilter = ({onFiltersValue}) => {
     const fetchOptionCosechaTipo = async() => {
       try {
         const responseTipo = await searchCosechaTipo()
-        const formatter= responseTipo?.map(tipo =>({
-          id: tipo.cosechaTipoId,
-          uc:tipo.descripcion
-        }))
+        const formatter= responseTipo?.map(tipo =>(
+          formatterDataCombo(tipo.cosechaTipoId, tipo.descripcion)))
         setCosechaTipo(formatter)
       } catch (error) {
         console.error('Error al cargar fetchOptionCosechaTipo:', error);

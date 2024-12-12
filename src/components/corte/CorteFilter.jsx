@@ -5,6 +5,7 @@ import ButtonCustom from '../common/ButtonCustom'
 import ComboBoxCustom from "../common/ComboBoxCustom"
 import { searchCorteEstados } from '../../services/corte'
 import { searchAsignaTierra } from '../../services/asignartierra'
+import { formatterDataCombo } from '../common/FormatteData'
 
 const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')
@@ -20,17 +21,13 @@ const CorteFilter = ({onFiltersValue}) => {
   },[])
   const getListCombos = async() => {
     const ucs = await searchAsignaTierra({})
-    const formatter= ucs?.map(tipo =>({
-        id: tipo.tierraId,
-        uc:tipo.uc
-      }))
+    const formatter= ucs?.map(tipo =>
+      (formatterDataCombo(tipo.tierraId,tipo.uc)))
     setUcLista(formatter)
 
     const estados = await searchCorteEstados()
-    const formatterEstados= estados?.map(tipo =>({
-      id: tipo.corteTipoId,
-      uc:tipo.corteDescripcion
-    }))
+    const formatterEstados= estados?.map(tipo =>
+      (formatterDataCombo(tipo.corteTipoId,tipo.corteDescripcion)))
     setEstadoLista(formatterEstados)
   }
   const handleSelectionChange = (option) => {

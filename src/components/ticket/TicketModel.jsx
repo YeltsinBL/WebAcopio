@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
-import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../common/FormatteData'
+import { convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
 import { ticketSave, ticketUpdate } from '../../services/ticket'
 import SectionModel from '../common/SectionModel'
 import FilterOption from '../common/FilterOption'
@@ -28,11 +28,11 @@ export const TicketModel = ({ onShowModel, data }) => {
   const [placaVehiculoList, setPlacaVehiculoList] = useState([])
   const [seleccionPlacaCamion, setseleccionPlacaCamion] = useState(
     data.carguilloDetalleCamionId ? 
-    {id:data.carguilloDetalleCamionId, uc: data.ticketCamion} : null)
+    {id:data.carguilloDetalleCamionId, nombre: data.ticketCamion} : null)
   const [seleccionPlacaVehiculo, setseleccionPlacaVehiculo] = useState(
     data.carguilloDetalleVehiculoId ? 
-    {id:data.carguilloDetalleVehiculoId, uc: data.ticketVehiculo} : null)
-  const seleccionCarguillo = data.carguilloId ? {id:data.carguilloId, uc: data.ticketTransportista} : null
+    {id:data.carguilloDetalleVehiculoId, nombre: data.ticketVehiculo} : null)
+  const seleccionCarguillo = data.carguilloId ? {id:data.carguilloId, nombre: data.ticketTransportista} : null
 
   const [errores, setErrores] = useState({})
   useEffect(() =>{
@@ -83,7 +83,7 @@ export const TicketModel = ({ onShowModel, data }) => {
     if(carguilloTipoId == 3) setPlacaVehiculoList(formatter)
     else setPlacaCamionList(formatter)
   }
-  const formatterDataCombo = (id, value) => ({id: id, uc: value})
+
   const handleSelectionChange = async(option) => {
     setCarguilloId(option)
     setCamionModel('')

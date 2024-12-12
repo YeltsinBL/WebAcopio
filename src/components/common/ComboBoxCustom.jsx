@@ -30,7 +30,7 @@ const ComboBoxCustom = ({ initialOptions, disabled=true, selectedOption, onSelec
         <option value="" disabled={disabled} className={!disabled ? colorOptions:''}>-- Selecciona una opción --</option>
         {options.map((option) => (
           <option key={option.id} value={option.id} className={colorOptions}>
-            {option.uc || option.ut}
+            {option.nombre}
           </option>
         ))}
     </select>

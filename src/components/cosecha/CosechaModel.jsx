@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import ComboBoxCustom from "../common/ComboBoxCustom"
 import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../services/cosecha'
-import { obtenerFechaLocal } from '../common/FormatteData'
+import { formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
 
 const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
@@ -73,10 +73,8 @@ const CosechaModel = ({ onShowModel, data }) => {
   const fetchOptionsTierras = async () => {
     try {
       const responseTierra = await searchAsignaTierra({})
-      const formatter= responseTierra?.map(tipo =>({
-        id: tipo.tierraId,
-        uc: tipo.uc
-      }))    
+      const formatter= responseTierra?.map(tipo =>(
+        formatterDataCombo(tipo.tierraId, tipo.uc)))
       setTierras(formatter)
     } catch (error) {
       console.error('Error al cargar fetchOptionsTierras:', error);
@@ -85,10 +83,8 @@ const CosechaModel = ({ onShowModel, data }) => {
   const fetchOptionCosechaTipo = async() => {
     try {
       const responseTipo = await searchCosechaTipo()
-      const formatter= responseTipo?.map(tipo =>({
-        id: tipo.cosechaTipoId,
-        uc:tipo.descripcion
-      }))
+      const formatter= responseTipo?.map(tipo =>(
+        formatterDataCombo(tipo.cosechaTipoId, tipo.descripcion)))
       setCosechaTipo(formatter)
     } catch (error) {
       console.error('Error al cargar fetchOptionCosechaTipo:', error);

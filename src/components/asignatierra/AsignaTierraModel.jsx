@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { asignaTierraSave, asignaTierraUpdate } from "../../services/asignartierra"
 import { searchTierrasAvailable } from "../../services/tierra"
 import { searchProveedorAvailable } from "../../services/proveedor"
-import { obtenerFechaLocal } from "../common/FormatteData"
+import { formatterDataCombo, obtenerFechaLocal } from "../common/FormatteData"
 import ComboBoxCustom from "../common/ComboBoxCustom"
 
 const AsignaTierraModel = ({ onShowModel, data }) => {
@@ -14,8 +14,8 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
   const [provedores, setProveedores] = useState([])
  
   const [errores, setErrores] = useState({})
-  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, ut: data.ut } : null
-  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
+  const seleccionProveedor = data.proveedorId ? {id: data.proveedorId, nombre: data.ut } : null
+  const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.uc } : null
   useEffect(() => {
     if (data) {
       fetchOptionsTierras()
@@ -33,7 +33,8 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
       const updatedOptions = seleccionTierra ?
       [seleccionTierra, ...responseTierra.filter((option) => option.id !== seleccionTierra.id)]
       : responseTierra
-      setTierras(updatedOptions)
+      const formatter = updatedOptions?.map(tipo =>(formatterDataCombo(tipo.id,tipo.uc)))
+      setTierras(formatter)
     } catch (error) {
       console.error('Error al cargar las opciones:', error);
     }
@@ -44,7 +45,8 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
       const updatedProveedor =  seleccionProveedor ?
       [seleccionProveedor, ...responseProveedor.filter((option) => option.id !== seleccionProveedor.id)]
       : responseProveedor
-      setProveedores(updatedProveedor)
+      const formatter = updatedProveedor?.map(tipo =>(formatterDataCombo(tipo.id,tipo.ut)))
+      setProveedores(formatter)
     } catch (error) {
       console.error('Error al cargar las opciones:', error);
     }

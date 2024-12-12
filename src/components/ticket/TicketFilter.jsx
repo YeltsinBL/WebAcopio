@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { searchTicketsEstado } from '../../services/ticket'
 import ComboBoxCustom from "../common/ComboBoxCustom"
+import { formatterDataCombo } from '../common/FormatteData'
 
 export const TicketFilter = ({onFiltersValue}) => {
   const [ingenioFilter, setIngenioFilter] = useState('')
@@ -17,10 +18,8 @@ export const TicketFilter = ({onFiltersValue}) => {
   }, [])
   const getTicketEstados = async() => {
     const estados = await searchTicketsEstado()
-    const formatter= estados?.map(tipo =>({
-        id: tipo.ticketEstadoId,
-        uc:tipo.ticketEstadoDescripcion
-      }))
+    const formatter= estados?.map(tipo =>(
+      formatterDataCombo(tipo.ticketEstadoId, tipo.ticketEstadoDescripcion)))
     setTicketEstado(formatter)
   }
   const handleSelectionChange = (option) => {

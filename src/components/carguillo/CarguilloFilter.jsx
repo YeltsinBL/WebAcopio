@@ -4,6 +4,7 @@ import FilterOption from '../common/FilterOption'
 import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloTipoList } from '../../services/carguillo'
 import ButtonCustom from '../common/ButtonCustom'
+import { formatterDataCombo } from '../common/FormatteData'
 
 const CarguilloFilter = ({onFiltersValue}) => {
   const [carguilloTipo, setCarguilloTipo] = useState('')
@@ -16,15 +17,12 @@ const CarguilloFilter = ({onFiltersValue}) => {
   useEffect(() => {
     getCaguilloLists()
     setCarguilloEstadoList(
-      [{id:1, uc:'Activo'},
-      {id:2, uc:'Deshabilitado'}])
+      [{id:1, nombre:'Activo'},
+      {id:2, nombre:'Deshabilitado'}])
   },[])
   const getCaguilloLists = async(value) =>{
     const tipos = await getCarguilloTipoList(value)
-    const formatter = tipos?.map(tipo =>({
-      id: tipo.carguilloTipoId,
-      uc: tipo.carguilloTipoDescripcion
-    }))
+    const formatter = tipos?.map(tipo =>(formatterDataCombo(tipo.carguilloTipoId,tipo.carguilloTipoDescripcion)))
     setCarguilloTipoList(formatter)
   }
   const handleCarguilloTipoChange= (option) => {

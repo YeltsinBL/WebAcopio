@@ -5,7 +5,7 @@ import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloTipoList, saveCarguillo } from '../../services/carguillo'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
-import { obtenerFechaLocal } from '../common/FormatteData'
+import { formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
 import ButtonCustom from '../common/ButtonCustom'
 import { NoRegistros } from '../common/NoRegistros'
 import { Power, Trash2 } from 'lucide-react'
@@ -18,7 +18,7 @@ const CarguilloModel = ({ onShowModel, data }) => {
   const [placa, setPlaca] = useState('')
   const [errores, setErrores] = useState({})
 
-  const seleccionTipo = data.carguilloTipoId ? {id:data.carguilloTipoId, uc:data.carguilloTipoDescripcion} : null
+  const seleccionTipo = data.carguilloTipoId ? {id:data.carguilloTipoId, nombre:data.carguilloTipoDescripcion} : null
   const [carguilloTipoList, setCarguilloTipoList] = useState([])
   const [carguilloTipoTransporteList, setCarguilloTipoTransporteList] = useState([])
   const [placasList, setPlacasList] = useState([])
@@ -39,18 +39,12 @@ const CarguilloModel = ({ onShowModel, data }) => {
   },[data])
   const getCarguilloTipo = async(value) =>{
     const tipos = await getCarguilloTipoList(value)
-    const formatter = tipos?.map(tipo =>({
-      id: tipo.carguilloTipoId,
-      uc: tipo.carguilloTipoDescripcion
-    }))
+    const formatter = tipos?.map(tipo =>(formatterDataCombo(tipo.carguilloTipoId,tipo.carguilloTipoDescripcion)))
     setCarguilloTipoList(formatter)
   }
   const getCarguilloTipoTransporte = async(value) =>{
     const tipos = await getCarguilloTipoList(value)
-    const formatter = tipos?.map(tipo =>({
-      id: tipo.carguilloTipoId,
-      uc: tipo.carguilloTipoDescripcion
-    }))
+    const formatter = tipos?.map(tipo =>(formatterDataCombo(tipo.carguilloTipoId,tipo.carguilloTipoDescripcion)))
     setCarguilloTipoTransporteList(formatter)
   }
   const handleSelectionChange = (option) => {
@@ -96,7 +90,7 @@ const CarguilloModel = ({ onShowModel, data }) => {
       const updatePlacaList = [...placasList, 
         { carguilloDetalleId: `temp-${Date.now()}`,
           carguilloTipoId: tipoTransporteId,
-          carguilloTipoDescripcion: nombreTipo[0].uc, 
+          carguilloTipoDescripcion: nombreTipo[0].nombre, 
           carguilloDetallePlaca: placa,
           carguilloDetalleEstado: true}]
       setPlacasList(updatePlacaList)

@@ -8,7 +8,7 @@ import { searchTierrasAvailable } from '../../services/tierra'
 import ButtonCustom from '../common/ButtonCustom'
 import CorteTicketPopup from './CorteTicketPopup'
 import { NoRegistros } from '../common/NoRegistros'
-import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../common/FormatteData'
+import { convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
 import { Trash2 } from 'lucide-react'
 import { corteSave } from '../../services/corte'
 import { searchCarguilloList } from '../../services/carguillo'
@@ -27,8 +27,8 @@ const CorteModel = ({ onShowModel, data }) => {
   const [errores, setErrores] = useState({})
   const [showPopup, setShowPopup] = useState(false)
 
-  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.tierraUC } : null
-  const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, uc: data.carguilloTitular } : null
+  const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
+  const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
   const [ucLista, setUcLista] = useState([])
   const [carguilloLista, setCarguilloLista] = useState([])
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
@@ -70,18 +70,14 @@ const CorteModel = ({ onShowModel, data }) => {
   }
   const getListUC = async() => {
     const ucs = await searchTierrasAvailable()
-    const formatter= ucs?.map(tipo =>({
-        id: tipo.id,
-        uc:tipo.uc
-      }))
+    const formatter= ucs?.map(tipo =>
+      (formatterDataCombo(tipo.id, tipo.uc)))
     setUcLista(formatter)
   }
   const getListCarguillo = async() => {
     const paleros = await searchCarguilloList({tipoCarguilloId:1, titular:'', estado: 1})
-    const formatter = paleros.map(palero =>({
-      id: palero.carguilloId,
-      uc: palero.carguilloTitular
-    }))
+    const formatter = paleros.map(palero =>
+      (formatterDataCombo(palero.carguilloId, palero.carguilloTitular)))
     setCarguilloLista(formatter)
   }
   const validarCampos = () => {
