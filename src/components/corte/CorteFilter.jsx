@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SectionFilter from '../common/SectionFilter'
 import FilterOption from '../common/FilterOption'
 import ButtonCustom from '../common/ButtonCustom'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 import { searchCorteEstados } from '../../services/corte'
 import { searchAsignaTierra } from '../../services/asignartierra'
 
@@ -50,7 +50,7 @@ const CorteFilter = ({onFiltersValue}) => {
   return (
     <SectionFilter>
       <FilterOption htmlFor={'UCFilter'} name={'UC'} >
-        <ComboBox  initialOptions={ucLista} disabled={false}
+        <ComboBoxCustom  initialOptions={ucLista} disabled={false}
           onSelectionChange={handleSelectionChange}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
           colorOptions={"text-black"}
@@ -61,7 +61,7 @@ const CorteFilter = ({onFiltersValue}) => {
       <FilterOption htmlFor={'FechaHastaFilter'} name={'Fecha Hasta'} type={'date'}
         placeholder={'Ejm: 20/11/2024'} value={fechaHastaFilter} onChange={setFechaHastaFilter}/>
       <FilterOption htmlFor={'EstadoFilter'} name={'Estado'} >
-        <ComboBox  initialOptions={estadoLista} disabled={false}
+        <ComboBoxCustom  initialOptions={estadoLista} disabled={false}
           onSelectionChange={handleSelectionChangeEstado}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
           colorOptions={"text-black"}

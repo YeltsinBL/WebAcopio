@@ -3,7 +3,7 @@ import SectionModel from '../common/SectionModel'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
 import FilterOption from '../common/FilterOption'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 import { searchTierrasAvailable } from '../../services/tierra'
 import ButtonCustom from '../common/ButtonCustom'
 import CorteTicketPopup from './CorteTicketPopup'
@@ -178,7 +178,7 @@ const CorteModel = ({ onShowModel, data }) => {
             ):
             (
               <>
-          <ComboBox  initialOptions={ucLista} selectedOption={seleccionTierra} 
+          <ComboBoxCustom  initialOptions={ucLista} selectedOption={seleccionTierra} 
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.uc ? "border-red-500" : ""
@@ -215,7 +215,7 @@ const CorteModel = ({ onShowModel, data }) => {
             ):
             (
               <>
-              <ComboBox  initialOptions={carguilloLista} selectedOption={seleccionCarguillo} 
+              <ComboBoxCustom  initialOptions={carguilloLista} selectedOption={seleccionCarguillo} 
                 onSelectionChange={handleSelectionCarguilloChange}
                 className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                   errores.carguilloId ? "border-red-500" : ""

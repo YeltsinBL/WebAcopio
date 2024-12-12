@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SectionModel from '../common/SectionModel'
 import FilterOption from '../common/FilterOption'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloTipoList, saveCarguillo } from '../../services/carguillo'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
@@ -161,7 +161,7 @@ const CarguilloModel = ({ onShowModel, data }) => {
     <SectionModel title={(data.carguilloId > 0 ? 'Información del':'Registrar') + ' Carguillo'}>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
         <FilterOption htmlFor={'TipoModel'} name={'Tipo'}>
-          <ComboBox initialOptions={carguilloTipoList} selectedOption={seleccionTipo}
+          <ComboBoxCustom initialOptions={carguilloTipoList} selectedOption={seleccionTipo}
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.tipoId ? "border-red-500" : ""
@@ -190,7 +190,7 @@ const CarguilloModel = ({ onShowModel, data }) => {
         <h2 className='pb-6 text-2xl font-semibold text-gray-100 md:pb-0'>Lista de Placas </h2>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
           <FilterOption htmlFor={'TipoTransporteModel'} name={'Tipo Transporte'}>
-            <ComboBox initialOptions={carguilloTipoTransporteList}
+            <ComboBoxCustom initialOptions={carguilloTipoTransporteList}
                 onSelectionChange={handleSelectionTipoTransporteChange}
                 className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                 errores.tipoTransporteId ? "border-red-500" : ""

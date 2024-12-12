@@ -5,7 +5,7 @@ import { convertirFechaToYMD, FormatteDecimal, obtenerFechaLocal } from '../comm
 import { ticketSave, ticketUpdate } from '../../services/ticket'
 import SectionModel from '../common/SectionModel'
 import FilterOption from '../common/FilterOption'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloPlacasList, searchCarguilloList } from '../../services/carguillo'
 
 export const TicketModel = ({ onShowModel, data }) => {
@@ -204,7 +204,7 @@ export const TicketModel = ({ onShowModel, data }) => {
           </>
         </FilterOption>
         <FilterOption htmlFor={'CarguilloModel'} name={'Transportista'}>
-          <ComboBox initialOptions={carguilloList} selectedOption={seleccionCarguillo}
+          <ComboBoxCustom initialOptions={carguilloList} selectedOption={seleccionCarguillo}
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.tipoId ? "border-red-500" : ""
@@ -238,7 +238,7 @@ export const TicketModel = ({ onShowModel, data }) => {
           </>
         </FilterOption>
         <FilterOption htmlFor={'CamionModel'} name={'Camión'}>
-          <ComboBox initialOptions={placaCamionList} selectedOption={seleccionPlacaCamion}
+          <ComboBoxCustom initialOptions={placaCamionList} selectedOption={seleccionPlacaCamion}
             onSelectionChange={handleSelectionCamionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.camion ? "border-red-500" : ""
@@ -260,7 +260,7 @@ export const TicketModel = ({ onShowModel, data }) => {
           </>
         </FilterOption>
         <FilterOption htmlFor={'VehiculoModel'} name={'Vehículo'}>
-          <ComboBox initialOptions={placaVehiculoList} selectedOption={seleccionPlacaVehiculo}
+          <ComboBoxCustom initialOptions={placaVehiculoList} selectedOption={seleccionPlacaVehiculo}
             onSelectionChange={handleSelectionVehiculoChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.vehiculo ? "border-red-500" : ""

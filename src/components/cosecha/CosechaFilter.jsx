@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { searchCosechaTipo } from "../../services/cosecha"
-import ComboBox from "../asignatierra/Combobox"
+import ComboBoxCustom from "../common/ComboBoxCustom"
 
 const CosechaFilter = ({onFiltersValue}) => {
     const [ucFilter, setUCFilter] = useState('')
@@ -73,7 +73,7 @@ const CosechaFilter = ({onFiltersValue}) => {
                 </div>
                 <div className='flex flex-col gap-1 w-1/8'>
                     <label htmlFor="CosechaTipo" className="text-white">Cosecha</label>
-                    <ComboBox initialOptions={cosechaTipo} disabled={false}
+                    <ComboBoxCustom initialOptions={cosechaTipo} disabled={false}
                       onSelectionChange={handleSelectionChangeCosechaTipo}
                       className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
                       colorOptions={"text-black"}

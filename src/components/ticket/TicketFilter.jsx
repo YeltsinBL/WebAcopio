@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { searchTicketsEstado } from '../../services/ticket'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 
 export const TicketFilter = ({onFiltersValue}) => {
   const [ingenioFilter, setIngenioFilter] = useState('')
@@ -79,7 +79,7 @@ export const TicketFilter = ({onFiltersValue}) => {
                 </div>
                 <div className='flex flex-col gap-1 w-1/8'>
                     <label htmlFor="EstadoFilter" className="text-white">Estado</label>
-                    <ComboBox  initialOptions={ticketEstado} disabled={false}
+                    <ComboBoxCustom  initialOptions={ticketEstado} disabled={false}
                       onSelectionChange={handleSelectionChange}
                       className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
                       colorOptions={"text-black"}

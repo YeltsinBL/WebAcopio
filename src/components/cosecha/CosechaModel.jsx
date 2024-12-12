@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { searchAsignaTierra } from '../../services/asignartierra'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../services/cosecha'
 import { obtenerFechaLocal } from '../common/FormatteData'
 
@@ -169,7 +169,7 @@ const CosechaModel = ({ onShowModel, data }) => {
                 </div>           
                 <div className='space-y-2'>
                   <label htmlFor="AsignaTierraUTModal" className="text-white font-semibold">UC/Tierra</label>
-                  <ComboBox initialOptions={tierras} selectedOption={seleccionTierra} 
+                  <ComboBoxCustom initialOptions={tierras} selectedOption={seleccionTierra} 
                     onSelectionChange={handleSelectionChangeTierra}
                     className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                       errores.uc ? "border-red-500" : ""
@@ -258,7 +258,7 @@ const CosechaModel = ({ onShowModel, data }) => {
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaTipo" className="text-white">Tipo Cosecha</label>
-                    <ComboBox initialOptions={cosechaTipo} selectedOption={seleccionCosechaTipo} 
+                    <ComboBoxCustom initialOptions={cosechaTipo} selectedOption={seleccionCosechaTipo} 
                       onSelectionChange={handleSelectionChangeCosechaTipo}
                       className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                         errores.uc ? "border-red-500" : ""

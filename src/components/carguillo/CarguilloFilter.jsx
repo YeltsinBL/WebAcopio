@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SectionFilter from '../common/SectionFilter'
 import FilterOption from '../common/FilterOption'
-import ComboBox from '../asignatierra/Combobox'
+import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloTipoList } from '../../services/carguillo'
 import ButtonCustom from '../common/ButtonCustom'
 
@@ -45,7 +45,7 @@ const CarguilloFilter = ({onFiltersValue}) => {
   return (
     <SectionFilter>
       <FilterOption htmlFor={"CarguilloTipoFilter"} name={"Tipo Carguillo"}>
-        <ComboBox initialOptions={carguilloTipoList} disabled={false}
+        <ComboBoxCustom initialOptions={carguilloTipoList} disabled={false}
           onSelectionChange={handleCarguilloTipoChange}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
           colorOptions={"text-black"}
@@ -54,7 +54,7 @@ const CarguilloFilter = ({onFiltersValue}) => {
       <FilterOption htmlFor={'CarguilloTitularFilter'} name={'Titular'} type={'text'}
       placeholder={'Ejm: Transportista 1'} value={carguilloTitular} onChange={setCarguilloTitular}/>
       <FilterOption htmlFor={'CarguilloEstadoFilter'} name={'Estado'}>
-        <ComboBox initialOptions={carguilloEstadoList} disabled={false}
+        <ComboBoxCustom initialOptions={carguilloEstadoList} disabled={false}
           onSelectionChange={handleCarguilloEstadoChange}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
           colorOptions={"text-black"}

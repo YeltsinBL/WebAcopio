@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { asignaTierraSave, asignaTierraUpdate } from "../../services/asignartierra"
 import { searchTierrasAvailable } from "../../services/tierra"
 import { searchProveedorAvailable } from "../../services/proveedor"
-import ComboBox from "./Combobox"
 import { obtenerFechaLocal } from "../common/FormatteData"
+import ComboBoxCustom from "../common/ComboBoxCustom"
 
 const AsignaTierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -142,7 +142,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
                 </div>
                 <div className='space-y-2'>
                   <label htmlFor="AsignaTierraUTModal" className="text-black font-semibold">UT/Proveedor</label>
-                  <ComboBox initialOptions={provedores} selectedOption={seleccionProveedor} 
+                  <ComboBoxCustom initialOptions={provedores} selectedOption={seleccionProveedor} 
                     onSelectionChange={handleSelectionChangeProveedor}
                     className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                       errores.ut ? "border-red-500" : ""
@@ -152,7 +152,7 @@ const AsignaTierraModel = ({ onShowModel, data }) => {
                 </div>
                 <div className='space-y-2'>
                   <label htmlFor="AsignaTierraUTModal" className="text-black font-semibold">UC/Tierra</label>
-                  <ComboBox initialOptions={tierras} selectedOption={seleccionTierra} 
+                  <ComboBoxCustom initialOptions={tierras} selectedOption={seleccionTierra} 
                     onSelectionChange={handleSelectionChangeTierra}
                     className={`bg-transparent focus:outline-none w-full text-black border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                       errores.uc ? "border-red-500" : ""
