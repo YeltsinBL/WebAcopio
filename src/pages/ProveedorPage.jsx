@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
-import Header from "../components/common/Header"
+import { Header } from "../components/common"
 import { proveedorGetById, searchProveedor } from "../services/proveedor"
 import { 
   ProveedorFilter, ProveedorModel, ProveedorModelDelete, ProveedorTable 

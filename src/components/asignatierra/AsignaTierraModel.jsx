@@ -2,8 +2,7 @@ import { useEffect, useState } from "react"
 import { asignaTierraSave, asignaTierraUpdate } from "../../services/asignartierra"
 import { searchTierrasAvailable } from "../../services/tierra"
 import { searchProveedorAvailable } from "../../services/proveedor"
-import { formatterDataCombo, obtenerFechaLocal } from "../common/FormatteData"
-import ComboBoxCustom from "../common/ComboBoxCustom"
+import { ComboBoxCustom, formatterDataCombo, obtenerFechaLocal } from "../common"
 
 export const AsignaTierraModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -29,7 +28,7 @@ export const AsignaTierraModel = ({ onShowModel, data }) => {
   const fetchOptionsTierras = async () => {
     try {
       const responseTierra = await searchTierrasAvailable()
-      // Combina la opción seleccionada actual con los datos de la API (si no existe en la lista)      
+      // Combina la opción seleccionada actual con los datos de la API (si no existe en la lista)
       const updatedOptions = seleccionTierra ?
       [seleccionTierra, ...responseTierra.filter((option) => option.id !== seleccionTierra.id)]
       : responseTierra

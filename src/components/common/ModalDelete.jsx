@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ModalDelete = ({title, message, children}) => {
+export const ModalDelete = ({title, message, children}) => {
   return (
     <>
       <div
@@ -26,5 +26,3 @@ const ModalDelete = ({title, message, children}) => {
     </>
   )
 }
-
-export default ModalDelete

@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import SectionModel from '../common/SectionModel'
-import Footer from '../common/Footer'
-import FooterButton from '../common/FooterButton'
-import FilterOption from '../common/FilterOption'
-import ComboBoxCustom from "../common/ComboBoxCustom"
-import ButtonCustom from '../common/ButtonCustom'
 import CorteTicketPopup from './CorteTicketPopup'
-import { NoRegistros } from '../common/NoRegistros'
-import { convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
 import { Trash2 } from 'lucide-react'
 import { corteSave } from '../../services/corte'
 import { searchCarguilloList } from '../../services/carguillo'
 import { searchAsignaTierra } from '../../services/asignartierra'
+import { 
+  ButtonCustom, ComboBoxCustom, convertirFechaToYMD, FilterOption, Footer, FooterButton, 
+  FormatteDecimal, formatterDataCombo, NoRegistros, obtenerFechaLocal, SectionModel 
+} from '../common'
 
 export const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')

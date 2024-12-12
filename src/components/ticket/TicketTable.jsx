@@ -1,6 +1,4 @@
-import React from 'react'
-import Table from '../common/Table'
-import { NoRegistros } from '../common/NoRegistros'
+import { NoRegistros, Table} from '../common'
 import { Edit, Trash2 } from 'lucide-react'
 
 export const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {

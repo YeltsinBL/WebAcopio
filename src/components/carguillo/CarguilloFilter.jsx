@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import SectionFilter from '../common/SectionFilter'
-import FilterOption from '../common/FilterOption'
-import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloTipoList } from '../../services/carguillo'
-import ButtonCustom from '../common/ButtonCustom'
-import { formatterDataCombo } from '../common/FormatteData'
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, formatterDataCombo, SectionFilter 
+} from '../common'
 
 const CarguilloFilter = ({onFiltersValue}) => {
   const [carguilloTipo, setCarguilloTipo] = useState('')

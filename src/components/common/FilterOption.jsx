@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FilterOption = ({htmlFor, name, type, placeholder, value, onChange, children}) => {
+export const FilterOption = ({htmlFor, name, type, placeholder, value, onChange, children}) => {
   return (
     <div className='flex flex-col gap-1 w-1/8'>
       <label htmlFor={htmlFor} className="text-white">{name}</label>
@@ -15,5 +15,3 @@ const FilterOption = ({htmlFor, name, type, placeholder, value, onChange, childr
     </div>
   )
 }
-
-export default FilterOption

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import Header from "../components/common/Header"
+import { Header } from "../components/common"
 import { searchTierras, tierraGetById } from "../services/tierra"
 import { 
   TierraModel, TierraModelDelete, TierrasFilter, TierrasTable 

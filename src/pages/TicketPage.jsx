@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../components/common/Header'
-import Footer from '../components/common/Footer'
-import FooterButton from '../components/common/FooterButton'
+import { Footer, FooterButton, Header } from '../components/common'
 import { searchTickets, ticketGetById } from '../services/ticket'
 import { TicketFilter, TicketModalDelete, TicketModel, TicketTable } from '../components/ticket'
 

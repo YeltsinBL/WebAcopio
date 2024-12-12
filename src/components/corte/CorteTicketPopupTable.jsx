@@ -1,5 +1,5 @@
 import React from 'react'
-import { NoRegistros } from '../common/NoRegistros'
+import { NoRegistros } from '../common'
 
 const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
   return (

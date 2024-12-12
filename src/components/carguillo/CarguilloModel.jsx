@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import SectionModel from '../common/SectionModel'
-import FilterOption from '../common/FilterOption'
-import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloTipoList, saveCarguillo } from '../../services/carguillo'
-import Footer from '../common/Footer'
-import FooterButton from '../common/FooterButton'
-import { formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
-import ButtonCustom from '../common/ButtonCustom'
-import { NoRegistros } from '../common/NoRegistros'
 import { Power, Trash2 } from 'lucide-react'
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, formatterDataCombo,
+  NoRegistros, obtenerFechaLocal, SectionModel
+} from '../common'
 
 const CarguilloModel = ({ onShowModel, data }) => {
   const [carguilloId, setCarguilloId] = useState('')

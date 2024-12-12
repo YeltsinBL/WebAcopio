@@ -1,7 +1,4 @@
-import React from 'react'
-import ModalDelete from '../common/ModalDelete'
-import Footer from '../common/Footer'
-import FooterButton from '../common/FooterButton'
+import { Footer, FooterButton, ModalDelete } from '../common'
 
 export const CorteModelDelete = ({onShowModel, data}) => {
   const handleGuardar =(e)=>{

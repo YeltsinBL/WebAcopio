@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { searchTicketsEstado } from '../../services/ticket'
-import ComboBoxCustom from "../common/ComboBoxCustom"
-import { formatterDataCombo } from '../common/FormatteData'
+import { ComboBoxCustom, formatterDataCombo } from '../common'
 
 export const TicketFilter = ({onFiltersValue}) => {
   const [ingenioFilter, setIngenioFilter] = useState('')

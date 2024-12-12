@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import SectionFilter from '../common/SectionFilter'
-import FilterOption from '../common/FilterOption'
-import ButtonCustom from '../common/ButtonCustom'
-import ComboBoxCustom from "../common/ComboBoxCustom"
 import { searchCorteEstados } from '../../services/corte'
 import { searchAsignaTierra } from '../../services/asignartierra'
-import { formatterDataCombo } from '../common/FormatteData'
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, formatterDataCombo, SectionFilter
+} from '../common'
 
 export const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')

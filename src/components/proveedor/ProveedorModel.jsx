@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { proveedorSave, proveedorUpdate } from "../../services/proveedor"
-import { obtenerFechaLocal } from "../common/FormatteData"
+import { obtenerFechaLocal } from "../common"
 
 export const ProveedorModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')

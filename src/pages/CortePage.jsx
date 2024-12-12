@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import Header from '../components/common/Header'
-import Footer from '../components/common/Footer'
-import FooterButton from '../components/common/FooterButton'
-import Main from '../components/common/Main'
+import { useEffect, useState } from 'react'
+import { Footer, FooterButton, Header, Main } from '../components/common'
 import { useNavigate } from 'react-router-dom'
 import { corteGetById, searchCortes } from '../services/corte'
 import { 

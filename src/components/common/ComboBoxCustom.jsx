@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ComboBoxCustom = ({ initialOptions, disabled=true, selectedOption, onSelectionChange, className, colorOptions }) => {
+export const ComboBoxCustom = ({ initialOptions, disabled=true, selectedOption, onSelectionChange, className, colorOptions }) => {
   const [options, setOptions] = useState([]);
   const [selectedValue, setSelectedValue] = useState(selectedOption);
 
@@ -37,4 +37,3 @@ const ComboBoxCustom = ({ initialOptions, disabled=true, selectedOption, onSelec
   );
 };
 
-export default ComboBoxCustom;

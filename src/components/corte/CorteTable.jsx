@@ -1,7 +1,5 @@
-import React from 'react'
-import Table from '../common/Table'
-import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
+import { NoRegistros, Table } from '../common'
 
 export const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
   const headers = ['ID', 'Fecha', 'UC', 'Precio', 

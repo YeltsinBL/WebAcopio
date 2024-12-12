@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import Header from '../components/common/Header'
-import Main from '../components/common/Main'
+import { useEffect, useState } from 'react'
+import { Footer, FooterButton, Header, Main } from '../components/common'
 import { getCarguillobyId, searchCarguilloList } from '../services/carguillo'
 import { CarguilloFilter, CarguilloModel, CarguilloTable } from '../components/carguillo/index'
-import Footer from '../components/common/Footer'
-import FooterButton from '../components/common/FooterButton'
 import { useNavigate } from 'react-router-dom'
 
 export const CarguilloPage = () => {

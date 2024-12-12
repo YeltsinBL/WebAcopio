@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import Footer from '../common/Footer'
-import FooterButton from '../common/FooterButton'
-import { convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal } from '../common/FormatteData'
+import { useEffect, useState } from 'react'
+import { 
+  ComboBoxCustom, convertirFechaToYMD, FilterOption, Footer, FooterButton, 
+  FormatteDecimal, formatterDataCombo, obtenerFechaLocal, SectionModel 
+} from '../common'
 import { ticketSave, ticketUpdate } from '../../services/ticket'
-import SectionModel from '../common/SectionModel'
-import FilterOption from '../common/FilterOption'
-import ComboBoxCustom from "../common/ComboBoxCustom"
 import { getCarguilloPlacasList, searchCarguilloList } from '../../services/carguillo'
 
 export const TicketModel = ({ onShowModel, data }) => {

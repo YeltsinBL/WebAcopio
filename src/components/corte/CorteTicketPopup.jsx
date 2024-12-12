@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { NoRegistros } from '../common/NoRegistros'
-import { TICKET_DATA } from '../mocks/DataList'
-import Footer from '../common/Footer'
-import FooterButton from '../common/FooterButton'
+import { useEffect, useState } from 'react'
 import CorteTicketPopupTable from './CorteTicketPopupTable'
 import { searchTickets } from '../../services/ticket'
+import { Footer, FooterButton } from '../common'
 
 const CorteTicketPopup = ({onShowModel, headers}) => {
   const [ticketList, setTICKET_DATA] = useState([])

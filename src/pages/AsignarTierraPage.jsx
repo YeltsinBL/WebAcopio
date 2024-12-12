@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import Header from "../components/common/Header"
+import { Header } from "../components/common"
 import { useNavigate } from "react-router-dom"
 import { asignaTierraGetById, searchAsignaTierra } from "../services/asignartierra"
 import { 

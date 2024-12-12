@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FooterButton = ({accion , name}) => {
+export const FooterButton = ({accion , name}) => {
   return (
     <button 
       className="bg-[#313395] text-white active:bg-gray-700 
@@ -10,5 +10,3 @@ const FooterButton = ({accion , name}) => {
     </button>
   )
 }
-
-export default FooterButton

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SectionFilter = ({children}) => {
+export const SectionFilter = ({children}) => {
   return (
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
 		<form action="">
@@ -11,5 +11,3 @@ const SectionFilter = ({children}) => {
     </div>
   )
 }
-
-export default SectionFilter

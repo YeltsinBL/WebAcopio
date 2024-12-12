@@ -1,9 +1,5 @@
-import React from 'react'
-import ModalDelete from '../common/ModalDelete'
-import Footer from '../common/Footer'
-import FooterButton from '../common/FooterButton'
 import { ticketDelete } from '../../services/ticket'
-import { obtenerFechaLocal } from '../common/FormatteData'
+import { Footer, FooterButton, ModalDelete, obtenerFechaLocal } from '../common'
 
 export const TicketModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async (e) => {
