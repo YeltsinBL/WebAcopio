@@ -3,13 +3,11 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import FooterButton from '../components/common/FooterButton'
 import Main from '../components/common/Main'
-import CorteFilter from '../components/corte/CorteFilter'
-import { CORTE_DATA } from '../components/mocks/DataList'
-import CorteTable from '../components/corte/CorteTable'
-import CorteModel from '../components/corte/CorteModel'
 import { useNavigate } from 'react-router-dom'
-import CorteModelDelete from '../components/corte/CorteModelDelete'
 import { corteGetById, searchCortes } from '../services/corte'
+import { 
+  CorteFilter, CorteModel, CorteModelDelete, CorteTable 
+} from '../components/corte'
 
 export const CortePage = () => {
   const navigate = useNavigate()

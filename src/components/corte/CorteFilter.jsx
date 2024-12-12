@@ -7,7 +7,7 @@ import { searchCorteEstados } from '../../services/corte'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { formatterDataCombo } from '../common/FormatteData'
 
-const CorteFilter = ({onFiltersValue}) => {
+export const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')
   const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
   const [fechaHastaFilter, setFechaHastaFilter] = useState('')
@@ -68,5 +68,3 @@ const CorteFilter = ({onFiltersValue}) => {
     </SectionFilter>
   )
 }
-
-export default CorteFilter

@@ -3,7 +3,7 @@ import ModalDelete from '../common/ModalDelete'
 import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
 
-const CorteModelDelete = ({onShowModel, data}) => {
+export const CorteModelDelete = ({onShowModel, data}) => {
   const handleGuardar =(e)=>{
     e.preventDefault()
     sendDataDismissModel(data)
@@ -24,5 +24,3 @@ const CorteModelDelete = ({onShowModel, data}) => {
     </ModalDelete> 
   )
 }
-
-export default CorteModelDelete

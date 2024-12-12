@@ -4,7 +4,6 @@ import Footer from '../common/Footer'
 import FooterButton from '../common/FooterButton'
 import FilterOption from '../common/FilterOption'
 import ComboBoxCustom from "../common/ComboBoxCustom"
-import { searchTierrasAvailable } from '../../services/tierra'
 import ButtonCustom from '../common/ButtonCustom'
 import CorteTicketPopup from './CorteTicketPopup'
 import { NoRegistros } from '../common/NoRegistros'
@@ -12,8 +11,9 @@ import { convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaL
 import { Trash2 } from 'lucide-react'
 import { corteSave } from '../../services/corte'
 import { searchCarguilloList } from '../../services/carguillo'
+import { searchAsignaTierra } from '../../services/asignartierra'
 
-const CorteModel = ({ onShowModel, data }) => {
+export const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
   const [ucModel, setUcModel] = useState('')
   const [fechaModel, setFechaModel] = useState('')
@@ -69,9 +69,9 @@ const CorteModel = ({ onShowModel, data }) => {
     return total + parseFloat(num.pesoBruto)
   }
   const getListUC = async() => {
-    const ucs = await searchTierrasAvailable()
+    const ucs = await searchAsignaTierra({})
     const formatter= ucs?.map(tipo =>
-      (formatterDataCombo(tipo.id, tipo.uc)))
+      (formatterDataCombo(tipo.tierraId, tipo.uc)))
     setUcLista(formatter)
   }
   const getListCarguillo = async() => {
@@ -133,7 +133,7 @@ const CorteModel = ({ onShowModel, data }) => {
     onShowModel({id:0})
   }
   const onRowDelete= (data)=>{
-    setTicketSelected(ticketSelected.filter(ticket => ticket.id !== data.carguilloId))
+    setTicketSelected(ticketSelected.filter(ticket => ticket.id !== data.id))
   }
   return (
     <>
@@ -360,5 +360,3 @@ const CorteModel = ({ onShowModel, data }) => {
     </>
   )
 }
-
-export default CorteModel

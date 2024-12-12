@@ -3,7 +3,7 @@ import Table from '../common/Table'
 import { NoRegistros } from '../common/NoRegistros'
 import { Edit, Trash2 } from 'lucide-react'
 
-const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
+export const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
   const headers = ['ID', 'Fecha', 'UC', 'Precio', 
     'Cant. Ticket ', 'Peso Bruto', 'total ', 'Estado', 'Acciones']
   return (
@@ -54,5 +54,3 @@ const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
     </Table>
   )
 }
-
-export default CorteTable
