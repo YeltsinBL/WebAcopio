@@ -2,6 +2,10 @@
 export const FormatteDecimal = (number, precision) => {
   return parseFloat(number).toFixed(precision)
 }
+export const convertirFechaDDMMYYYY = (fechaString) => {
+  const [year, month, day] = fechaString.split("-");
+  return `${day}/${month}/${year}`;
+  };
 export const convertirFechaToYMD = (fechaISO) => {
   const fecha = new Date(fechaISO)
   const year = fecha.getFullYear()

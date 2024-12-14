@@ -108,3 +108,16 @@ export const CARGUILLO_DATA = [
   { "carguilloId": 6,"carguilloTitular": "Update Transportista","carguilloTipoDescripcion": "Transportista","carguilloEstado": true},
   { "carguilloId": 7,"carguilloTitular": "Update","carguilloTipoDescripcion": "Pala","carguilloEstado": true}
 ]
+
+export const data_recojo = [
+  {"recojoId":1, "recojoFechaInicio": '10/10/2024', "recojoFechaFin":'20/10/2024', "recojoTicketCantidad": 1, "recojoCamionesCantidad":1, "recojoCamionesPrecio":25.3, "recojoDiasCantidad":1, "recojoDiasPrecio":25.3, "recojoTotalPrecio":50.6, "RecojoEstadoDescripcion": "Activo" },
+  {"recojoId":2, "recojoFechaInicio": '30/10/2024', "recojoFechaFin":'30/10/2024', "recojoTicketCantidad": 2, "recojoCamionesCantidad":2, "recojoCamionesPrecio":25.3, "recojoDiasCantidad":2, "recojoDiasPrecio":25.3, "recojoTotalPrecio":101.2, "RecojoEstadoDescripcion": "Activo" }
+]
+export const RECOJO_DATA = data_recojo.map(recojo =>({
+  ...recojo, 
+  recojoFechaInicio: convertirFecha(recojo.recojoFechaInicio),
+  recojoFechaFin: convertirFecha(recojo.recojoFechaInicio),
+  recojoCamionesPrecio: FormatteDecimal(recojo.recojoCamionesPrecio, 2),
+  recojoDiasPrecio:FormatteDecimal(recojo.recojoDiasPrecio, 2),
+  recojoTotalPrecio: FormatteDecimal(recojo.recojoTotalPrecio, 2)
+}))
