@@ -1,0 +1,62 @@
+import { appSetting } from "../settings/appsetting"
+
+export const servicioTransporteEstadosList = async() => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}ServicioTransporte/Estados`,{
+      method:'GET',
+      headers:{'Content-Type': 'application/json'}
+    })
+    if(!response.ok) throw new Error(`HTTP error! status ${response.status}`)
+    return await response.json()
+  } catch (error) {
+    console.log('servicioTransporteEstadosList:', error.message)
+    throw new Error('Error al buscar los Estados del Servicio Transporte')
+  }
+}
+
+export const servicioTransporteSearch = async(search) => {
+  let url=`${appSetting.apiUrl}ServicioTransporte`
+  if(search != null) {
+    const {fechaDesdeFilter, fechaHastaFilter, carguilloFilter, estadoFilter} = search
+    url = `${url}?fechaDesde=${fechaDesdeFilter}&fechaHasta=${fechaHastaFilter}&carguilloId=${carguilloFilter}&estadoId=${estadoFilter}`
+  }
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    return await response.json()
+  } catch (error) {
+    console.log('servicioTransporteSearch:', error.message)
+    throw new Error('Error al buscar el Servicio Transporte')
+  }
+}
+
+export const servicioTransporteGetById = async({id}) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}ServicioTransporte/${id}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    return await response.json()
+  } catch (error) {
+    console.log('servicioTransporteGetById:', error.message)
+    throw new Error('Error al obtener el Servicio Transporte')
+  }
+}
+export const servicioTransporteSave = async({method, servicioTransporte}) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}ServicioTransporte`, {
+      method: method,
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(servicioTransporte)
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    return await response.json()
+  } catch (error) {
+    console.log('servicioTransporteSave:', error.message)
+    throw new Error('Error al guardar el Servicio Transporte')
+  }
+}

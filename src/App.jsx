@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import Sidebar from "./components/Sidebar"
 import { AsignarTierraPage, CarguilloPage, CortePage, CosechaPage, 
-  HomePage, ProveedorPage, RecojoPage, TicketPage, TierrasPage 
+  HomePage, ProveedorPage, RecojoPage, ServicioTransportePage, TicketPage, TierrasPage 
 } from "./pages"
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
         <Route path='/corte' element={<CortePage />} />
         <Route path='/carguillo' element={<CarguilloPage />} />
         <Route path='/recojo' element={<RecojoPage />} />
+        <Route path='/serviciotransporte' element={<ServicioTransportePage />} />
       </Routes>
     </div>
   )

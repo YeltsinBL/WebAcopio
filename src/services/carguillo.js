@@ -59,6 +59,19 @@ export const getCarguilloPlacasList = async(carguilloId,carguilloTipoId)=>{
     throw new Error('Error al buscar las placas del carguillo')
   }
 }
+export const getCarguilloInTickets = async()=>{
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Carguillo/InAllTickets`,{
+      method:'GET',
+      headers:{'Content-Type': 'application/json'}
+    })
+    if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    return await response.json()
+  } catch (error) {
+    console.log('getCarguilloPlacasList:', error.message)
+    throw new Error('Error al buscar las placas del carguillo')
+  }
+}
 export const saveCarguillo = async(method,carguillo) => {
   try {
     const response = await fetch(`${appSetting.apiUrl}Carguillo`, {
