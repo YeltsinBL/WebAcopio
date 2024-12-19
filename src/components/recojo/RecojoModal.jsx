@@ -1,5 +1,6 @@
 import { 
-    InputDateCustom, FilterOption, Footer, FooterButton, SectionModel 
+    InputDateCustom, FilterOption, Footer, FooterButton, SectionModel, 
+    InputDecimalCustom
 } from '../common'
 import { 
     useCalcularRecojoTotal, useInitialRecojoModal, useValidateRecojoModal 
@@ -103,13 +104,9 @@ export const RecojoModal = ({onShowModel, data}) => {
           </FilterOption>
           <FilterOption htmlFor={'PrecioCamionModel'} name={'Precio Camión'}>
             <>
-              <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.precioCamion ? "border-red-500" : ""
-                }`}
-                name='query' placeholder='Ejm: 10.55'
-                value={precioCamionModel}
-                onChange={(e) => setPrecioCamionModel(parseFloat(e.target.value) || '')}
-              />
+              <InputDecimalCustom onChange={setPrecioCamionModel}
+                valueError={errores.precioCamion}
+                placeholder={'Ejm: 10.55'} textValue={precioCamionModel} />
               {errores.precioCamion && <p className="text-red-500 text-sm">{errores.precioCamion}</p>}
             </>
           </FilterOption>
@@ -127,25 +124,18 @@ export const RecojoModal = ({onShowModel, data}) => {
           </FilterOption>
           <FilterOption htmlFor={'PrecioDiasModel'} name={'Precio Días'}>
             <>
-              <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.precioDias ? "border-red-500" : ""
-                }`}
-                name='query' placeholder='Ejm: 10.55'
-                value={precioDiasModel}
-                onChange={(e) => setPrecioDiasModel(parseFloat(e.target.value) || '')}
-              />
+              <InputDecimalCustom onChange={setPrecioDiasModel}
+                valueError={errores.precioDias}
+                placeholder={'Ejm: 10.55'} textValue={precioDiasModel} />
               {errores.precioDias && <p className="text-red-500 text-sm">{errores.precioDias}</p>}
             </>
           </FilterOption>
           <FilterOption htmlFor={'TotalModel'} name={'Total'}>
             <>
-              <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.total ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Automático'
-              value={recojoTotalModel}
-              readOnly
-              />
+              <InputDecimalCustom onChange={()=>{}}
+                valueError={errores.total}
+                placeholder={'Ejm: 10.55'} textValue={recojoTotalModel} />
+              
               {errores.total && <p className="text-red-500 text-sm">{errores.total}</p>}
             </>
           </FilterOption>
