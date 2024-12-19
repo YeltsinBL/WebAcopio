@@ -39,7 +39,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   },[])
   useEffect(()=>{
     if(data){
-      setIdModel(data.carguilloId || 0)
+      setIdModel(data.corteId || 0)
       setUcModel(data.tierraUC || '')
       setFechaModel(
         data.corteFecha ? convertirFechaToYMD(data.corteFecha) : 
@@ -136,7 +136,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   }
   return (
     <>
-    <SectionModel title={(data.carguilloId > 0 ? 'Información del': 'Registrar') + ' Corte'}>
+    <SectionModel title={(data.corteId > 0 ? 'Información del': 'Registrar') + ' Corte'}>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3'>
         <div className='space-y-2 hidden'>
           <label htmlFor="IdModel" className="text-white ">ID</label>
@@ -156,12 +156,12 @@ export const CorteModel = ({ onShowModel, data }) => {
             name='query' placeholder='Ejm: 20/11/2024'
             value={fechaModel}
             onChange={(e) => setFechaModel(e.target.value)}
-            readOnly={data.carguilloId > 0}
+            readOnly={data.corteId > 0}
           />
           {errores.fecha && <p className="text-red-500 text-sm">{errores.fecha}</p>}
         </div>           
         <FilterOption htmlFor={'UCFilter'} name={'UC'} >
-          {data.carguilloId > 0 ?
+          {data.corteId > 0 ?
             (
             <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                 errores.uc ? "border-red-500" : ""
@@ -193,7 +193,7 @@ export const CorteModel = ({ onShowModel, data }) => {
             name='query' placeholder='Ejm: 85.60'
             value={precioModel}
             onChange={(e) => setPrecioModel(e.target.value)}
-            readOnly={data.carguilloId > 0}
+            readOnly={data.corteId > 0}
           />
           {errores.precio && <p className="text-red-500 text-sm">{errores.precio}</p>}
         </div>
@@ -230,7 +230,7 @@ export const CorteModel = ({ onShowModel, data }) => {
             name='query' placeholder='Ejm: 85.60'
             value={carguilloPrecioModel}
             onChange={(e) => setCarguilloPrecioModel(e.target.value)}
-            readOnly={data.carguilloId > 0}
+            readOnly={data.corteId > 0}
           />
           {errores.carguilloPrecio && <p className="text-red-500 text-sm">{errores.carguilloPrecio}</p>}
         </div>
@@ -252,7 +252,7 @@ export const CorteModel = ({ onShowModel, data }) => {
     <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
       <div className='grid grid-cols-1 md:flex justify-between items-center mb-6'>
         <h2 className='pb-6 text-xl font-semibold text-gray-100 md:pb-0'>Lista de Tickets Seleccionados</h2>
-        <ButtonCustom name={'Agregar'} onClick={handleShowModel} extraClassName={data.carguilloId > 0 ? 'hidden' : ''}/>
+        <ButtonCustom name={'Agregar'} onClick={handleShowModel} extraClassName={data.corteId > 0 ? 'hidden' : ''}/>
       </div>
       <div className="overflow-auto max-h-[350px]">
         <table className="table-auto w-full divide-y divide-gray-700">
@@ -263,7 +263,7 @@ export const CorteModel = ({ onShowModel, data }) => {
                     {header}
                   </th>
                 ))}
-                {data.carguilloId > 0 ?(''):(                    
+                {data.corteId > 0 ?(''):(                    
                 <th className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}>
                   Acción
                 </th>
@@ -304,7 +304,7 @@ export const CorteModel = ({ onShowModel, data }) => {
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                       {ticket.pesoBruto}
                   </td>
-                  {data.carguilloId > 0 ?(''):(
+                  {data.corteId > 0 ?(''):(
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
                     <button className='text-red-400 hover:text-red-300'
                       onClick={()=>onRowDelete(ticket)}
@@ -350,7 +350,7 @@ export const CorteModel = ({ onShowModel, data }) => {
 
     <Footer>
       {
-        data.carguilloId > 0 ?
+        data.corteId > 0 ?
         (''):( <FooterButton accion={handleGuardar} name={"Guardar"}/> )
       }
       <FooterButton accion={handleCancelar} name={"Cancelar"}/>
