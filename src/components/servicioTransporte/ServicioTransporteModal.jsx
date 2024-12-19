@@ -238,7 +238,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
                   )}                  
                 </tr>
               ))
-            ): ( <NoRegistros colSpan={headers.length -1}/> )}
+            ): ( <NoRegistros colSpan={headers.length}/> )}
             </tbody>
         </table>
       </div>
