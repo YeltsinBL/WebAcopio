@@ -1,5 +1,6 @@
 
 import { Edit } from "lucide-react"
+import { NoRegistros } from "../common/NoRegistros"
 
 export const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
     return (
@@ -61,7 +62,8 @@ export const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
 					</thead>
 
 					<tbody className='divide-y divide-gray-700'>
-						{Cosecha_DATA.map((product, index) => (
+						{Cosecha_DATA.length >0 ? (
+						Cosecha_DATA.map((product, index) => (
 							<tr key={product.id} >
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
 									{product.id}
@@ -121,7 +123,9 @@ export const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
 									</button> */}
 								</td>
 							</tr>
-						))}
+						))):(
+							<NoRegistros colSpan={15} />
+						)}
 					</tbody>
 				</table>
 			</div>
