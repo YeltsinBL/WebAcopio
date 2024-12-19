@@ -1,4 +1,5 @@
 import { appSetting } from "../settings/appsetting"
+import { FormatteDecimal } from "../utils"
 
 export const servicioTransporteEstadosList = async() => {
   try {
@@ -40,7 +41,8 @@ export const servicioTransporteGetById = async({id}) => {
       headers: { 'Content-Type': 'application/json' }
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    return await response.json()
+    const data = await response.json()
+    return formatterCorteById(data)
   } catch (error) {
     console.log('servicioTransporteGetById:', error.message)
     throw new Error('Error al obtener el Servicio Transporte')
@@ -60,3 +62,43 @@ export const servicioTransporteSave = async({method, servicioTransporte}) => {
     throw new Error('Error al guardar el Servicio Transporte')
   }
 }
+
+const formatterCorteById = (corte) => {
+  const formatter= corte.servicioTransporteDetails?.map(ticket => (formatterticket(ticket)))
+  return {...corte,
+    servicioTransporteFecha : new Date(corte.servicioTransporteFecha),
+    servicioTransportePrecio: FormatteDecimal(corte.servicioTransportePrecio,2),
+    servicioTransporteTotal : FormatteDecimal(corte.servicioTransporteTotal,3),
+    servicioTransporteDetails : formatter
+  }
+}
+const formatterticket = (data) => {
+    return {
+      id : data.ticketId,
+      ingenio : data.ticketIngenio,
+      fecha : new Date(data.ticketFecha ),
+      viaje : data.ticketViaje,
+      transportista :  data.ticketTransportista ,
+      chofer : data.ticketChofer,
+      camion : data.ticketCamion,
+      camionPeso : FormatteDecimal(data.ticketCamionPeso, 3),
+      vehiculo : data.ticketVehiculo,
+      vehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
+      unidadPeso : data.ticketUnidadPeso,
+      pesoBruto : FormatteDecimal(data.ticketPesoBruto, 3),
+      estado : data.ticketEstadoDescripcion
+    }
+  }
+
+  /***
+   * 
+   * 
+   * "servicioTransporteId": 4,
+  "servicioTransporteFecha": "2024-12-19T00:00:00",
+  "carguilloId": 6,
+  "carguilloTitular": "Update Transportista",
+  "servicioTransportePrecio": 10,
+  "servicioTransporteTotal": 40,
+  "servicioTransporteEstadoDescripcion": "Activo",
+  "servicioTransporteDetails": [
+   */

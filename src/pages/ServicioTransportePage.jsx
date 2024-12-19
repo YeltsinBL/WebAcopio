@@ -65,14 +65,16 @@ export const ServicioTransportePage = () => {
     <ContainerPageCustom>
       <Header title={'Servicio Transporte'}/>
       <Main>
+        {!showModal ?
+        <>
           <ServicioTransporteFilter onFiltersValue={handleDataFromChild} />
           <ServicioTransporteTable data={servicioList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete} /> 
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect} />
             <FooterButton name={'Salir'} accion={handleGoBack} />
           </Footer>
-        
-        {showModal && <ServicioTransporteModal onShowModel={handleSaveModel} data={selectedRowData}/>}
+        </>:        
+         <ServicioTransporteModal onShowModel={handleSaveModel} data={selectedRowData}/>}
         {showModelDelete && <ServicioTransporteModalDelete id={idModelDelete} onShowModel={handleShowModelDelete}/>}
       </Main>
     </ContainerPageCustom>
