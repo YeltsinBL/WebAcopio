@@ -3,13 +3,13 @@ import { Edit } from 'lucide-react'
 import { NoRegistros, Table } from '../common'
 
 const CarguilloTable = ({data, onRowSelect}) => {
-  const headers = ['id', 'Tipo', 'Titular', 'Estado', 'Acciones']
+  const headers = ['Tipo', 'Titular', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Carguillos'} headers={headers}> 
-      {data ? (
+      {data.length > 0 ? (
         data.map((carguillo) => (
           <tr key={carguillo.carguilloId}>
-            <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center '>
+            <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
               {carguillo.carguilloId}
             </td>
             <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
