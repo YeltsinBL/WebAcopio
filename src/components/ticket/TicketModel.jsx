@@ -167,19 +167,6 @@ export const TicketModel = ({ onShowModel, data }) => {
     <>
     <SectionModel title={(data.id > 0 ? 'Editar' : 'Registrar')+ ' Ticket'} >
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3'>
-        <FilterOption htmlFor={'IdModel'} name={'ID'}>
-          <>
-            <input type='text' className={`bg-transparent  focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.id ? "border-red-500" : "" 
-              } `}
-              name='query' placeholder='Automático'
-              value={idModel}
-              onChange={(e) => setIdModel(e.target.value)}
-              readOnly={data.id > 0}
-            />
-            {errores.id && <p className="text-red-500 text-sm">{errores.id}</p>}
-          </>
-        </FilterOption>
         <FilterOption htmlFor={'IngenioModel'} name={'Ingenio'}>
           <>
             <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
