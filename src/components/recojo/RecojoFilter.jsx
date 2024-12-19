@@ -32,11 +32,11 @@ export const RecojoFilter = ({onFiltersValue}) => {
   }
   return (
     <SectionFilter>
-      <FilterOption htmlFor={'FechaInicioFilter'} name={'Fecha Inicio'}>
+      <FilterOption htmlFor={'FechaInicioFilter'} name={'Fecha Desde'}>
         <InputDateCustom fechaValue={fechaDesdeFilter} 
           setFechaValue={setFechaDesdeFilter}/>
       </FilterOption>
-      <FilterOption htmlFor={'FechaInicioFilter'} name={'Fecha Inicio'}>
+      <FilterOption htmlFor={'FechaHastaFilter'} name={'Fecha Hasta'}>
         <InputDateCustom fechaValue={fechaHastaFilter} 
           setFechaValue={setFechaHastaFilter}/>
       </FilterOption>

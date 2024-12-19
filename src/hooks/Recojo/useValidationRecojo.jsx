@@ -6,7 +6,6 @@ export const useValidateRecojoModal = () => {
     const nuevosErrores = {}  
     if (!values.fechaInicioModel) nuevosErrores.fechaInicio = "El campo FECHA INICIO es obligatorio.";
     if (!values.fechaFinModel) nuevosErrores.fechaFin = "El campo FECHA FINAL es obligatorio.";
-    if (!values.cantidadTicketModel) nuevosErrores.cantidadTicket = "El campo CANTIDAD TICKETS es obligatorio.";
     if (!values.cantidadCamionModel) nuevosErrores.cantidadCamion = "El campo CANTIDAD CAMIÓN es obligatorio.";
     if (!values.precioCamionModel) nuevosErrores.precioCamion = "El campo PRECIO CAMIÓN es obligatorio.";
     if (!values.cantidadDiasModel) nuevosErrores.cantidadDias = "El campo CANTIDAD DÍAS es obligatorio.";

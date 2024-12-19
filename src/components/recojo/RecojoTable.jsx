@@ -4,12 +4,12 @@ import {
 import { Edit, Trash2 } from 'lucide-react'
 
 export const RecojoTable = ({data, onRowSelect, onRowDelete}) => {
-  const headers = ['Fecha Inicio', 'Fecha Final','Cant. Ticket', 
+  const headers = ['Fecha Inicio', 'Fecha Final',
     'Precio Días', 'Precio Camión', 'Total', 'Estado', 'Acciones'
   ]
   return (
     <Table nameTitle={'Lista de Recojo'} headers={headers}>
-      {data ? (
+      {data.length > 0 ? (
         data.map((recojo) => (
           <tr key={recojo.recojoId}>
             <TableTd hidden={true}>{recojo.recojoId}</TableTd>
@@ -19,7 +19,6 @@ export const RecojoTable = ({data, onRowSelect, onRowDelete}) => {
             <TableTd>
               {recojo.recojoFechaFin}
             </TableTd>
-            <TableTd> {recojo.recojoTicketCantidad} </TableTd>
             <TableTd> {recojo.recojoDiasPrecio} </TableTd>
             <TableTd> {recojo.recojoCamionesPrecio} </TableTd>
             <TableTd> {recojo.recojoTotalPrecio} </TableTd> 
@@ -41,7 +40,7 @@ export const RecojoTable = ({data, onRowSelect, onRowDelete}) => {
             </TableTd>
           </tr>
         ))
-      ):(<NoRegistros colSpan={headers. length} />)}
+      ):(<NoRegistros colSpan={headers.length} />)}
     </Table>
   )
 }

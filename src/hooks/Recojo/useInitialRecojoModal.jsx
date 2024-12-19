@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
-import { convertirFechaToYMD, obtenerFechaLocal } from "../../utils"
+import { obtenerFechaLocal } from "../../utils"
 
 export const useInitialRecojoModal = (data) => {
   const [recojoId, setRecojoId] = useState("")
   const [fechaInicioModel, setFechaInicioModel] = useState("")
   const [fechaFinModel, setFechaFinModel] = useState("")
-  const [cantidadTicketModel, setCantidadTicketModel] = useState("")
   const [cantidadCamionModel, setCantidadCamionModel] = useState("")
   const [precioCamionModel, setPrecioCamionModel] = useState("")
   const [cantidadDiasModel, setCantidadDiasModel] = useState("")
@@ -23,7 +22,6 @@ export const useInitialRecojoModal = (data) => {
         data.recojoFechaFin
           || obtenerFechaLocal({ date: new Date() }).split("T")[0]
       )
-      setCantidadTicketModel(data.recojoTicketCantidad || "")
       setCantidadCamionModel(data.recojoCamionesCantidad || "")
       setPrecioCamionModel(data.recojoCamionesPrecio || "")
       setCantidadDiasModel(data.recojoDiasCantidad || "")
@@ -34,11 +32,11 @@ export const useInitialRecojoModal = (data) => {
 
   return {
     recojoId, fechaInicioModel, fechaFinModel,
-    cantidadTicketModel, cantidadCamionModel,
+    cantidadCamionModel,
     precioCamionModel, cantidadDiasModel,
     precioDiasModel, recojoEstado,
     setRecojoId, setFechaInicioModel,
-    setFechaFinModel, setCantidadTicketModel,
+    setFechaFinModel,
     setCantidadCamionModel, setPrecioCamionModel,
     setCantidadDiasModel, setPrecioDiasModel,
     setRecojoEstado

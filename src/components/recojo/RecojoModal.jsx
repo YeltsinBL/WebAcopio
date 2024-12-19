@@ -13,11 +13,11 @@ export const RecojoModal = ({onShowModel, data}) => {
   /**Custom Hooks**/
   const {
     recojoId, fechaInicioModel, fechaFinModel,
-    cantidadTicketModel, cantidadCamionModel,
+    cantidadCamionModel,
     precioCamionModel, cantidadDiasModel,
     precioDiasModel, recojoEstado,
     setFechaInicioModel, setFechaFinModel,
-    setCantidadTicketModel, setCantidadCamionModel,
+    setCantidadCamionModel,
     setPrecioCamionModel, setCantidadDiasModel,
     setPrecioDiasModel, setRecojoEstado,
   } = useInitialRecojoModal(data)
@@ -31,7 +31,7 @@ export const RecojoModal = ({onShowModel, data}) => {
     e.preventDefault()
     const { isValid } = validate({
         fechaInicioModel,fechaFinModel,
-        cantidadTicketModel,cantidadCamionModel,
+        cantidadCamionModel,
         precioCamionModel,cantidadDiasModel,
         precioDiasModel,recojoTotalModel
     })
@@ -39,7 +39,6 @@ export const RecojoModal = ({onShowModel, data}) => {
       let recojoModel={
         recojoFechaInicio: fechaInicioModel,
         recojoFechaFin: fechaFinModel,
-        recojoTicketCantidad: cantidadTicketModel,
         recojoCamionesCantidad: cantidadCamionModel,
         recojoCamionesPrecio: precioCamionModel,
         recojoDiasCantidad: cantidadDiasModel,
@@ -88,18 +87,6 @@ export const RecojoModal = ({onShowModel, data}) => {
                 valueError={errores.fechaFin ? true: false}
                 setFechaValue={setFechaFinModel}/>
               {errores.fechaFin && <p className="text-red-500 text-sm">{errores.fechaFin}</p>}
-            </>
-          </FilterOption>
-          <FilterOption htmlFor={'CantidadTicketModel'} name={'Cantidad Tickets'}>
-            <>
-              <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.cantidadTicket ? "border-red-500" : ""
-                }`}
-                name='query' placeholder='Ejm: 1'
-                value={cantidadTicketModel}
-                onChange={(e) => setCantidadTicketModel(parseInt(e.target.value) || '')}
-              />
-              {errores.cantidadTicket && <p className="text-red-500 text-sm">{errores.cantidadTicket}</p>}
             </>
           </FilterOption>
           <FilterOption htmlFor={'CantidadCamionModel'} name={'Cantidad Camión'}>

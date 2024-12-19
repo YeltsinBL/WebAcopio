@@ -59,9 +59,7 @@ export const RecojoPage = () => {
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (recojoId) =>{
-    if(recojoId > 0) setRecojoList(recojoList.filter(recojo =>
-        recojo.recojoId !== recojoId
-      ))
+    if(recojoId > 0) getRecojos()
     setShowModelDelete(false)
   }
   return (
