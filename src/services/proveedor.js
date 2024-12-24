@@ -1,14 +1,11 @@
 import { appSetting } from "../settings/appsetting"
 
-export const searchProveedor = async({search}) => {
-  if(search == null) console.log("Sin parametros", `${appSetting.apiUrl}Proveedor`)
-  else {
-    const {ut, dni, nombre} = search
-    console.log("Con parametros", `${appSetting.apiUrl}Proveedor?ut=${ut}&dni=${dni}&ut=${nombre}`)
-  }
-
+export const searchProveedor = async(search) => {
+  let url = `${appSetting.apiUrl}Proveedor`
+  if(search != null) url += `?ut=${search.ut}&nombre=${search.nombre}&estado=${search.estado}`
+  
   try {
-    const response = await fetch(`${appSetting.apiUrl}Proveedor`, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -17,16 +14,7 @@ export const searchProveedor = async({search}) => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const proveedores = await response.json()
-    const formatter= proveedores?.map(proveedor => ({
-      id : proveedor.proveedorId,
-      ut : proveedor.proveedorUT,
-      dni : proveedor.personDNI,
-      nombre : proveedor.proveedorNombre,
-      activo : proveedor.proveedorStatus
-    })) 
-    return formatter
-
+    return await response.json()
   } catch (error) {
     console.log('searchProveedor:', error.message)
     throw new Error('Error al buscar proveedores')

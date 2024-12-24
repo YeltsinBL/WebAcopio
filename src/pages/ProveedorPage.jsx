@@ -23,27 +23,16 @@ export const ProveedorPage = () => {
   useEffect(()=> {
     getProducts()
   }, [])
-  const getProducts = async () => {
-    const searchProveedores = await searchProveedor({})
-    setFilteredProducts(Array.isArray(searchProveedores) ? searchProveedores : [])
+  const getProducts = async (search=null) => {
+    const searchProveedores = await searchProveedor(search)
+    setFilteredProducts(searchProveedores || [])
   }
   // Función que se pasará al hijo
   const handleDataFromChild = (data) => {
-    const {ut, dni, nombre} = data
-    if(ut=='' & dni=='' & nombre==''){
-      return getProducts()
-    }
-    const filtered = filteredProducts.filter((product) => {
-      const matchesUT = ut ? product.ut.toLowerCase().includes(ut.toLowerCase()) : true
-      const matchesDNI = dni ? product.dni.toLowerCase().includes(dni.toLowerCase()) : true
-      const matchesNombre = nombre
-        ? product.nombre.toLowerCase().includes(nombre.toLowerCase()) 
-        : true
-  
-      // Devuelve verdadero si el producto coincide con todos los filtros aplicados
-      return matchesUT && matchesDNI && matchesNombre
-    })
-    setFilteredProducts(filtered)
+    const {ut, nombre, estado} = data
+    console.log(ut=='' && nombre=='' && estado=='')
+    if(ut=='' && nombre=='' && estado==='') return getProducts()
+    getProducts(data)
   }
   const handleShowModel = (data) => {
     if(data.id == 0) return setShowModal(false)

@@ -1,92 +1,65 @@
 
 import { Edit, Trash2 } from "lucide-react"
+import { NoRegistros, Table, TableButton, TableTd } from "../common"
+import { ExpendableButton } from "../common/ExpendableButton"
+import useOpenController from "../../hooks/common/useOpenFileTable"
 
 export const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
-    return (
-		<div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
-			<div className='flex justify-between items-center mb-6'>
-				<h2 className='text-xl font-semibold text-gray-100'>Lista de Proveedores</h2>
-			</div>
-
-			{/* <div className='overflow-y-auto h-[350px] overflow-x-auto'> */}
-			<div className="overflow-auto max-h-[350px]">
-				{/* <table className='min-w-full divide-y divide-gray-700'> */}
-				<table className="table-auto w-full divide-y divide-gray-700">
-					<thead className="bg-gray-800  sticky top-0 z-10">
-						<tr>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider hidden'>
-								ID
-							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								UT
-							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								DNI
-							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Nombre
-							</th>
-							{/* <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Apellido Paterno
-							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Apellido Materno
-							</th> */}
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Activo
-							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Actions
-							</th>
-						</tr>
-					</thead>
-
-					<tbody className='divide-y divide-gray-700'>
-					{PROVEEDOR_DATA?.length > 0 ? (
-						PROVEEDOR_DATA.map(product => (
-							<tr key={product.id} >
-								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
-									{product.id}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									{product.ut}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									{product.dni}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									{product.nombre}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									{product.activo ? "Sí" : "No"}
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
-									<button
-										className="text-blue-500 hover:text-blue-700 px-3"
-										onClick={() => onRowSelect(product)} // Llama al manejador con los datos de la fila
-										>
-										<Edit size={18} />
-									</button>
-									<button className='text-red-400 hover:text-red-300' 
-										onClick={(e) => {
-											e.preventDefault()
-											eliminarProducto(product.id)}
-										}>
-										<Trash2 size={18} />
-									</button>
-								</td>
-							</tr>
-						))
-					) : (
-						<tr>
-						  <td colSpan={5} className="text-center py-4">
-							No hay proveedores registrados
-						  </td>
-						</tr>
-					  )}
-					</tbody>
-				</table>
-			</div>
-		</div>
-	)
+  const header = ['UT', 'DNI', 'Nombre', 'Activo', 'Actions']
+  return (
+	<Table nameTitle={'Lista de Proveedores'} headers={header}>
+      { PROVEEDOR_DATA.length > 0 ?
+	  PROVEEDOR_DATA.map((personDetails) => (
+        <TableSection key={personDetails.proveedorId} personDetails={personDetails} onRowSelect={onRowSelect} eliminarProducto={eliminarProducto} />
+	  )):(<NoRegistros  colSpan={header.length} />)}
+    </Table>
+  )
 }
+
+const TableSection = ({ personDetails, onRowSelect, eliminarProducto}) => {
+	const { isOpen, toggle } = useOpenController(false);
+	return (
+	  <>
+		<tr key={personDetails.proveedorId}>
+		  <TableTd hidden={true}>{personDetails.proveedorId}</TableTd>
+		  <TableTd>
+			<ExpendableButton isOpen={isOpen} toggle={toggle} />		  
+			<b>{personDetails.proveedorUT} </b>
+		  </TableTd>
+		  <TableTd></TableTd>
+		  <TableTd></TableTd>
+		  <TableTd>{personDetails.proveedorStatus ? 'Activo':'Inactivo'}</TableTd>
+		  <TableTd>
+		    <TableButton className={'text-blue-500 hover:text-blue-700 px-3'} 
+		  	onRowSelect={()=>onRowSelect(personDetails)}>
+		  	  <Edit size={18} />
+		    </TableButton>
+		    { personDetails.proveedorStatus &&
+		    (
+		  	<TableButton className={'text-red-400 hover:text-red-300 '} 
+		  	  onRowSelect={()=>eliminarProducto(personDetails.proveedorId)}>
+		  	  <Trash2 size={18} />
+		  	</TableButton>
+		    )}
+		  </TableTd>
+		</tr>
+		{isOpen && <TableRow personDetails={personDetails} />}
+	  </>
+	);
+  };
+  const TableRow = ({ personDetails }) => {
+	return (
+	  <>
+		{personDetails.personas.map((detail, index) => (
+		  <tr key={`${personDetails.proveedorUT}_${index}`}>
+		    <TableTd>{personDetails.proveedorUT}</TableTd>
+			<TableTd>{detail.personDNI}</TableTd>
+			<TableTd>{detail.proveedorNombre}</TableTd>
+			<TableTd>{detail.proveedorPersonStatus ? 'Activo':'Inactivo'}</TableTd>
+			<TableTd></TableTd>
+		  </tr>
+		))}
+	  </>
+	);
+  };
+  
