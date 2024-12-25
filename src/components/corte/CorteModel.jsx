@@ -6,6 +6,7 @@ import { searchCarguilloList } from '../../services/carguillo'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
+  InputTextCustom, 
   NoRegistros, SectionModel 
 } from '../common'
 import { 
@@ -15,6 +16,7 @@ import {
 export const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
   const [ucModel, setUcModel] = useState('')
+  const [campoModel, setCampoModel] = useState('')
   const [fechaModel, setFechaModel] = useState('')
   const [precioModel, setPrecioModel] = useState('')
   const [carguilloIdModel, setCarguilloIdModel] = useState('')
@@ -29,6 +31,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
   const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
   const [ucLista, setUcLista] = useState([])
+  const [ucListaCombo, setUcListaCombo] = useState([])
   const [carguilloLista, setCarguilloLista] = useState([])
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
@@ -41,6 +44,7 @@ export const CorteModel = ({ onShowModel, data }) => {
     if(data){
       setIdModel(data.corteId || 0)
       setUcModel(data.tierraUC || '')
+      setCampoModel(data.tierraCampo || '')
       setFechaModel(
         data.corteFecha ? convertirFechaToYMD(data.corteFecha) : 
         obtenerFechaLocal({date: new Date()}).split('T')[0]
@@ -69,9 +73,10 @@ export const CorteModel = ({ onShowModel, data }) => {
   }
   const getListUC = async() => {
     const ucs = await searchAsignaTierra({})
+    setUcLista(ucs)
     const formatter= ucs?.map(tipo =>
       (formatterDataCombo(tipo.tierraId, tipo.uc)))
-    setUcLista(formatter)
+    setUcListaCombo(formatter)
   }
   const getListCarguillo = async() => {
     const paleros = await searchCarguilloList({tipoCarguilloId:1, titular:'', estado: 1})
@@ -94,7 +99,11 @@ export const CorteModel = ({ onShowModel, data }) => {
   
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
-  const handleSelectionChange = (option) => setUcModel(option)
+  const handleSelectionChange = (option) => {
+    setUcModel(option)
+    var uc = ucLista.find((item) => item.tierraId === option)
+    setCampoModel(uc.campo)
+  }
   const handleSelectionCarguilloChange = (option) => setCarguilloIdModel(option)
   const handleShowModel = () => setShowPopup(true)
   const resspuestaShowModel = (data) => {
@@ -173,7 +182,7 @@ export const CorteModel = ({ onShowModel, data }) => {
             ):
             (
               <>
-          <ComboBoxCustom  initialOptions={ucLista} selectedOption={seleccionTierra} 
+          <ComboBoxCustom  initialOptions={ucListaCombo} selectedOption={seleccionTierra} 
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.uc ? "border-red-500" : ""
@@ -184,6 +193,9 @@ export const CorteModel = ({ onShowModel, data }) => {
               </>
             )
           }
+        </FilterOption>
+        <FilterOption htmlFor={'CampoModel'} name={'Campo'}>
+          <InputTextCustom textValue={campoModel} placeholder='Automático' readOnly={true}/>
         </FilterOption>
         <div className='space-y-2'>
           <label htmlFor="PrecioModel" className="text-white">Precio Corte</label>

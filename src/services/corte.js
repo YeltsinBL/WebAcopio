@@ -82,7 +82,8 @@ const formattercorte = (corte) => {
     cantidadTicket : corte.corteCantidadTicket,
     pesoBruto : FormatteDecimal(corte.cortePesoBrutoTotal,3),
     total : FormatteDecimal(corte.corteTotal,2) ,
-    estado : corte.corteEstadoDescripcion
+    estado : corte.corteEstadoDescripcion,
+    campo : corte.tierraCampo
   }
 }
 

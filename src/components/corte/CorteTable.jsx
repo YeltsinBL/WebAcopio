@@ -2,7 +2,7 @@ import { Edit, Trash2 } from 'lucide-react'
 import { NoRegistros, Table } from '../common'
 
 export const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
-  const headers = ['Fecha', 'UC', 'Precio', 
+  const headers = ['Fecha', 'UC', 'Campo','Precio', 
     'Cant. Ticket ', 'Peso Bruto', 'total ', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Cortes'} headers={headers}> 
@@ -17,6 +17,9 @@ export const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete}) => {
               </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                   {corte.uc}
+              </td>
+              <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                  {corte.campo}
               </td>
               <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                   {corte.precio}
