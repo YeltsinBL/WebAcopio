@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import CorteTicketPopup from './CorteTicketPopup'
 import { Trash2 } from 'lucide-react'
 import { corteSave } from '../../services/corte'
-import { searchCarguilloList } from '../../services/carguillo'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
@@ -19,8 +18,6 @@ export const CorteModel = ({ onShowModel, data }) => {
   const [campoModel, setCampoModel] = useState('')
   const [fechaModel, setFechaModel] = useState('')
   const [precioModel, setPrecioModel] = useState('')
-  const [carguilloIdModel, setCarguilloIdModel] = useState('')
-  const [carguilloPrecioModel, setCarguilloPrecioModel] = useState('')
   const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
   const [totalModel, setTotalModel] = useState('')
   const [estadoModel, setEstadoModel] = useState('Activo')
@@ -30,16 +27,13 @@ export const CorteModel = ({ onShowModel, data }) => {
   const [showPopup, setShowPopup] = useState(false)
 
   const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
-  const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
-  const [carguilloLista, setCarguilloLista] = useState([])
   const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
 
   useEffect(()=> {
     getListUC()
-    getListCarguillo()
   },[])
   useEffect(()=>{
     if(data){
@@ -51,8 +45,6 @@ export const CorteModel = ({ onShowModel, data }) => {
         obtenerFechaLocal({date: new Date()}).split('T')[0]
       )
       setPrecioModel(data.cortePrecio || '')
-      setCarguilloIdModel(data.carguilloTitular || '')
-      setCarguilloPrecioModel(data.carguilloPrecio || '')
       setSumaPesoBrutoModel(data.cortePesoBrutoTotal || '')
       setTotalModel(data.corteTotal || '')
       setEstadoModel(data.corteEstadoDescripcion || 'Activo')
@@ -66,10 +58,10 @@ export const CorteModel = ({ onShowModel, data }) => {
     return setSumaPesoBrutoModel('')
   }, [ticketSelected])
   useEffect(()=>{
-    if(precioModel > 0 && carguilloPrecioModel > 0 && sumaPesoBrutoModel > 0) 
-      return setTotalModel(FormatteDecimal((precioModel * sumaPesoBrutoModel) + parseFloat(carguilloPrecioModel),2))
+    if(precioModel > 0 && sumaPesoBrutoModel > 0) 
+      return setTotalModel(FormatteDecimal(precioModel * sumaPesoBrutoModel,2))
     return setTotalModel('')
-  },[precioModel, carguilloPrecioModel, sumaPesoBrutoModel])
+  },[precioModel, sumaPesoBrutoModel])
   const getSum=(total, num) =>{
     return total + parseFloat(num.pesoBruto)
   }
@@ -80,20 +72,12 @@ export const CorteModel = ({ onShowModel, data }) => {
       (formatterDataCombo(tipo.tierraId, tipo.uc)))
     setUcListaCombo(formatter)
   }
-  const getListCarguillo = async() => {
-    const paleros = await searchCarguilloList({tipoCarguilloId:1, titular:'', estado: 1})
-    const formatter = paleros.map(palero =>
-      (formatterDataCombo(palero.carguilloId, palero.carguilloTitular)))
-    setCarguilloLista(formatter)
-  }
   const validarCampos = () => {
     const nuevosErrores = {}
     //if (!idModel) nuevosErrores.id = "El campo ID es obligatorio."
     if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo FECHA es obligatorio."
     if (!precioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
-    if (!carguilloIdModel) nuevosErrores.carguilloId = "El campo PALERO es obligatorio."
-    if (!carguilloPrecioModel) nuevosErrores.carguilloPrecio = "El campo PRECIO PALA es obligatorio."
     if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA PESO BRUTO es obligatorio."
     if (!totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
   
@@ -107,7 +91,6 @@ export const CorteModel = ({ onShowModel, data }) => {
     setCampoModel(uc.campo)
     setProvedoresModel(uc.proveedoresNombres)
   }
-  const handleSelectionCarguilloChange = (option) => setCarguilloIdModel(option)
   const handleShowModel = () => setShowPopup(true)
   const resspuestaShowModel = (data) => {
     if(data.length > 0) {
@@ -130,8 +113,6 @@ export const CorteModel = ({ onShowModel, data }) => {
         cortePrecio: precioModel,
         cortePesoBrutoTotal: sumaPesoBrutoModel,
         corteTotal: totalModel,
-        carguilloId:carguilloIdModel,
-        carguilloPrecio: carguilloPrecioModel,
         userCreatedName: 'ADMIN',
         userCreatedAt: obtenerFechaLocal({date: new Date()}),
         corteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.id}))
@@ -211,43 +192,6 @@ export const CorteModel = ({ onShowModel, data }) => {
             readOnly={data.corteId > 0}
           />
           {errores.precio && <p className="text-red-500 text-sm">{errores.precio}</p>}
-        </div>
-        <FilterOption htmlFor={'CarguilloIdModel'} name={'Palero'}>
-          {data.carguilloId > 0 ?
-            (
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.uc ? "border-red-500" : ""
-              }`}
-              name='query' 
-              value={carguilloIdModel}
-              readOnly
-            />
-            ):
-            (
-              <>
-              <ComboBoxCustom  initialOptions={carguilloLista} selectedOption={seleccionCarguillo} 
-                onSelectionChange={handleSelectionCarguilloChange}
-                className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.carguilloId ? "border-red-500" : ""
-                }`}
-                colorOptions={"text-black"}
-              />
-              {errores.carguilloId && <p className="text-red-500 text-sm">{errores.carguilloId}</p>}
-              </>
-            )
-          }
-        </FilterOption>
-        <div className='space-y-2'>
-          <label htmlFor="PrecioModel" className="text-white">Precio Pala</label>
-          <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.carguilloPrecio ? "border-red-500" : ""
-            }`}
-            name='query' placeholder='Ejm: 85.60'
-            value={carguilloPrecioModel}
-            onChange={(e) => setCarguilloPrecioModel(e.target.value)}
-            readOnly={data.corteId > 0}
-          />
-          {errores.carguilloPrecio && <p className="text-red-500 text-sm">{errores.carguilloPrecio}</p>}
         </div>
         <div className='space-y-2'>
           <label htmlFor="EstadoModel" className="text-white">Estado</label>
