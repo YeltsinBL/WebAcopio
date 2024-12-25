@@ -14,7 +14,7 @@ export const TicketModel = ({ onShowModel, data }) => {
   const [ingenioModel, setIngenioModel] = useState('')
   const [viajeModel, setViajeModel] = useState('')
   const [carguilloId, setCarguilloId] = useState('')
-  const [choferModel, setChoferModel] = useState('')
+  const [choferModel, setChoferModel] = useState(null)
   const [fechaModel, setFechaModel] = useState('')
   const [camionModel, setCamionModel] = useState('')
   const [camionPesoModel, setCamionPesoModel] = useState('')
@@ -45,7 +45,7 @@ export const TicketModel = ({ onShowModel, data }) => {
       setIngenioModel(data.ticketIngenio || '')
       setViajeModel(data.ticketViaje || '')
       setCarguilloId(data.carguilloId || '')
-      setChoferModel(data.ticketChofer || "")
+      setChoferModel(data.ticketChofer || null)
       setFechaModel(data.ticketFecha? convertirFechaToYMD(data.ticketFecha) : obtenerFechaLocal({date: new Date()}).split('T')[0])
       setCamionModel(data.carguilloDetalleCamionId || "")
       setCamionPesoModel(data.ticketCamionPeso || "")
@@ -103,7 +103,7 @@ export const TicketModel = ({ onShowModel, data }) => {
     if (!ingenioModel) nuevosErrores.ingenio = "El campo INGENIO es obligatorio."
     if (!viajeModel) nuevosErrores.viaje = "El campo VIAJE es obligatorio."
     if (!carguilloId) nuevosErrores.transportista = "El campo TRANSPORTISTA es obligatorio."
-    if (!choferModel) nuevosErrores.chofer = "El campo CHOFER es obligatorio."
+    //if (!choferModel) nuevosErrores.chofer = "El campo CHOFER es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo FECHA es obligatorio."
     if (!camionModel) nuevosErrores.camion = "El campo CAMIÓN es obligatorio."
     if (!camionPesoModel) nuevosErrores.camionPeso = "El campo CAMIÓN PESO es obligatorio."
@@ -126,7 +126,7 @@ export const TicketModel = ({ onShowModel, data }) => {
           ticketFecha: fechaModel, 
           ticketViaje: viajeModel,
           carguilloId:carguilloId, 
-          ticketChofer: choferModel,
+          ticketChofer: choferModel || null,
           carguilloDetalleCamionId: camionModel,
           ticketCamionPeso: camionPesoModel,
           carguilloDetalleVehiculoId: vehiculoModel,
@@ -143,7 +143,7 @@ export const TicketModel = ({ onShowModel, data }) => {
         ticketFecha: fechaModel, 
         ticketViaje: viajeModel,
         carguilloId:carguilloId, 
-        ticketChofer: choferModel,
+        ticketChofer: choferModel || null,
         carguilloDetalleCamionId: camionModel,
         ticketCamionPeso: camionPesoModel,
         carguilloDetalleVehiculoId: vehiculoModel,
@@ -202,16 +202,11 @@ export const TicketModel = ({ onShowModel, data }) => {
           {errores.viaje && <p className="text-red-500 text-sm">{errores.viaje}</p>}
         </FilterOption>
         <FilterOption htmlFor={'ChoferModel'} name={'Chofer'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.chofer ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ingrese el nombre'
-              value={choferModel}
-              onChange={(e) => setChoferModel(e.target.value)}
-            />
-            {errores.chofer && <p className="text-red-500 text-sm">{errores.chofer}</p>}
-          </>
+          <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+            name='query' placeholder='Ingrese el nombre'
+            value={choferModel}
+            onChange={(e) => setChoferModel(e.target.value)}
+          />
         </FilterOption>
         <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
           <>
