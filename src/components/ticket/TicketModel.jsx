@@ -20,7 +20,7 @@ export const TicketModel = ({ onShowModel, data }) => {
   const [camionPesoModel, setCamionPesoModel] = useState('')
   const [vehiculoModel, setVehiculoModel] = useState('')
   const [vehiculoPesoModel, setVehiculoPesoModel] = useState('')
-  const [unidadPesoModel, setUnidadPesoModel] = useState('')
+  const [unidadPesoModel, setUnidadPesoModel] = useState('TN')
   const [pesoBrutoModel, setPesoBrutoModel] = useState('')
   const [estadoModel, setEstadoModel] = useState('Activo')
 
@@ -51,7 +51,7 @@ export const TicketModel = ({ onShowModel, data }) => {
       setCamionPesoModel(data.ticketCamionPeso || "")
       setVehiculoModel(data.carguilloDetalleVehiculoId || "")
       setVehiculoPesoModel(data.ticketVehiculoPeso || "")
-      setUnidadPesoModel(data.ticketUnidadPeso || '')
+      setUnidadPesoModel(data.ticketUnidadPeso || 'TN')
       setPesoBrutoModel(data.ticketPesoBruto || '')
       setEstadoModel(data.ticketEstadoDescripcion || 'Activo')      
     }
