@@ -26,7 +26,8 @@ export const searchAsignaTierra = async({search}) => {
         activo : tierra.asignarTierraStatus,
         proveedorId: tierra.asignarTierraProveedorId,
         tierraId: tierra.asignarTierraTierraId,
-        campo:tierra.tierraCampo
+        campo:tierra.tierraCampo,
+        proveedoresNombres: tierra.proveedoresNombres,
       }))    
       return formatter
   

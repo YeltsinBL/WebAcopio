@@ -24,6 +24,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
   const [totalModel, setTotalModel] = useState('')
   const [estadoModel, setEstadoModel] = useState('Activo')
+  const [proveedoresModel, setProvedoresModel] = useState('')
   const [ticketSelected, setTicketSelected] = useState([])
   const [errores, setErrores] = useState({})
   const [showPopup, setShowPopup] = useState(false)
@@ -56,6 +57,7 @@ export const CorteModel = ({ onShowModel, data }) => {
       setTotalModel(data.corteTotal || '')
       setEstadoModel(data.corteEstadoDescripcion || 'Activo')
       setTicketSelected(data.tickets || [])
+      setProvedoresModel(data.proveedoresNombres || '')
     }
   }, [data])
   useEffect(() => {
@@ -103,6 +105,7 @@ export const CorteModel = ({ onShowModel, data }) => {
     setUcModel(option)
     var uc = ucLista.find((item) => item.tierraId === option)
     setCampoModel(uc.campo)
+    setProvedoresModel(uc.proveedoresNombres)
   }
   const handleSelectionCarguilloChange = (option) => setCarguilloIdModel(option)
   const handleShowModel = () => setShowPopup(true)
@@ -257,7 +260,11 @@ export const CorteModel = ({ onShowModel, data }) => {
               readOnly
           />
           {errores.estado && <p className="text-red-500 text-sm">{errores.estado}</p>}
-        </div>                 
+        </div>
+        <div className='space-y-2 md:col-span-2 lg:col-span-4 '>
+          <label htmlFor="ProveedoresModel" className="text-white">Proveedores</label>
+          <InputTextCustom textValue={proveedoresModel} placeholder='Automático' readOnly={true}/>
+        </div>
       </div>        
     </SectionModel>
     <div>
