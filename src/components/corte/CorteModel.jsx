@@ -29,7 +29,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
-  const headers = ['ID', 'Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
+  const headers = ['ID', 'Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
 
   useEffect(()=> {

@@ -29,6 +29,9 @@ const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
                       {ticket.ingenio}
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.campo}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                       {ticket.viaje}
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
