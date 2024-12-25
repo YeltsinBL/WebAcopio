@@ -34,7 +34,7 @@ export const ProveedorModel = ({ onShowModel, data }) => {
     e.preventDefault()
     if (validarCampos(true)) {
       const isDuplicado = proveedoresList.some(
-        (item) => item.personDNI === dni && item.proveedorPersonId !== proveedorPersonId
+        (item) => dni !== '' && item.personDNI === dni && item.proveedorPersonId !== proveedorPersonId
       )
       if(isDuplicado) return setErrores({dni:"El DNI ya ha sido agregado a otro proveedor"})
       if(proveedorPersonId !== ''){
@@ -92,7 +92,6 @@ export const ProveedorModel = ({ onShowModel, data }) => {
     const nuevosErrores = {}
     if(agregar){
       if (!ut) nuevosErrores.ut = "El campo UT es obligatorio."
-      if (!dni) nuevosErrores.dni = "El campo DNI es obligatorio."
       if (!nombre) nuevosErrores.nombre = "El campo Nombre es obligatorio."
       if (!apePat) nuevosErrores.apePat = "El campo Apellido Paterno es obligatorio."
       if (!apeMat) nuevosErrores.apeMat = "El campo Apellido Materno es obligatorio."
