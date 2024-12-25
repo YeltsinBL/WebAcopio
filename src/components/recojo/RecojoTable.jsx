@@ -4,7 +4,7 @@ import {
 import { Edit, Trash2 } from 'lucide-react'
 
 export const RecojoTable = ({data, onRowSelect, onRowDelete}) => {
-  const headers = ['Fecha Inicio', 'Fecha Final',
+  const headers = ['Fecha Inicio', 'Fecha Final', 'Campo',
     'Precio Días', 'Precio Camión', 'Total', 'Estado', 'Acciones'
   ]
   return (
@@ -19,6 +19,7 @@ export const RecojoTable = ({data, onRowSelect, onRowDelete}) => {
             <TableTd>
               {recojo.recojoFechaFin}
             </TableTd>
+            <TableTd> {recojo.recojoCampo} </TableTd>
             <TableTd> {recojo.recojoDiasPrecio} </TableTd>
             <TableTd> {recojo.recojoCamionesPrecio} </TableTd>
             <TableTd> {recojo.recojoTotalPrecio} </TableTd> 

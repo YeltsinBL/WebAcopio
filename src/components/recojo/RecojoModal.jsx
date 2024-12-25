@@ -1,6 +1,7 @@
 import { 
     InputDateCustom, FilterOption, Footer, FooterButton, SectionModel, 
-    InputDecimalCustom
+    InputDecimalCustom,
+    InputTextCustom
 } from '../common'
 import { 
     useCalcularRecojoTotal, useInitialRecojoModal, useValidateRecojoModal 
@@ -16,11 +17,11 @@ export const RecojoModal = ({onShowModel, data}) => {
     recojoId, fechaInicioModel, fechaFinModel,
     cantidadCamionModel,
     precioCamionModel, cantidadDiasModel,
-    precioDiasModel, recojoEstado,
+    precioDiasModel, recojoEstado,campoModel,
     setFechaInicioModel, setFechaFinModel,
     setCantidadCamionModel,
     setPrecioCamionModel, setCantidadDiasModel,
-    setPrecioDiasModel, setRecojoEstado,
+    setPrecioDiasModel, setRecojoEstado,setCampoModel
   } = useInitialRecojoModal(data)
   const {validate, errores} = useValidateRecojoModal()
   const recojoTotalModel = useCalcularRecojoTotal(
@@ -44,7 +45,8 @@ export const RecojoModal = ({onShowModel, data}) => {
         recojoCamionesPrecio: precioCamionModel,
         recojoDiasCantidad: cantidadDiasModel,
         recojoDiasPrecio: precioDiasModel,
-        recojoTotalPrecio: recojoTotalModel
+        recojoTotalPrecio: recojoTotalModel,
+        recojoCampo: campoModel
       }
       if(recojoId > 0){
         recojoModel.recojoId= recojoId
@@ -89,6 +91,9 @@ export const RecojoModal = ({onShowModel, data}) => {
                 setFechaValue={setFechaFinModel}/>
               {errores.fechaFin && <p className="text-red-500 text-sm">{errores.fechaFin}</p>}
             </>
+          </FilterOption>
+          <FilterOption htmlFor={'CampoModel'} name={'Campo'}>
+            <InputTextCustom textValue={campoModel}  placeholder='Ingrese el nombre del campo (opcional)' onChange={setCampoModel}/>
           </FilterOption>
           <FilterOption htmlFor={'CantidadCamionModel'} name={'Cantidad Camión'}>
             <>

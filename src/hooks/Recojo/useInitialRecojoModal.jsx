@@ -5,6 +5,7 @@ export const useInitialRecojoModal = (data) => {
   const [recojoId, setRecojoId] = useState("")
   const [fechaInicioModel, setFechaInicioModel] = useState("")
   const [fechaFinModel, setFechaFinModel] = useState("")
+  const [campoModel, setCampoModel] = useState("")
   const [cantidadCamionModel, setCantidadCamionModel] = useState("")
   const [precioCamionModel, setPrecioCamionModel] = useState("")
   const [cantidadDiasModel, setCantidadDiasModel] = useState("")
@@ -14,6 +15,7 @@ export const useInitialRecojoModal = (data) => {
   useEffect(() => {
     if (data) {
       setRecojoId(data.recojoId || "")
+      setCampoModel(data.campo || "")
       setFechaInicioModel(
         data.recojoFechaInicio
           || obtenerFechaLocal({ date: new Date() }).split("T")[0]
@@ -34,11 +36,11 @@ export const useInitialRecojoModal = (data) => {
     recojoId, fechaInicioModel, fechaFinModel,
     cantidadCamionModel,
     precioCamionModel, cantidadDiasModel,
-    precioDiasModel, recojoEstado,
+    precioDiasModel, recojoEstado,campoModel,
     setRecojoId, setFechaInicioModel,
     setFechaFinModel,
     setCantidadCamionModel, setPrecioCamionModel,
     setCantidadDiasModel, setPrecioDiasModel,
-    setRecojoEstado
+    setRecojoEstado, setCampoModel
   }
 }
