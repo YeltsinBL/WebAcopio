@@ -195,11 +195,11 @@ export const TicketModel = ({ onShowModel, data }) => {
           <ComboBoxCustom initialOptions={carguilloList} selectedOption={seleccionCarguillo}
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.tipoId ? "border-red-500" : ""
+              errores.transportista ? "border-red-500" : ""
             }`}
             colorOptions={"text-black"}
           />
-          {errores.viaje && <p className="text-red-500 text-sm">{errores.viaje}</p>}
+          {errores.transportista && <p className="text-red-500 text-sm">{errores.transportista}</p>}
         </FilterOption>
         <FilterOption htmlFor={'ChoferModel'} name={'Chofer'}>
           <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
