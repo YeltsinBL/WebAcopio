@@ -2,7 +2,7 @@ import { Edit, Trash2 } from 'lucide-react'
 import { NoRegistros, Table, TableButton, TableTd } from '../common'
 
 export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete}) => {
-  const headers =['Fecha', 'Transportista', 'Precio', 'Total', 'Estado', 'Acciones']
+  const headers =['Fecha', 'Transportista', 'Trans. Precio', 'Palero', 'Pala Precio','Total', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Servicio Transporte'} headers={headers}>
       {data.length > 0 ? (
@@ -12,6 +12,8 @@ export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete}) => {
             <TableTd>{servicio.servicioTransporteFecha}</TableTd>
             <TableTd>{servicio.servicioTransporteCarguilloTitular}</TableTd>
             <TableTd> {servicio.servicioTransportePrecio} </TableTd>
+            <TableTd>{servicio.servicioTransporteCarguilloPalero}</TableTd>
+            <TableTd> {servicio.carguilloPaleroPrecio} </TableTd>
             <TableTd> {servicio.servicioTransporteTotal} </TableTd>
             <TableTd> {servicio.servicioTransporteEstadoDescripcion} </TableTd>
             <TableTd>

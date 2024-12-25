@@ -3,7 +3,7 @@ import {
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom,
   InputDecimalCustom, InputTextCustom, NoRegistros, SectionModel 
 } from "../common"
-import { getCarguilloInTickets } from "../../services/carguillo"
+import { getCarguilloInTickets, searchCarguilloList } from "../../services/carguillo"
 import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimal, 
   formatterDataCombo, obtenerFechaLocal 
 } from "../../utils"
@@ -13,6 +13,7 @@ import { ServicioTransportePopup } from "./ServicioTransportePopup"
 
 export const ServicioTransporteModal = ({onShowModel, data}) => {
   const [carguilloList, setCarguilloList] = useState([])
+  const [carguilloPaleroLista, setCarguilloPaleroLista] = useState([])
   const [servicioIdModel, setServicioIdModel] = useState('')
   const [fechaModel, setFechaModel] = useState('')
   const [carguilloIdModel, setCarguilloIdModel] = useState('')
@@ -22,12 +23,15 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
   const [ticketSelected, setTicketSelected] = useState([])
   const [servicioDescripcion, setServicioDescripcion] = useState('')
   const [showPopup, setShowPopup] = useState(false)
+  const [carguilloIdPaleroModel, setCarguilloIdPaleroModel] = useState('')
+  const [carguilloPaleroPrecioModel, setCarguilloPaleroPrecioModel] = useState('')
 
   const [errores, setErrores] = useState({})
 
   const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
+  const seleccionCarguilloPalero = data.carguilloIdPalero ? {id: data.carguilloIdPalero, nombre: data.carguilloTitularPalero } : null
   
-  const headers = ['Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
+  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
 
   useEffect(() => {
@@ -36,16 +40,16 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
     return setSumaPesoBrutoModel('')
   }, [ticketSelected])
   useEffect(()=>{
-    if(servicioPrecioModel> 0 && sumaPesoBrutoModel > 0) 
-      return setTotalModel(FormatteDecimal((servicioPrecioModel * sumaPesoBrutoModel) ,2))
+    if(servicioPrecioModel> 0 && carguilloPaleroPrecioModel >= 0 && sumaPesoBrutoModel > 0) 
+      return setTotalModel(FormatteDecimal((servicioPrecioModel * sumaPesoBrutoModel) + parseFloat(carguilloPaleroPrecioModel||0) ,2))
     return setTotalModel('')
-  },[servicioPrecioModel, sumaPesoBrutoModel])
+  },[servicioPrecioModel, carguilloPaleroPrecioModel, sumaPesoBrutoModel])
   const getSum=(total, num) =>{
     return total + parseFloat(num.pesoBruto)
   }
   useEffect(()=>{    
     getCarguillo()
-
+    getListCarguilloPalero()
     if(data){
       setServicioIdModel(data.servicioTransporteId || '')
       setFechaModel(
@@ -55,6 +59,8 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
       setServicioPrecioModel(data.servicioTransportePrecio || '')
       setServicioDescripcion(data.servicioTransporteEstadoDescripcion || 'Activo')
       setTicketSelected(data.servicioTransporteDetails || [])
+      setCarguilloIdPaleroModel(data.carguilloIdPalero || '')
+      setCarguilloPaleroPrecioModel(data.carguilloPaleroPrecio || '')
     }
   }, [])
   const getCarguillo = async() =>{
@@ -62,6 +68,12 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
     const formatter = tipos?.map(tipo =>(
       formatterDataCombo(tipo.carguilloId,tipo.carguilloTitular)))
     setCarguilloList(formatter)
+  }
+  const getListCarguilloPalero = async() => {
+    const paleros = await searchCarguilloList({tipoCarguilloId:1, titular:'', estado: 1})
+    const formatter = paleros.map(palero =>
+      (formatterDataCombo(palero.carguilloId, palero.carguilloTitular)))
+    setCarguilloPaleroLista(formatter)
   }
   const validarCampos = (viewPopUp = false) => {
     const nuevosErrores = {}
@@ -71,7 +83,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
       if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA PESO BRUTO es obligatorio."
       if (!totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
     }
-    if (!carguilloIdModel) nuevosErrores.carguillo = "El campo TRANSPORTISTA es obligatorio."  
+    if (!carguilloIdModel) nuevosErrores.carguillo = "El campo TRANSPORTISTA es obligatorio."
   
     setErrores(nuevosErrores)
 
@@ -79,6 +91,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
   }
 
   const handleSelectionCarguilloChange = (option) => setCarguilloIdModel(option)
+  const handleSelectionCarguilloPaleroChange = (option) => setCarguilloIdPaleroModel(option)
   const handleShowModel = () => {
     if(validarCampos(true)){
       setShowPopup(true)
@@ -104,13 +117,17 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
         carguilloId: carguilloIdModel,
         servicioTransportePrecio: servicioPrecioModel,
         servicioTransporteTotal: totalModel,
-        servicioTransporteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.id}))
+        servicioTransporteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.id})),
+        carguilloIdPalero: (carguilloIdPaleroModel==''|| isNaN(carguilloIdPaleroModel))?null:carguilloIdPaleroModel,
+        carguilloPaleroPrecio: carguilloPaleroPrecioModel || null
       }
       if(servicioIdModel >0){
-        servicioModel.servicioTransporteId= servicioIdModel
-        servicioModel.servicioTransporteEstadoDescripcion= servicioDescripcion
-        servicioModel.userModifiedAt= obtenerFechaLocal({date: new Date()})
-        servicioModel.userModifiedName= "ADMIN"
+        servicioModel = {...servicioModel, 
+          servicioTransporteId: servicioIdModel,
+          servicioTransporteEstadoDescripcion: servicioDescripcion,
+          userModifiedAt: obtenerFechaLocal({date: new Date()}),
+          userModifiedName: "ADMIN"
+        }
         // const servicioSave = await servicioTransporteSave({method:'PUT',servicioTransporte: servicioModel})
         // return onShowModel({...servicioSave,
         //   servicioTransporteFecha: convertirFechaDDMMYYYY(servicioSave.servicioTransporteFecha)
@@ -169,6 +186,20 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
             <InputTextCustom onChange={setServicioDescripcion}
               textValue={servicioDescripcion} readOnly={true} />
           </FilterOption>
+          <FilterOption htmlFor={'CarguilloIdPaleroModel'} name={'Palero'}>
+            <ComboBoxCustom  initialOptions={carguilloPaleroLista} selectedOption={seleccionCarguilloPalero} 
+              onSelectionChange={handleSelectionCarguilloPaleroChange}
+              className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                errores.carguilloIdPalero ? "border-red-500" : ""
+              }`}
+              colorOptions={"text-black"}
+              disabled={false}
+            />
+        </FilterOption>
+        <FilterOption htmlFor={'PrecioModel'} name={'Precio Pala'}>
+            <InputTextCustom onChange={setCarguilloPaleroPrecioModel} placeholder='Ejm: 85.60'
+              textValue={carguilloPaleroPrecioModel} />
+          </FilterOption>
         </div>
       </SectionModel>
       <div>
@@ -202,6 +233,9 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                       {ticket.ingenio}
+                  </td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                      {ticket.campo}
                   </td>
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                       {ticket.viaje}
