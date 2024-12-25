@@ -54,86 +54,27 @@ export const proveedorGetById = async({id}) => {
         'Content-Type': 'application/json',
       },
     });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const proveedor = await response.json()
-    return {
-      id : proveedor.proveedorId,
-      ut : proveedor.proveedorUT,
-      dni : proveedor.personDNI,
-      nombre : proveedor.personName,
-      apellidoPaterno: proveedor.personPaternalSurname,
-      apellidoMaterno: proveedor.personMaternalSurname,
-      activo : proveedor.proveedorStatus
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    return await response.json()
   } catch (error) {
     console.log('proveedorGetById:', error.message)
     throw new Error('Error al obtener el proveedor')
   }
 }
 
-export const proveedorSave = async(proveedor) => {
+export const proveedorSave = async(method, proveedor) => {
   try {
     const response = await fetch(`${appSetting.apiUrl}Proveedor`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(proveedor)
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json()
-    return {
-      id : data.proveedorId,
-      ut : data.proveedorUT,
-      dni : data.personDNI,
-      nombre : data.proveedorNombre,
-      activo : data.proveedorStatus
-    }
-  } catch (error) {
-    console.log('proveedorGetById:', error.message)
-    throw new Error('Error al obtener el proveedor')
-  }
-}
-export const proveedorUpdate = async(proveedor) => {
-  try {
-    const response = await fetch(`${appSetting.apiUrl}Proveedor`, {
-      method: 'PUT',
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(proveedor)
     })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json()
-    return {
-      id : data.proveedorId,
-      ut : data.proveedorUT,
-      dni : data.personDNI,
-      nombre : data.proveedorNombre,
-      activo : data.proveedorStatus
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    return await response.json()
   } catch (error) {
-    console.log('proveedorGetById:', error.message)
-    throw new Error('Error al obtener el proveedor')
-  }
-}
-export const proveedorDelete = async({id}) => {
-  try {
-    const response = await fetch(`${appSetting.apiUrl}Proveedor/${id}`, {
-      method: 'DELETE'
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return true
-  } catch (error) {
-    console.log('proveedorGetById:', error.message)
-    throw new Error('Error al obtener el proveedor')
+    console.log('proveedorSave:', error.message)
+    throw new Error('Error al guardar el proveedor')
   }
 }

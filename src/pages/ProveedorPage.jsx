@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
-import { Header } from "../components/common"
+import { Header, Main } from "../components/common"
 import { proveedorGetById, searchProveedor } from "../services/proveedor"
 import { 
   ProveedorFilter, ProveedorModel, ProveedorModelDelete, ProveedorTable 
@@ -35,23 +35,13 @@ export const ProveedorPage = () => {
     getProducts(data)
   }
   const handleShowModel = (data) => {
-    if(data.id == 0) return setShowModal(false)
-    
-    const existingIndex = filteredProducts.findIndex((item) => item.id === data.id)
-    if (existingIndex >= 0) {
-      // Reemplazar datos si el ID existe
-      const updatedList = [...filteredProducts]
-      updatedList[existingIndex] = data
-      setFilteredProducts(updatedList)
-    } else {
-      setFilteredProducts([...filteredProducts, data])
-    }
+    if(data.proveedorId > 0) getProducts()    
     setShowModal(false)
   }
   // Función para manejar la selección de una fila desde la tabla
   const handleRowSelect = async(rowData) => {
-    if(rowData.id != null){
-      const proveedorById = await proveedorGetById({id:rowData.id})
+    if(rowData.proveedorId != null){
+      const proveedorById = await proveedorGetById({id:rowData.proveedorId})
       setSelectedRowData(proveedorById)
     }else {
       setSelectedRowData(rowData)
@@ -71,7 +61,9 @@ export const ProveedorPage = () => {
   return (
     <div className='flex-1 overflow-auto relative z-10'>
         <Header title='Proveedor'/>
-        <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+        <Main>
+          {!showModal ? 
+          <>
           <ProveedorFilter onUTValue={handleDataFromChild} />
           <ProveedorTable PROVEEDOR_DATA={filteredProducts} onRowSelect={handleRowSelect} eliminarProducto={eliminarProducto}/>
           <div className="flex justify-end gap-2">
@@ -84,9 +76,9 @@ export const ProveedorPage = () => {
               Salir
             </button>
           </div>
-          {showModal ? ( <ProveedorModel onShowModel={handleShowModel} data={selectedRowData} />  ) : null}
+          </>:<ProveedorModel onShowModel={handleShowModel} data={selectedRowData} /> }
           {showModalDelete ? ( <ProveedorModelDelete onShowModel={handleShowModelDelete} data={idModalDelete}/>): null}
-        </main>
+        </Main>
     </div>
   )
 }

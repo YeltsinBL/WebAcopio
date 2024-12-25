@@ -1,10 +1,14 @@
-import { proveedorDelete } from "../../services/proveedor"
+import { proveedorSave } from "../../services/proveedor"
+import { obtenerFechaLocal } from "../../utils"
 
 export const ProveedorModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async (e) => {
         e.preventDefault()
-        console.log(data)
-        const proveedor = await proveedorDelete({id:data})
+        const proveedor = await proveedorSave('DELETE', {
+          proveedorId:data,
+          userModifiedName: "ADMIN",
+          userModifiedAt: obtenerFechaLocal({date: new Date()})
+        })
         if (proveedor) sendDataDismissModel(data)
         else sendDataDismissModel(0)
       }
