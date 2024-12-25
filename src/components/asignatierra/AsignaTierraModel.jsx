@@ -91,7 +91,7 @@ export const AsignaTierraModel = ({ onShowModel, data }) => {
   }
   const retorna = (asigna) => {
     return onShowModel({id:asigna.id, ut:asigna.ut, 
-      uc:asigna.uc, fecha:fecha, activo:asigna.activo })
+      uc:asigna.uc, fecha:fecha, activo:asigna.activo , campo:asigna.campo})
   }
   const handleSelectionChangeProveedor = (option) => {
     setUt(option)

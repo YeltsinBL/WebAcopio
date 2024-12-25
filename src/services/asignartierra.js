@@ -25,7 +25,8 @@ export const searchAsignaTierra = async({search}) => {
         fecha : new Date(`${tierra.asignarTierraFecha}T00:00:00`),
         activo : tierra.asignarTierraStatus,
         proveedorId: tierra.asignarTierraProveedorId,
-        tierraId: tierra.asignarTierraTierraId
+        tierraId: tierra.asignarTierraTierraId,
+        campo:tierra.tierraCampo
       }))    
       return formatter
   
@@ -116,7 +117,8 @@ export const searchAsignaTierra = async({search}) => {
         fecha : data.asignarTierraFecha,
         activo : true,
         proveedorId:data.asignarTierraProveedorId || 0,
-        tierraId:data.asignarTierraTierraId || 0
+        tierraId:data.asignarTierraTierraId || 0,
+        campo:data.tierraCampo
     }
   }
  

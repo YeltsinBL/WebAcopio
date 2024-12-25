@@ -19,6 +19,9 @@ export const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProdu
 								UC
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+								Campo
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								UT
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
@@ -42,6 +45,9 @@ export const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarProdu
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
 									{product.uc}
+								</td>
+								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+									{product.campo}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
 									{product.ut}
