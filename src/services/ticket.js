@@ -143,6 +143,7 @@ const formatterticket = (data) => {
   return {
     id : data.ticketId,
     ingenio : data.ticketIngenio,
+    campo: data.ticketCampo,
     fecha : new Date(data.ticketFecha ),
     viaje : data.ticketViaje,
     transportista :  data.ticketTransportista ,

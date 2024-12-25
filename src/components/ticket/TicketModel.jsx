@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { 
   ComboBoxCustom, FilterOption, Footer, FooterButton, 
+  InputTextCustom, 
   SectionModel 
 } from '../common'
 import { ticketSave, ticketUpdate } from '../../services/ticket'
@@ -12,6 +13,7 @@ import {
 export const TicketModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
   const [ingenioModel, setIngenioModel] = useState('')
+  const [campoModel, setCampoModel] = useState('')
   const [viajeModel, setViajeModel] = useState('')
   const [carguilloId, setCarguilloId] = useState('')
   const [choferModel, setChoferModel] = useState(null)
@@ -43,6 +45,7 @@ export const TicketModel = ({ onShowModel, data }) => {
     if (data) {
       setIdModel(data.ticketId || 0)
       setIngenioModel(data.ticketIngenio || '')
+      setCampoModel(data.ticketCampo || '')
       setViajeModel(data.ticketViaje || '')
       setCarguilloId(data.carguilloId || '')
       setChoferModel(data.ticketChofer || null)
@@ -58,8 +61,10 @@ export const TicketModel = ({ onShowModel, data }) => {
   }, [data])
 
   useEffect(()=> {
-    const camionPeso = parseFloat(camionPesoModel) && parseFloat(camionPesoModel) > 0 ? parseFloat(camionPesoModel) :0
-    const vehiculoPeso = parseFloat(vehiculoPesoModel) && parseFloat(vehiculoPesoModel) > 0 ? parseFloat(vehiculoPesoModel) :0
+    if (!parseFloat(camionPesoModel)) return
+    if (!parseFloat(vehiculoPesoModel)) return
+    const camionPeso = parseFloat(camionPesoModel) > 0 ? parseFloat(camionPesoModel) : 0
+    const vehiculoPeso = parseFloat(vehiculoPesoModel) > 0 ? parseFloat(vehiculoPesoModel) : 0
     const calculate = camionPeso + vehiculoPeso
     setPesoBrutoModel( calculate > 0 ? FormatteDecimal(calculate,3) : '' )
   }, [camionPesoModel, vehiculoPesoModel])
@@ -119,28 +124,10 @@ export const TicketModel = ({ onShowModel, data }) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
-      if(idModel > 0) {
-        const ticket = await ticketUpdate({
-          ticketId: idModel,
-          ticketIngenio:ingenioModel,
-          ticketFecha: fechaModel, 
-          ticketViaje: viajeModel,
-          carguilloId:carguilloId, 
-          ticketChofer: choferModel || null,
-          carguilloDetalleCamionId: camionModel,
-          ticketCamionPeso: camionPesoModel,
-          carguilloDetalleVehiculoId: vehiculoModel,
-          ticketVehiculoPeso: vehiculoPesoModel,
-          ticketUnidadPeso:unidadPesoModel,
-          ticketPesoBruto: pesoBrutoModel,
-          userModifiedAt: obtenerFechaLocal({date: new Date()}),
-          userModifiedName: "ADMIN" 
-        })
-        return retorna(ticket)
-      }
-      const ticket = await ticketSave({
+      let save = {
         ticketIngenio:ingenioModel,
-        ticketFecha: fechaModel, 
+        ticketCampo: campoModel,
+        ticketFecha: fechaModel,
         ticketViaje: viajeModel,
         carguilloId:carguilloId, 
         ticketChofer: choferModel || null,
@@ -150,9 +137,19 @@ export const TicketModel = ({ onShowModel, data }) => {
         ticketVehiculoPeso: vehiculoPesoModel,
         ticketUnidadPeso:unidadPesoModel,
         ticketPesoBruto: pesoBrutoModel,
+      }
+      if(idModel > 0) {
+        save = {...save,
+          ticketId:idModel,
+          userModifiedAt: obtenerFechaLocal({date: new Date()}),
+          userModifiedName: "ADMIN" }
+        const ticket = await ticketUpdate(save)
+        return retorna(ticket)
+      }
+      save = {...save,
         userCreatedAt: obtenerFechaLocal({date: new Date()}),
-        userCreatedName: "ADMIN" 
-      })
+        userCreatedName: "ADMIN" }
+      const ticket = await ticketSave(save)
       return retorna(ticket)
     }
   }
@@ -178,6 +175,9 @@ export const TicketModel = ({ onShowModel, data }) => {
             />
             {errores.ingenio && <p className="text-red-500 text-sm">{errores.ingenio}</p>}
           </>
+        </FilterOption>
+        <FilterOption htmlFor={'CampoModel'} name={'Campo'}>
+          <InputTextCustom textValue={campoModel}  placeholder='Ingrese el nombre del campo (opcional)' onChange={setCampoModel}/>
         </FilterOption>
         <FilterOption htmlFor={'ViajeModel'} name={'Viaje'}>
           <>

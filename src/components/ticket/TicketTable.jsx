@@ -2,7 +2,7 @@ import { NoRegistros, Table} from '../common'
 import { Edit, Trash2 } from 'lucide-react'
 
 export const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
-  const headers = ['Ingenio', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
+  const headers = ['Ingenio', 'Campo','Viaje', 'Fecha', 'Transportista', 'Camión', 
       'Vehículo', 'Peso Bruto', 'Estado', 'Acciones']
   return (
   <Table nameTitle={"Lista de Tickets"} headers={headers} >
@@ -14,6 +14,9 @@ export const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
           </td>
           <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
               {ticket.ingenio}
+          </td>
+          <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+              {ticket.campo}
           </td>
           <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
               {ticket.viaje}
