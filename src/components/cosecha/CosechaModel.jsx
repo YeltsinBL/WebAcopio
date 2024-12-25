@@ -7,13 +7,14 @@ import { formatterDataCombo, obtenerFechaLocal } from '../../utils'
 export const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState('')
   const [ucModel, setUCModel] = useState('')
+  const [campoModel, setCampoModel] = useState('')
   const [utModel, setUTModel] = useState('')
   const [fechaModel, setFechaModel] = useState('')
-  const [supervisorModel, setSupervisorModel] = useState('')
-  const [hasModel, setHasModel] = useState('')
-  const [sacModel, setSacModel] = useState('')
-  const [redModel, setRedModel] = useState('')
-  const [humedadModel, setHumedadModel] = useState('')
+  const [supervisorModel, setSupervisorModel] = useState(null)
+  const [hasModel, setHasModel] = useState(null)
+  const [sacModel, setSacModel] = useState(null)
+  const [redModel, setRedModel] = useState(null)
+  const [humedadModel, setHumedadModel] = useState(null)
   const [cosechaModel, setCosechaModel] = useState('')
 
   const [tierras, setTierras] = useState([])
@@ -34,13 +35,14 @@ export const CosechaModel = ({ onShowModel, data }) => {
     if (data) {
       setIdModel(data.id || 0);
       setUCModel(data.tierraId || 0);
+      setCampoModel(data.campo || '');
       setUTModel(seleccionProveedor);
       setFechaModel(data.fecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
-      setSupervisorModel(data.supervisor || "");
-      setHasModel(data.has || "");
-      setSacModel(data.sac || "");
-      setRedModel(data.red || "");
-      setHumedadModel(data.humedad || "");
+      setSupervisorModel(data.supervisor || null);
+      setHasModel(data.has || null);
+      setSacModel(data.sac || null);
+      setRedModel(data.red || null);
+      setHumedadModel(data.humedad || null);
       setCosechaModel(data.tipoCosecha || 0);
     }
   }, []);
@@ -52,10 +54,10 @@ export const CosechaModel = ({ onShowModel, data }) => {
     if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo Fecha es obligatorio."
     //if (!supervisorModel) nuevosErrores.supervisor = "El campo Supervisor es obligatorio."
-    if (!hasModel) nuevosErrores.has = "El campo HAS es obligatorio."
-    if (!sacModel) nuevosErrores.sac = "El campo SAC es obligatorio."
-    if (!redModel) nuevosErrores.red = "El campo RED es obligatorio."
-    if (!humedadModel) nuevosErrores.humedad = "El campo Humedad es obligatorio."
+    // if (!hasModel) nuevosErrores.has = "El campo HAS es obligatorio."
+    // if (!sacModel) nuevosErrores.sac = "El campo SAC es obligatorio."
+    // if (!redModel) nuevosErrores.red = "El campo RED es obligatorio."
+    // if (!humedadModel) nuevosErrores.humedad = "El campo Humedad es obligatorio."
     if (!cosechaModel) nuevosErrores.cosecha = "El campo Tipo Cosecha es obligatorio."
   
     setErrores(nuevosErrores)
@@ -93,6 +95,7 @@ export const CosechaModel = ({ onShowModel, data }) => {
   const handleSelectionChangeTierra = (option) => {
     setUCModel(option)
     const selected = listAsigna.find(tierra => tierra.tierraId === option)
+    setCampoModel(selected.campo)
     setUTModel({proveedorId:selected.proveedorId, ut:selected.ut})
   };
   const handleSelectionChangeCosechaTipo = (option) => {
@@ -101,32 +104,27 @@ export const CosechaModel = ({ onShowModel, data }) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
+      let save = {
+        cosechaHas: hasModel || null,
+        cosechaSac: sacModel || null,
+        cosechaRed: redModel || null,
+        cosechaHumedad: humedadModel || null,
+        cosechaCosechaTipoId: cosechaModel,
+      }
       if(idModel > 0){
-        const resp = await cosechaUpdate({
-          cosechaId: idModel,
-          cosechaHas: hasModel,
-          cosechaSac: sacModel,
-          cosechaRed: redModel,
-          cosechaHumedad: humedadModel,
-          cosechaCosechaTipoId: cosechaModel,
-          userModifiedName: "ADMIN",
-          userModifiedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
-       })
+        save.cosechaId= idModel
+        save.userModifiedName= "ADMIN"
+        save.userModifiedAt= obtenerFechaLocal({date: new Date()}).split('T')[0]
+        const resp = await cosechaUpdate(save)
        return retorna(resp)
       }
-      const resp = await cosechaSave({
-        cosechaFecha: fechaModel,
-        cosechaSupervisor: supervisorModel,
-        cosechaHas: hasModel,
-        cosechaSac: sacModel,
-        cosechaRed: redModel,
-        cosechaHumedad: humedadModel,
-        cosechaCosechaTipoId: cosechaModel,
-        cosechaTierraId: ucModel,
-        cosechaProveedorId: utModel.proveedorId,
-        userCreatedName: "ADMIN",
-        userCreatedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
-      })
+      save.cosechaFecha= fechaModel
+      save.cosechaSupervisor= supervisorModel || null
+      save.cosechaTierraId= ucModel
+      save.cosechaProveedorId= utModel.proveedorId
+      save.userCreatedName= "ADMIN"
+      save.userCreatedAt= obtenerFechaLocal({date: new Date()}).split('T')[0]
+      const resp = await cosechaSave(save)
       return retorna(resp)
     }
   }
@@ -175,10 +173,18 @@ export const CosechaModel = ({ onShowModel, data }) => {
                   {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
                 </div>
                 <div className='space-y-2'>
-                    <label htmlFor="CosechaUT" className="text-white">UT</label>
+                    <label htmlFor="Campo" className="text-white">Campo</label>
                     <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
+                        errores.campo ? "border-red-500" : ""
                     }`}
+                        name='query' placeholder='Automático el campo'
+                        value={campoModel || ''}
+                        readOnly
+                    />
+                </div>
+                <div className='space-y-2'>
+                    <label htmlFor="CosechaUT" className="text-white">UT</label>
+                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
                         name='query' placeholder='Automático el código UT'
                         value={utModel?.ut || ''}
                         readOnly
@@ -187,7 +193,7 @@ export const CosechaModel = ({ onShowModel, data }) => {
                 <div className='space-y-2'>
                     <label htmlFor="CosechaFecha" className="text-white">Fecha </label>
                     <input type='date' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
+                        errores.fecha ? "border-red-500" : ""
                     }`}
                         name='query' placeholder='Ejm: 20/11/2024'
                         value={fechaModel}
@@ -198,59 +204,44 @@ export const CosechaModel = ({ onShowModel, data }) => {
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaSupervisor" className="text-white">Supervisor</label>
-                    <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
-                    }`}
-                        name='query' placeholder='Ingrese el nombre'
+                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+                        name='query' placeholder='Ingrese el nombre (opcional)'
                         value={supervisorModel}
                         onChange={(e) => setSupervisorModel(e.target.value)}
                         readOnly={data.id > 0}
                     />
-                  {errores.supervisor && <p className="text-red-500 text-sm">{errores.supervisor}</p>}
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaHAS" className="text-white">HAS</label>
-                    <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
-                    }`}
-                        name='query' placeholder='Ingrese el valor'
+                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+                        name='query' placeholder='Ingrese el valor (opcional)'
                         value={hasModel}
                         onChange={(e) => setHasModel(e.target.value)}
                     />
-                  {errores.has && <p className="text-red-500 text-sm">{errores.has}</p>}
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaSac" className="text-white">SAC</label>
-                    <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
-                    }`}
-                        name='query' placeholder='Ingrese el valor'
+                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+                        name='query' placeholder='Ingrese el valor (opcional)'
                         value={sacModel}
                         onChange={(e) => setSacModel(e.target.value)}
                     />
-                  {errores.sac && <p className="text-red-500 text-sm">{errores.sac}</p>}
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaRed" className="text-white">Red</label>
-                    <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
-                    }`}
-                        name='query' placeholder='Ingrese el valor'
+                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+                        name='query' placeholder='Ingrese el valor (opcional)'
                         value={redModel}
                         onChange={(e) => setRedModel(e.target.value)}
                     />
-                  {errores.red && <p className="text-red-500 text-sm">{errores.red}</p>}
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaHumedad" className="text-white">Humedad</label>
-                    <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                        errores.uc ? "border-red-500" : ""
-                    }`}
-                        name='query' placeholder='Ingrese el valor'
+                    <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
+                        name='query' placeholder='Ingrese el valor (opcional)'
                         value={humedadModel}
                         onChange={(e) => setHumedadModel(e.target.value)}
                     />
-                  {errores.humedad && <p className="text-red-500 text-sm">{errores.humedad}</p>}
                 </div>
                 <div className='space-y-2'>
                     <label htmlFor="CosechaTipo" className="text-white">Tipo Cosecha</label>
