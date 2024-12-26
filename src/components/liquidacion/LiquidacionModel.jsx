@@ -33,12 +33,12 @@ export function LiquidacionModel({onShowModel, data}) {
   const [financiamientoInteresMesModel, setFinanciamientoInteresMesModel] = useState("0")
   const [financiamientoInteresModel, setFinanciamientoInteresModel] = useState("0") 
   const [financiamientoTotalModel, setFinanciamientoTotalModel] = useState("0")
-  const [financiamientoACuentaTotal, setFinanciamientoACuentaTotal] = useState('')
+  const [financiamientoACuentaTotal, setFinanciamientoACuentaTotal] = useState('0')
   const [liquidacionPorPagar, setLiquidacionPorPagar] = useState('')
 
   const [adicionalesMotivoModel, setAdicionalesMotivoModel] = useState('')
   const [adicionalesTotalModel, setAdicionalesTotalModel] = useState('')
-  const [adicionalesTotal, setAdicionalesTotal] = useState('')
+  const [adicionalesTotal, setAdicionalesTotal] = useState('0')
   const [showPopup, setShowPopup] = useState(false)
 
 
@@ -71,12 +71,13 @@ export function LiquidacionModel({onShowModel, data}) {
       setpComprasModel(data.liquidacionToneladaPrecioCompra || '')
       setToneladasTotalModel(data.liquidacionToneladaTotal || '')
 
-      setFinanciamientoACuentaTotal(data.liquidacionFinanciamientoACuenta || '')
-      setLiquidacionPorPagar(data.liquidacionPagar || '')
+      setFinanciamientoACuentaTotal(data.liquidacionFinanciamientoACuenta || '0')
+      setLiquidacionPorPagar(data.liquidacionPagar || '0')
       setFinanciamientoFechaModel(data.financiamientoFecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
       setTicketsSeleccionadosList(data.liquidacionTickets || [])
       setFinanciamientoList(data.liquidacionFinanciamiento || [])
       setAdicionalesList(data.liquidacionAdicionals || [])
+      setAdicionalesTotal(data.adicionalTotal || 0)
     }
   }, [])
   useEffect(() => {
@@ -104,19 +105,19 @@ export function LiquidacionModel({onShowModel, data}) {
   useEffect(() => {
     const total = financiamientoList.reduce(getSumFina, 0)
     if(total>0) return setFinanciamientoACuentaTotal(FormatteDecimalMath(total,2))
-    return setFinanciamientoACuentaTotal('')
+    return setFinanciamientoACuentaTotal('0')
   }, [financiamientoList])
   useEffect(() => {
     const total = adicionalesList.reduce(getSumAdi, 0)
     if(total>0) return setAdicionalesTotal(FormatteDecimalMath(total,2))
-    return setAdicionalesTotal('')
+    return setAdicionalesTotal('0')
   }, [adicionalesList])
   useEffect(()=>{
-    if(parseFloat(toneladasTotalModel) && parseFloat(financiamientoACuentaTotal)){
+    if(parseFloat(toneladasTotalModel)){
       const adicional = adicionalesTotal === '' ? 0 : parseFloat(adicionalesTotal)
       const total = parseFloat(toneladasTotalModel) - parseFloat(financiamientoACuentaTotal) - adicional
       setLiquidacionPorPagar(FormatteDecimalMath(total,2))
-    }else setLiquidacionPorPagar('')
+    }else setLiquidacionPorPagar('0')
   },[toneladasTotalModel, financiamientoACuentaTotal, adicionalesTotal])
   const getSum=(total, num) =>{
     return total + parseFloat(num.pesoBruto)
