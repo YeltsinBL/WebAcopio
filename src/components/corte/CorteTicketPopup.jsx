@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import CorteTicketPopupTable from './CorteTicketPopupTable'
-import { searchTickets } from '../../services/ticket'
+import { searchTickets, searchTicketsByProveedor } from '../../services/ticket'
 import { Footer, FooterButton } from '../common'
 
-const CorteTicketPopup = ({onShowModel, headers}) => {
+const CorteTicketPopup = ({onShowModel, headers, proveedorId= null}) => {
   const [ticketList, setTICKET_DATA] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
 
@@ -11,10 +11,15 @@ const CorteTicketPopup = ({onShowModel, headers}) => {
     getTicketActive()
   }, [])
   const getTicketActive = async() => {
-    const tickets = await searchTickets(
-      {ingenio:'', transportista:'', viaje:'', fechaDesde:'', fechaHasta:'',estado:1}
-    )
-    setTICKET_DATA(tickets)
+    if(proveedorId == null) {
+      const tickets = await searchTickets(
+        {ingenio:'', transportista:'', viaje:'', fechaDesde:'', fechaHasta:'',estado:1}
+      )
+      setTICKET_DATA(tickets)
+    }else{const tickets = await searchTicketsByProveedor(proveedorId)
+      setTICKET_DATA(tickets)
+      console.log(tickets)
+    }
   }
 
   const handleCheckboxChange = (row) => {

@@ -82,6 +82,22 @@ export const searchTicketsByCarguillo = async(carguilloId) => {
     throw new Error('Error al buscar tickets')
   }
 }
+export const searchTicketsByProveedor = async(proveedorId) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket/Liquidacion/Proveedor?proveedorId=${proveedorId}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    const tickets = await response.json()
+    const formatter= tickets?.map(ticket => (formatterticket(ticket))) 
+    return formatter
+
+  } catch (error) {
+    console.log('searchtickets:', error.message)
+    throw new Error('Error al buscar tickets')
+  }
+}
 export const ticketSave = async(ticket) => {
   try {
     const response = await fetch(`${appSetting.apiUrl}Ticket`, {

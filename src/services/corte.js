@@ -112,6 +112,7 @@ const formatterticket = (data) => {
       vehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
       unidadPeso : data.ticketUnidadPeso,
       pesoBruto : FormatteDecimal(data.ticketPesoBruto, 3),
-      estado : data.ticketEstadoDescripcion
+      estado : data.ticketEstadoDescripcion,
+      campo: data.ticketCampo
     }
   }

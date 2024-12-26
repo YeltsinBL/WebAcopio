@@ -2,6 +2,10 @@
 export const FormatteDecimal = (number, precision) => {
   return parseFloat(number).toFixed(precision)
 }
+export const FormatteDecimalMath = (number, precision) => {
+  const factor = Math.pow(10, precision);
+  return (Math.round(number * factor) / factor).toFixed(precision);
+};
 export const convertirFechaDDMMYYYY = (fechaString) => {
   const [year, month, day] = fechaString.split("-");
   return `${day}/${month}/${year}`;
