@@ -25,9 +25,9 @@ export const UserPage =()=> {
     setFilteredUsers(users || [])
   }
   const handleDataFromChild = (data) => {
-    const {name, userName, estado} = data
-    console.log(name && userName && estado )
-    if(name=='' && userName=='' && estado==='') return getUsers()
+    const {typeUserId, name, userName, estado} = data
+    if(typeUserId === '' && name==='' && userName==='' && estado==='') 
+      return getUsers()
     getUsers(data)
   }
   const handleRowSelect = async(rowData) =>{

@@ -2,7 +2,7 @@ import { appSetting } from "../settings/appsetting";
 
 export const searchUser = async(search) => {
   let url = `${appSetting.apiUrl}User`
-  if(search != null) url += `?name=${search.name}&userName=${search.userName}&estado=${search.estado}`
+  if(search != null) url += `?typeUserId=${search.typeUserId}&name=${search.name}&userName=${search.userName}&estado=${search.estado}`
   
   try {
     const response = await fetch(url, {

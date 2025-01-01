@@ -3,7 +3,6 @@ import { obtenerFechaLocal } from "../../utils";
 import { Footer, FooterButton, ModalDelete } from "../common";
 
 export default function UserModelDelete({onShowModel, data}) {
-    console.log(data)
   const handleGuardar = async(e)=>{
     e.preventDefault()
     const usuario={
