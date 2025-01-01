@@ -4,6 +4,15 @@ export const SIDEBAR_ITEMS = [
         name:"Principal", icon:Home, color:"#6366f1", href:"/"
     },
     {
+      group: "Gestionar Usuarios",
+      icon:MapIcon,
+      items: [
+        {
+            name:"Usuarios", icon:MapIcon, color:"#6366f1", href:"/usuario"
+        },
+      ],
+    },
+    {
         name:"Proveedor", icon:Users, color:"#6366f1", href:"/proveedor"
     },
     {

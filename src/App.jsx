@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom"
 import Sidebar from "./components/Sidebar"
 import { AsignarTierraPage, CarguilloPage, CortePage, CosechaPage, 
-  HomePage, LiquidacionPage, ProveedorPage, RecojoPage, ServicioTransportePage, TicketPage, TierrasPage 
+  HomePage, LiquidacionPage, ProveedorPage, RecojoPage, ServicioTransportePage, TicketPage, TierrasPage, 
+  UserPage
 } from "./pages"
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Sidebar />
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path='/usuario' element={<UserPage />} />
         <Route path='/proveedor' element={<ProveedorPage />} />
         <Route path='/tierras' element={<TierrasPage />} />
         <Route path='/asignartierra' element={<AsignarTierraPage />} />
