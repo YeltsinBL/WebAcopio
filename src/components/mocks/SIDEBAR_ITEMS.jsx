@@ -1,14 +1,17 @@
-import { AlignHorizontalDistributeCenter, Banknote, BarChart2, Bus, BusIcon, Home, MapIcon, RadarIcon, Sheet, TicketCheck, Users } from "lucide-react"
+import { AlignHorizontalDistributeCenter, Banknote, BarChart2, Bus, BusIcon, Home, MapIcon, RadarIcon, Sheet, TicketCheck, UserCog, UserPen, Users, UserSquare } from "lucide-react"
 export const SIDEBAR_ITEMS = [
     {
         name:"Principal", icon:Home, color:"#6366f1", href:"/"
     },
     {
       group: "Gestionar Usuarios",
-      icon:MapIcon,
+      icon:UserCog,
       items: [
         {
-            name:"Usuarios", icon:MapIcon, color:"#6366f1", href:"/usuario"
+            name:"Tipo de Usuario", icon:UserSquare, color:"#6366f1", href:"/tipousuario"
+        },
+        {
+            name:"Usuarios", icon:UserPen, color:"#6366f1", href:"/usuario"
         },
       ],
     },
