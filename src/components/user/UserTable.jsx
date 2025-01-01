@@ -2,7 +2,7 @@ import { Edit, Trash2 } from "lucide-react";
 import { NoRegistros, Table, TableButton, TableTd } from "../common";
 
 export default function UserTable({data, onRowSelect, onDelete}) {
-  const header = ['Tipo Usuario', 'DNI', 'Nombre', 'Usuario','Activo', 'Actions']
+  const header = ['Tipo Usuario', 'DNI', 'Nombre', 'Usuario','Activo', 'Acciones']
   return (
     <Table nameTitle={'Lista de Usuarios'} headers={header}>
       {data.length >0 ?
