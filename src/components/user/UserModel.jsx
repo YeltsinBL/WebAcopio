@@ -9,7 +9,7 @@ import { formatterDataCombo, obtenerFechaLocal } from "../../utils";
 import { searchModulesGetAll, userSave } from "../../services/user";
 import { searchTypeUser } from "../../services/tipousuario";
 
-export default function UserModel({onShowModel, data}) {
+export function UserModel({onShowModel, data}) {
   const [userIdModel, setUserIdModel] = useState(0)
   const [personIdModel, setPersonIdModel] = useState(0)
   const [dniModel, setDniModel] = useState('')

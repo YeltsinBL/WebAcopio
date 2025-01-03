@@ -4,7 +4,7 @@ import { ESTADO_BASIC } from "../mocks/DataList";
 import { searchTypeUser } from "../../services/tipousuario";
 import { formatterDataCombo } from "../../utils";
 
-export default function UserFilter({onUserValues}) {
+export function UserFilter({onUserValues}) {
   const [nameFilter, setNameFilter] = useState('')
   const [userNameFilter, setUserNameFilter] = useState('')
   const [estadoFilter, setEstadoFilter] = useState('')

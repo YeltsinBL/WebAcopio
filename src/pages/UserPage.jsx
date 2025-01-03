@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Footer, FooterButton, Header, Main } from "../components/common";
-import UserFilter from "../components/user/UserFilter";
-import UserTable from "../components/user/UserTable";
 import { useClosePage } from "../hooks/common";
 import { searchUser, userGetById } from "../services/user";
-import UserModel from "../components/user/UserModel";
-import UserModelDelete from "../components/user/UserModelDelete";
+import { 
+  UserFilter, UserModalReset, UserModel, UserModelDelete, UserTable 
+} from "../components/user";
 
 export const UserPage =()=> {
   const handleGoBack = useClosePage()
@@ -15,7 +14,8 @@ export const UserPage =()=> {
   const [showModal, setShowModal] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [showModalDelete, setShowModalDelete] = useState(null)
-  const [dataModalDelete, setDataModalDelete] = useState(0)
+  const [dataModal, setDataModal] = useState({})
+  const [showModalReset, setShowModalReset] = useState(null)
 
   useEffect(()=>{
     getUsers()
@@ -42,12 +42,20 @@ export const UserPage =()=> {
     setShowModal(false)
   }
   const eliminarProducto = (data) => {
-    setDataModalDelete(data)
+    setDataModal(data)
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (userId) =>{
     if(userId > 0) getUsers()
     setShowModalDelete(false)
+  }
+  const resetPassword = async(user) => {    
+    setDataModal(user)
+    setShowModalReset(true)
+  }
+  const handleShowModelReset = (userId) =>{
+    if(userId) getUsers()
+    setShowModalReset(false)
   }
   return (
     <div className='flex-1 overflow-auto relative z-10'>
@@ -56,14 +64,16 @@ export const UserPage =()=> {
         {!showModal ?
         <>
           <UserFilter onUserValues={handleDataFromChild}/>
-          <UserTable data={filteredUsers} onRowSelect={handleRowSelect} onDelete={eliminarProducto} />
+          <UserTable data={filteredUsers} onRowSelect={handleRowSelect} onDelete={eliminarProducto} onResetPassword={resetPassword}/>
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect} />
             <FooterButton name={'Salir'} accion={handleGoBack} />
           </Footer>
         </>:
         <UserModel onShowModel={handleShowModel} data={selectedRowData}/>}
-        {showModalDelete && (<UserModelDelete onShowModel={handleShowModelDelete} data={dataModalDelete}/>)}
+        {showModalDelete && (<UserModelDelete onShowModel={handleShowModelDelete} data={dataModal}/>)}
+        {showModalReset && (<UserModalReset onShowModel={handleShowModelReset} data={dataModal}/>)}
+
       </Main>
     </div>
   )

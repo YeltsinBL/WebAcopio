@@ -2,7 +2,7 @@ import { userSave } from "../../services/user";
 import { obtenerFechaLocal } from "../../utils";
 import { Footer, FooterButton, ModalDelete } from "../common";
 
-export default function UserModelDelete({onShowModel, data}) {
+export function UserModelDelete({onShowModel, data}) {
   const handleGuardar = async(e)=>{
     e.preventDefault()
     const usuario={

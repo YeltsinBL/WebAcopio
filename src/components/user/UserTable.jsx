@@ -1,7 +1,7 @@
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, RefreshCcw, Trash2 } from "lucide-react";
 import { NoRegistros, Table, TableButton, TableTd } from "../common";
 
-export default function UserTable({data, onRowSelect, onDelete}) {
+export function UserTable({data, onRowSelect, onDelete, onResetPassword}) {
   const header = ['Tipo Usuario', 'DNI', 'Nombre', 'Usuario','Activo', 'Acciones']
   return (
     <Table nameTitle={'Lista de Usuarios'} headers={header}>
@@ -20,11 +20,18 @@ export default function UserTable({data, onRowSelect, onDelete}) {
 		  	    <Edit size={18} />
 		      </TableButton>
 		      { user.userStatus && (
-		  	  <TableButton className={'text-red-400 hover:text-red-300 '} 
+		  	  <TableButton className={'text-red-400 hover:text-red-300 px-3'} 
 		  	    onRowSelect={()=>onDelete(user)}>
 		  	    <Trash2 size={18} />
 		  	  </TableButton>
 		      )}
+          { user.userStatus && !user.userResetPassword && (
+		  	  <TableButton className={'text-green-400 hover:text-green-300 '} 
+		  	    onRowSelect={()=>onResetPassword(user)}>
+		  	    <RefreshCcw size={18} />
+		  	  </TableButton>
+		      )}
+          
 		    </TableTd>
           </tr>
         )):( <NoRegistros colSpan={header.length}/>)
