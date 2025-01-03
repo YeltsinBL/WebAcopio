@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { 
+  ComboBoxCustom,
   FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput, 
   NoRegistros, SectionModel, Table, TableButton, TableTd 
 } from "../common";
 import { Search } from "lucide-react";
-import { obtenerFechaLocal } from "../../utils";
+import { formatterDataCombo, obtenerFechaLocal } from "../../utils";
 import { searchModulesGetAll, userSave } from "../../services/user";
+import { searchTypeUser } from "../../services/tipousuario";
 
 export default function UserModel({onShowModel, data}) {
   const [userIdModel, setUserIdModel] = useState(0)
@@ -19,6 +21,10 @@ export default function UserModel({onShowModel, data}) {
   const [userPasswordModel, setUserPasswordModel] = useState('123')
   const [activo, setActivo] = useState("Activo")
   const [errores, setErrores] = useState({})
+  
+  const [tipoUsuarioList, setTipoUsuarioList] = useState([])
+  const seleccionTipoUsuario = data.typePersonId ? {id: data.typePersonId, nombre: data.typePersonName } : null
+
   const [modulosList, setModulosList] = useState([])
   const header = ['Módulo', 'Asignado']
   const [modulosChange, setModulosChange] = useState([])
@@ -50,9 +56,22 @@ export default function UserModel({onShowModel, data}) {
     fetchData()
     /*** "typePersonName": "string" */
   },[data])
+  useEffect(() => {
+    getTipoUsuarioList()
+  },[])
+  const getTipoUsuarioList = async() => {
+      var tipos = await searchTypeUser({name:'',estado:true})
+      const formatter= tipos?.map(tipo =>(
+        formatterDataCombo(tipo.tipoUsuarioId, tipo.tipoUsuarioNombre)))
+      setTipoUsuarioList(formatter)
+  }
 
   const modulesGetAll = async() => await searchModulesGetAll()
-  
+
+  const handleSelectionChangeTipoUsuario = (option) => {
+    if(option==''|| isNaN(option)) return setTypePersonIdModel('')
+    setTypePersonIdModel(option)
+  }
   const validarCampos = () => {
     const nuevosErrores = {}
     if (!nameModel) nuevosErrores.nombre = "El campo Nombre es obligatorio."
@@ -109,8 +128,12 @@ export default function UserModel({onShowModel, data}) {
       <SectionModel title={(userIdModel >0 ? 'Editar':'Registrar')+' Usuario'} >
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
           <FilterOption htmlFor={'TypePersonModel'} name={'Tipo Usuario'}>
-              <InputTextCustom textValue={typePersonIdModel} valueError={errores.tipoPersonaId}
-                placeholder="Selecciona" onChange={setTypePersonIdModel} />
+              <ComboBoxCustom initialOptions={tipoUsuarioList} selectedOption={seleccionTipoUsuario}
+                onSelectionChange={handleSelectionChangeTipoUsuario}
+                className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                errores.tipoPersonaId ? "border-red-500" : ""
+                }`}
+                colorOptions={"text-black"} />
               {errores.tipoPersonaId && <MessageValidationInput mensaje={errores.tipoPersonaId}/>}
           </FilterOption>
           <FilterOption htmlFor={'DniModel'} name={'DNI'}>
