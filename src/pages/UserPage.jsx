@@ -53,13 +53,16 @@ export const UserPage =()=> {
     <div className='flex-1 overflow-auto relative z-10'>
       <Header title={'Usuarios'} />
       <Main>
+        {!showModal ?
+        <>
           <UserFilter onUserValues={handleDataFromChild}/>
           <UserTable data={filteredUsers} onRowSelect={handleRowSelect} onDelete={eliminarProducto} />
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect} />
             <FooterButton name={'Salir'} accion={handleGoBack} />
-          </Footer>        
-        {showModal && (<UserModel onShowModel={handleShowModel} data={selectedRowData}/>)}
+          </Footer>
+        </>:
+        <UserModel onShowModel={handleShowModel} data={selectedRowData}/>}
         {showModalDelete && (<UserModelDelete onShowModel={handleShowModelDelete} data={dataModalDelete}/>)}
       </Main>
     </div>

@@ -53,7 +53,20 @@ export const userGetById = async({id}) => {
     }
   }
 export const searchUserModules = async(userName) => {
-  const url = `${appSetting.apiUrl}User/GetModules?userName=${userName}`  
+  const url = `${appSetting.apiUrl}User/GetAssignedModules?userName=${userName}`  
+  try {
+    const response = await fetch(url, {
+      method: 'GET', headers: { 'Content-Type': 'application/json' }
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    return await response.json()
+  } catch (error) {
+    console.log('searchUser:', error.message)
+    throw new Error('Error al buscar usuarios')
+  }
+}
+export const searchModulesGetAll = async() => {
+  const url = appSetting.apiUrl+'User/GetAllModules'
   try {
     const response = await fetch(url, {
       method: 'GET', headers: { 'Content-Type': 'application/json' }
