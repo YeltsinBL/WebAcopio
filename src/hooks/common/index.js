@@ -1,4 +1,5 @@
 export * from './index'
 export * from './useClosePage'
 export * from './useFetchData'
+export * from './useFetchModule'
 export * from './useOpenFileTable'
