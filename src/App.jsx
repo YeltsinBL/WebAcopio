@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import Sidebar from "./components/Sidebar"
 import { AsignarTierraPage, CarguilloPage, CortePage, CosechaPage, 
-  HomePage, LiquidacionPage, ProveedorPage, RecojoPage, ServicioTransportePage, TicketPage, TierrasPage, 
+  HomePage, LiquidacionPage, Login, ProveedorPage, RecojoPage, ServicioTransportePage, TicketPage, TierrasPage, 
   TipoUsuarioPage, UserPage
 } from "./pages"
 
@@ -17,6 +17,7 @@ function App() {
 
       <Sidebar />
       <Routes>
+        <Route path='/login' element={<Login />} />
         <Route path='/' element={<HomePage />} />
         <Route path='/tipousuario' element={<TipoUsuarioPage />} />
         <Route path='/usuario' element={<UserPage />} />
