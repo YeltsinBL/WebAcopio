@@ -52,11 +52,15 @@ export const userGetById = async({id}) => {
       throw new Error('Error al guardar el usuario')
     }
   }
-export const searchUserModules = async(userName) => {
+export const searchUserModules = async(userName, token) => {
   const url = `${appSetting.apiUrl}User/GetAssignedModules?userName=${userName}`  
   try {
     const response = await fetch(url, {
-      method: 'GET', headers: { 'Content-Type': 'application/json' }
+      method: 'GET', 
+      headers: { 
+        'Content-Type': 'application/json',
+        'authorization': `Bearer ${token}`
+      }
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()

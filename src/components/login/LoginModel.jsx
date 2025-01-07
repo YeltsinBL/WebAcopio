@@ -8,6 +8,7 @@ import { useClosePage } from "../../hooks/common"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { createUser, resetUser, UserKey } from "../../redux/states/user"
+import { clearModuleNames } from "../../redux/states/modules"
 
 export const LoginModel = () => {
   
@@ -27,6 +28,7 @@ export const LoginModel = () => {
       userRef.current.focus();
       clearLocalStorage(UserKey)
       dispatch(resetUser())
+      dispatch(clearModuleNames())
       navigate("/login", {replace: true})
   }, [])
   const validation= () => {

@@ -4,7 +4,7 @@ import { clearLocalStorage, persistLocalStorage } from "../../utils/localStorage
 export const UserKey = 'userKey'
 
 export const userSlice = createSlice({
-  name: 'userKey',
+  name: UserKey,
   initialState: localStorage.getItem(UserKey) ? JSON.parse(localStorage.getItem(UserKey)):{},
   reducers: {
     createUser: (_, action) => {

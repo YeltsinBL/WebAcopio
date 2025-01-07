@@ -2,6 +2,7 @@ import { Route } from "react-router-dom"
 import Sidebar from "../../components/Sidebar"
 import { RoutesWithNotFound } from "../../utils"
 import { lazy } from "react"
+import { RoleGuard } from "../../guards"
 
 const HomePage = lazy(() => import('../HomePage'))
 const UserPage = lazy(() => import('../UserPage'))
@@ -20,7 +21,8 @@ const PrivateRoute = () => {
   return (
     <>
       <Sidebar />
-      <RoutesWithNotFound>            
+      <RoutesWithNotFound>
+        <Route element={<RoleGuard />}>
         <Route path='/' element={<HomePage />} />
         <Route path='/usuario' element={<UserPage />} />
         <Route path='/tipousuario' element={<TipoUsuarioPage />} />
@@ -34,6 +36,7 @@ const PrivateRoute = () => {
         <Route path='/recojo' element={<RecojoPage />} />
         <Route path='/serviciotransporte' element={<ServicioTransportePage />} />
         <Route path='/liquidacion' element={<LiquidacionPage />} />
+        </Route>
       </RoutesWithNotFound>
     </>
   )
