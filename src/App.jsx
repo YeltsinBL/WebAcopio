@@ -1,10 +1,13 @@
-import { Route, Routes } from "react-router-dom"
-import Sidebar from "./components/Sidebar"
-import { AsignarTierraPage, CarguilloPage, CortePage, CosechaPage, 
-  HomePage, LiquidacionPage, Login, ProveedorPage, RecojoPage, ServicioTransportePage, TicketPage, TierrasPage, 
-  TipoUsuarioPage, UserPage
-} from "./pages"
+import { lazy, Suspense } from "react"
+import { Provider } from "react-redux"
+import { Route, BrowserRouter } from "react-router-dom"
+import store from './redux/store.js'
+import { RoutesWithNotFound } from "./utils"
+import { AuthGuard } from "./guards"
+import { Loading } from "./components/Loading/Loading"
 
+const LoginPage = lazy(() => import('./pages/Login'))
+const PrivateRoute = lazy(()=>  import('./pages/Private/PrivateRoute'))
 function App() {
   return (
     <div className='flex h-screen bg-gray-900 text-gray-100 overflow-hidden'>
@@ -14,24 +17,18 @@ function App() {
         <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-gray-900 opacity-80'/>
         <div className='absolute inset-0 backdrop-blur-sm'/>
       </div>
-
-      <Sidebar />
-      <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/' element={<HomePage />} />
-        <Route path='/tipousuario' element={<TipoUsuarioPage />} />
-        <Route path='/usuario' element={<UserPage />} />
-        <Route path='/proveedor' element={<ProveedorPage />} />
-        <Route path='/tierras' element={<TierrasPage />} />
-        <Route path='/asignartierra' element={<AsignarTierraPage />} />
-        <Route path='/cosecha' element={<CosechaPage />} />
-        <Route path='/ticket' element={<TicketPage />} />
-        <Route path='/corte' element={<CortePage />} />
-        <Route path='/carguillo' element={<CarguilloPage />} />
-        <Route path='/recojo' element={<RecojoPage />} />
-        <Route path='/serviciotransporte' element={<ServicioTransportePage />} />
-        <Route path='/liquidacion' element={<LiquidacionPage />} />
-      </Routes>
+      <Suspense fallback={<Loading />}>
+        <Provider store={store}>
+          <BrowserRouter>
+            <RoutesWithNotFound>
+              <Route path='/login' element={<LoginPage />} />
+              <Route element={<AuthGuard privateValidation={true} />}>
+                <Route path="*" element={ <PrivateRoute /> }/>
+              </Route>
+            </RoutesWithNotFound>
+          </BrowserRouter>
+        </Provider>
+      </Suspense>
     </div>
   )
 }

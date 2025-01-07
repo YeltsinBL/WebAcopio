@@ -8,7 +8,7 @@ import { convertirFechaDDMMYYYY } from '../utils'
 import { ServicioTransporteModal } from '../components/servicioTransporte/ServicioTransporteModal'
 import { ServicioTransporteModalDelete } from '../components/servicioTransporte/ServicioTransporteModalDelete'
 
-export const ServicioTransportePage = () => {
+const ServicioTransportePage = () => {
   const handleGoBack = useClosePage()
   const [servicioList, setServicioList] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
@@ -80,3 +80,4 @@ export const ServicioTransportePage = () => {
     </ContainerPageCustom>
   )
 }
+export default ServicioTransportePage

@@ -7,7 +7,7 @@ import { LiquidacionModel } from "../components/liquidacion/LiquidacionModel";
 import { LiquidacionFilter } from "../components/liquidacion/LiquidacionFilter";
 import { LiquidacionTable } from "../components/liquidacion/LiquidacionTable";
 
-export function LiquidacionPage() {
+function LiquidacionPage() {
   const handleGoBack = useClosePage()
   const [liquidacionList, setLiquidacionList] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
@@ -80,3 +80,4 @@ export function LiquidacionPage() {
     </ContainerPageCustom>
   )
 }
+export default LiquidacionPage

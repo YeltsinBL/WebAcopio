@@ -6,7 +6,7 @@ import {
   TierraModel, TierraModelDelete, TierrasFilter, TierrasTable 
 } from "../components/tierras"
 
-export const TierrasPage = () => {
+const TierrasPage = () => {
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
 
   const handleGoBack = () => {
@@ -97,3 +97,4 @@ export const TierrasPage = () => {
     </div>
   )
 }
+export default TierrasPage

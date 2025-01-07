@@ -6,7 +6,7 @@ import {
   AsignaTierraFilter, AsignaTierraModel, AsignaTierraModelDelete, AsignaTierraTable 
 } from "../components/asignatierra"
 
-export const AsignarTierraPage = () => {
+const AsignarTierraPage = () => {
 
   const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
 
@@ -97,3 +97,4 @@ export const AsignarTierraPage = () => {
     </div>
   )
 }
+export default AsignarTierraPage

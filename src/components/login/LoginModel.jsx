@@ -3,12 +3,18 @@ import {
   FilterOption, Footer, FooterButton, MessageValidationInput, SectionModel 
 } from "../common"
 import { AuthorizationLogIn, AuthorizationResetPassword, AuthorizationVerifyPassword } from "../../services/authorization"
-import { obtenerFechaLocal } from "../../utils"
+import { clearLocalStorage, obtenerFechaLocal } from "../../utils"
 import { useClosePage } from "../../hooks/common"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { createUser, resetUser, UserKey } from "../../redux/states/user"
 
 export const LoginModel = () => {
   
   const handleGoBack = useClosePage()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const userRef = useRef()
   const errRef = useRef()
   const [user, setUser] = useState('')
@@ -19,6 +25,9 @@ export const LoginModel = () => {
   const [errores, setErrores] = useState({})
   useEffect(() => {
       userRef.current.focus();
+      clearLocalStorage(UserKey)
+      dispatch(resetUser())
+      navigate("/login", {replace: true})
   }, [])
   const validation= () => {
     const nuevosErrores = {}
@@ -34,7 +43,10 @@ export const LoginModel = () => {
       const verify = await AuthorizationVerifyPassword({userName: user, userPassword: pwd})
       if(verify) return setChangePassword(verify)
       const login = await AuthorizationLogIn({userName: user, userPassword: pwd})
-      if(login.resultado) return handleGoBack()
+      if(login.resultado) {
+        dispatch(createUser({...login}))
+        return handleGoBack()
+      }
     }
     if(validation() && changePassword){
       const reset = await AuthorizationResetPassword({

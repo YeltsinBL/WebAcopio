@@ -1,7 +1,7 @@
 import { ContainerPageCustom} from "../components/common";
 import { LoginModel } from "../components/login/LoginModel";
 
-export const Login = () => {
+const Login = () => {
 
   return (
     <ContainerPageCustom>
@@ -9,3 +9,4 @@ export const Login = () => {
     </ContainerPageCustom> 
   )
 }
+export default Login

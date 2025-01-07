@@ -6,7 +6,7 @@ import {
   CorteFilter, CorteModel, CorteModelDelete, CorteTable 
 } from '../components/corte'
 
-export const CortePage = () => {
+const CortePage = () => {
   const navigate = useNavigate()
   const [corteList, setCorteList] = useState([])
   const [showModel, setShowModel] = useState(false)
@@ -78,3 +78,4 @@ export const CortePage = () => {
     </div>
   )
 }
+export default CortePage

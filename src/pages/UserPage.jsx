@@ -6,7 +6,7 @@ import {
   UserFilter, UserModalReset, UserModel, UserModelDelete, UserTable 
 } from "../components/user";
 
-export const UserPage =()=> {
+const UserPage =()=> {
   const handleGoBack = useClosePage()
   /* FILTRO */
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -78,3 +78,4 @@ export const UserPage =()=> {
     </div>
   )
 }
+export default UserPage

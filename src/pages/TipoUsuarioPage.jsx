@@ -6,7 +6,7 @@ import {
 } from "../components/tipoUsuario"
 import { searchTypeUser } from "../services/tipousuario"
 
-export const TipoUsuarioPage = () => {
+const TipoUsuarioPage = () => {
   const handleGoBack = useClosePage()
 
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -52,3 +52,4 @@ export const TipoUsuarioPage = () => {
     </div>
   )
 }
+export default TipoUsuarioPage

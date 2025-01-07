@@ -5,7 +5,7 @@ import { useClosePage } from '../hooks/common'
 import { recojoGetById, searchRecojos } from '../services/recojo'
 import { convertirFechaDDMMYYYY } from '../utils'
 
-export const RecojoPage = () => {
+const RecojoPage = () => {
   const handleGoBack = useClosePage()
   const [recojoList, setRecojoList] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
@@ -82,3 +82,4 @@ export const RecojoPage = () => {
     </ContainerPageCustom>
   )
 }
+export default RecojoPage

@@ -4,7 +4,7 @@ import { getCarguillobyId, searchCarguilloList } from '../services/carguillo'
 import { CarguilloFilter, CarguilloModel, CarguilloTable } from '../components/carguillo/index'
 import { useNavigate } from 'react-router-dom'
 
-export const CarguilloPage = () => {
+const CarguilloPage = () => {
   const navigate = useNavigate()
   const [carguilloList, setCarguilloList] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
@@ -64,3 +64,4 @@ export const CarguilloPage = () => {
     </div>
   )
 }
+export default CarguilloPage
