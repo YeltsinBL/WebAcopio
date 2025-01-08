@@ -17,6 +17,7 @@ const CarguilloPage = lazy(() => import ('../CarguilloPage'))
 const RecojoPage = lazy(() => import ('../RecojoPage'))
 const ServicioTransportePage = lazy(() => import ('../ServicioTransportePage'))
 const LiquidacionPage = lazy(() => import ('../LiquidacionPage'))
+const TesoreriaPage = lazy(() => import ('./tesoreria/TesoreriaPage'))
 const PrivateRoute = () => {
   return (
     <>
@@ -36,6 +37,7 @@ const PrivateRoute = () => {
         <Route path='/recojo' element={<RecojoPage />} />
         <Route path='/serviciotransporte' element={<ServicioTransportePage />} />
         <Route path='/liquidacion' element={<LiquidacionPage />} />
+        <Route path='/tesoreria' element={<TesoreriaPage />} />
         </Route>
       </RoutesWithNotFound>
     </>
