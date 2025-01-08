@@ -1,8 +1,8 @@
 
 import { Edit, Trash2 } from "lucide-react"
-import { NoRegistros, Table, TableButton, TableTd } from "../common"
-import { ExpendableButton } from "../common/ExpendableButton"
-import useOpenController from "../../hooks/common/useOpenFileTable"
+import { NoRegistros, Table, TableButton, TableTd } from "../../../../components/common"
+import { ExpendableButton } from "../../../../components/common/ExpendableButton"
+import useOpenController from "../../../../hooks/common/useOpenFileTable"
 
 export const ProveedorTable = ({PROVEEDOR_DATA, onRowSelect, eliminarProducto}) => {
   const header = ['UT', 'DNI', 'Nombre', 'Activo', 'Actions']

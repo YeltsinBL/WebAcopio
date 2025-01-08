@@ -1,5 +1,5 @@
-import { proveedorSave } from "../../services/proveedor"
-import { obtenerFechaLocal } from "../../utils"
+import { proveedorSave } from "../../../../services/proveedor"
+import { obtenerFechaLocal } from "../../../../utils"
 
 export const ProveedorModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async (e) => {

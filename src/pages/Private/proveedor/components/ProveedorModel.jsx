@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { proveedorSave } from "../../services/proveedor"
-import { obtenerFechaLocal } from "../../utils"
-import { ButtonCustom, FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, TableBodyCustom, TableButton, TableContainerCustom, TableHeaderCustom, TableTd, TitleCustom } from "../common"
+import { proveedorSave } from "../../../../services/proveedor"
+import { obtenerFechaLocal } from "../../../../utils"
+import { ButtonCustom, FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, TableBodyCustom, TableButton, TableContainerCustom, TableHeaderCustom, TableTd, TitleCustom } from "../../../../components/common"
 import { Edit, Power, Trash2 } from "lucide-react"
 
 export const ProveedorModel = ({ onShowModel, data }) => {

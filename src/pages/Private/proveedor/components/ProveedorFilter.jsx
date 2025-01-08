@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { ButtonCustom, ComboBoxCustom, FilterOption, InputTextCustom, SectionFilter } from "../common"
-import { ESTADO_BASIC } from "../mocks/DataList"
+import { ButtonCustom, ComboBoxCustom, FilterOption, InputTextCustom, SectionFilter } from "../../../../components/common"
+import { ESTADO_BASIC } from "../../../../components/mocks/DataList"
 
 export const ProveedorFilter = ({onUTValue}) => {
     const [utFilter, setUTFilter] = useState('')

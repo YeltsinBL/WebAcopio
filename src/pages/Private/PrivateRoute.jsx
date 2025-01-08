@@ -7,7 +7,7 @@ import { RoleGuard } from "../../guards"
 const HomePage = lazy(() => import('../HomePage'))
 const UserPage = lazy(() => import('../UserPage'))
 const TipoUsuarioPage = lazy(() => import('../TipoUsuarioPage'))
-const ProveedorPage  = lazy(() => import('../ProveedorPage'))
+const ProveedorPage  = lazy(() => import('./proveedor/ProveedorPage'))
 const TierrasPage = lazy(() => import ('../TierrasPage'))
 const AsignarTierraPage = lazy(() => import ('../AsignarTierraPage'))
 const CosechaPage = lazy(() => import ('../CosechaPage'))
