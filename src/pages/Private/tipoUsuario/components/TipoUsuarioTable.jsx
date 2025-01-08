@@ -1,11 +1,11 @@
+import { useState } from "react"
 import { Edit, Trash2 } from "lucide-react"
 import { ButtonCustom, FilterOption, InputTextCustom, MessageValidationInput, NoRegistros,
-    TableBodyCustom, TableButton, TableContainerCustom,
-    TableFooterCustom, TableHeaderCustom, TableTd, TitleCustom 
-} from "../common"
-import { useState } from "react"
-import { obtenerFechaLocal } from "../../utils"
-import { typeUserGetById, typeUserSave } from "../../services/tipousuario"
+  TableBodyCustom, TableButton, TableContainerCustom,
+  TableFooterCustom, TableHeaderCustom, TableTd, TitleCustom
+} from "../../../../components/common"
+import { obtenerFechaLocal } from "../../../../utils"
+import { typeUserGetById, typeUserSave } from "../../../../services/tipousuario"
 
 export const TipoUsuarioTable = ({data, onSave, onDelete}) => {
   const header = ['Tipo Usuario', 'Activo', 'Acciones']

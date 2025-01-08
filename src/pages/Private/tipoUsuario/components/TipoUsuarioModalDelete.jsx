@@ -1,6 +1,8 @@
-import { typeUserSave } from "../../services/tipousuario"
-import { obtenerFechaLocal } from "../../utils"
-import { Footer, FooterButton, ModalDelete } from "../common"
+import { 
+  Footer, FooterButton, ModalDelete
+} from "../../../../components/common"
+import { typeUserSave } from "../../../../services/tipousuario"
+import { obtenerFechaLocal } from "../../../../utils"
 
 export const TipoUsuarioModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e)=>{

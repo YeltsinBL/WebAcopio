@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import { Footer, FooterButton, Header, Main } from "../components/common"
-import { useClosePage } from "../hooks/common";
+import { Footer, FooterButton, Header, Main } from "../../../components/common"
+import { useClosePage } from "../../../hooks/common";
 import { 
     TipoUsuarioFilter, TipoUsuarioModalDelete, TipoUsuarioTable
-} from "../components/tipoUsuario"
-import { searchTypeUser } from "../services/tipousuario"
+} from "./components"
+import { searchTypeUser } from "../../../services/tipousuario"
 
 const TipoUsuarioPage = () => {
   const handleGoBack = useClosePage()
