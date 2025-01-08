@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { ButtonCustom, ComboBoxCustom, FilterOption, InputTextCustom, SectionFilter } from "../common";
-import { ESTADO_BASIC } from "../mocks/DataList";
-import { searchTypeUser } from "../../services/tipousuario";
-import { formatterDataCombo } from "../../utils";
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, InputTextCustom, SectionFilter
+} from "../../../../components/common"
+import { ESTADO_BASIC } from "../../../../components/mocks/DataList"
+import { searchTypeUser } from "../../../../services/tipousuario"
+import { formatterDataCombo } from "../../../../utils"
 
 export function UserFilter({onUserValues}) {
   const [nameFilter, setNameFilter] = useState('')

@@ -1,6 +1,0 @@
-export * from './UserFilter'
-export * from './UserModalReset'
-export * from './UserModel'
-export * from './UserModelDelete'
-export * from './UserTable'
-export * from './index'

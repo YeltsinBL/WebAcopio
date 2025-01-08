@@ -1,5 +1,7 @@
 import { Edit, RefreshCcw, Trash2 } from "lucide-react";
-import { NoRegistros, Table, TableButton, TableTd } from "../common";
+import { 
+  NoRegistros, Table, TableButton, TableTd
+} from "../../../../components/common";
 
 export function UserTable({data, onRowSelect, onDelete, onResetPassword}) {
   const header = ['Tipo Usuario', 'DNI', 'Nombre', 'Usuario','Activo', 'Acciones']

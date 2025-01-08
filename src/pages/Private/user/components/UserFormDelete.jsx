@@ -1,6 +1,6 @@
-import { userSave } from "../../services/user";
-import { obtenerFechaLocal } from "../../utils";
-import { Footer, FooterButton, ModalDelete } from "../common";
+import { Footer, FooterButton, ModalDelete } from "../../../../components/common"
+import { userSave } from "../../../../services/user"
+import { obtenerFechaLocal } from "../../../../utils"
 
 export function UserModelDelete({onShowModel, data}) {
   const handleGuardar = async(e)=>{

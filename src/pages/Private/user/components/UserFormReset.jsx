@@ -1,5 +1,7 @@
-import { AuthorizationActivateResetPassword } from "../../services/authorization"
-import { Footer, FooterButton, ModalDelete } from "../common"
+import { AuthorizationActivateResetPassword } from "../../../../services/authorization"
+import { 
+  Footer, FooterButton, ModalDelete
+} from "../../../../components/common"
 
 export const UserModalReset = ({onShowModel, data}) => {
   const handleGuardar =async(e)=>{

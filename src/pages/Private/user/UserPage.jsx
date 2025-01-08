@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Footer, FooterButton, Header, Main } from "../components/common";
-import { useClosePage } from "../hooks/common";
-import { searchUser, userGetById } from "../services/user";
+import {
+  Footer, FooterButton, Header, Main
+} from "../../../components/common"
+import { useClosePage } from "../../../hooks/common"
+import { searchUser, userGetById } from "../../../services/user";
 import { 
   UserFilter, UserModalReset, UserModel, UserModelDelete, UserTable 
-} from "../components/user";
+} from "./components";
 
 const UserPage =()=> {
   const handleGoBack = useClosePage()

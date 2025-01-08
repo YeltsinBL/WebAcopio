@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import { Search } from "lucide-react"
 import { 
-  ComboBoxCustom,
-  FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput, 
-  NoRegistros, SectionModel, Table, TableButton, TableTd 
-} from "../common";
-import { Search } from "lucide-react";
-import { formatterDataCombo, obtenerFechaLocal } from "../../utils";
-import { searchModulesGetAll, userSave } from "../../services/user";
-import { searchTypeUser } from "../../services/tipousuario";
+  ComboBoxCustom, FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput,
+  NoRegistros, SectionModel, Table, TableButton, TableTd
+} from "../../../../components/common"
+import { formatterDataCombo, obtenerFechaLocal } from "../../../../utils"
+import { searchModulesGetAll, userSave } from "../../../../services/user"
+import { searchTypeUser } from "../../../../services/tipousuario"
 
 export function UserModel({onShowModel, data}) {
   const [userIdModel, setUserIdModel] = useState(0)
