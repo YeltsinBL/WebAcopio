@@ -5,7 +5,7 @@ import {
   FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput,
   SectionModelPopup
 } from "../../../../components/common"
-import { tierraSave, tierraUpdate } from "../../../../services/tierra"
+import { tierraSave } from "../../../../services/tierra"
 
 export const TierraForm = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -57,13 +57,13 @@ export const TierraForm = ({ onShowModel, data }) => {
           tierraId :id,
           userModifiedName: "ADMIN",
           userModifiedAt: obtenerFechaLocal({date: new Date()})}
-        const tierra = await tierraUpdate(tierraModel)
+        const tierra = await tierraSave('PUT',tierraModel)
         return onShowModel(tierra)
       }
       tierraModel = {...tierraModel, 
         userCreatedName: "ADMIN",
         userCreatedAt: obtenerFechaLocal({date: new Date()})}
-      const tierra = await tierraSave(tierraModel)
+      const tierra = await tierraSave('POST',tierraModel)
       return onShowModel(tierra)
     }
   }

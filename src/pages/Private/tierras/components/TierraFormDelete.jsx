@@ -1,13 +1,13 @@
 import { 
   Footer, FooterButton, ModalDelete 
 } from "../../../../components/common"
-import { tierraDelete } from "../../../../services/tierra"
+import { tierraSave } from "../../../../services/tierra"
 import { obtenerFechaLocal } from "../../../../utils"
 
 export const TierraFormDelete = ({onShowModel, data}) => {
     const handleGuardar = async(e) => {
       e.preventDefault()
-      const tierra = await tierraDelete({
+      const tierra = await tierraSave('DELETE',{
         tierraId: data.tierraId,
         userModifiedName: "ADMIN",
         userModifiedAt: obtenerFechaLocal({date: new Date()})})
