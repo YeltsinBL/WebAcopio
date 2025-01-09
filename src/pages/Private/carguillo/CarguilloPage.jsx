@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Footer, FooterButton, Header, Main } from '../components/common'
-import { getCarguillobyId, searchCarguilloList } from '../services/carguillo'
-import { CarguilloFilter, CarguilloModel, CarguilloTable } from '../components/carguillo/index'
+import { Footer, FooterButton, Header, Main } from '../../../components/common'
+import { getCarguillobyId, searchCarguilloList } from '../../../services/carguillo'
+import { CarguilloFilter, CarguilloForm, CarguilloTable } from './components'
 import { useNavigate } from 'react-router-dom'
 
 const CarguilloPage = () => {
@@ -58,7 +58,7 @@ const CarguilloPage = () => {
             <FooterButton name={'Salir'} accion={handleGoBack} />
           </Footer>
         </>:
-        <CarguilloModel onShowModel={handleSaveModel} data={selectedRowData}/>
+        <CarguilloForm onShowModel={handleSaveModel} data={selectedRowData}/>
         }
       </Main>
     </div>

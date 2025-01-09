@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { getCarguilloTipoList, saveCarguillo } from '../../services/carguillo'
 import { Power, Trash2 } from 'lucide-react'
 import { 
+  getCarguilloTipoList, saveCarguillo 
+} from '../../../../services/carguillo'
+import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton,
-  NoRegistros, SectionModel
-} from '../common'
-import { formatterDataCombo, obtenerFechaLocal } from '../../utils'
+  InputTextCustom,
+  MessageValidationInput,
+  NoRegistros, SectionModel,
+  TableBodyCustom,
+  TableButton,
+  TableContainerCustom,
+  TableFooterCustom,
+  TableHeaderCustom,
+  TableTd,
+  TitleCustom
+} from '../../../../components/common'
+import { 
+  formatterDataCombo, obtenerFechaLocal 
+} from '../../../../utils'
 
-const CarguilloModel = ({ onShowModel, data }) => {
+const CarguilloForm = ({ onShowModel, data }) => {
   const [carguilloId, setCarguilloId] = useState('')
   const [tipoId, setTipoId] = useState('')
   const [titular, setTitular] = useState('')
@@ -22,6 +35,8 @@ const CarguilloModel = ({ onShowModel, data }) => {
   const TIPO_TRANSPORTISTA = 2
   const [isRequiredPlaca, setIsRequiredPlaca] = useState(false)
 
+  const headers= ['Tipo Transporte', 'Placa','Estado','Acción ']
+  
   useEffect(()=>{
     getCarguilloTipo()
     getCarguilloTipoTransporte(false)
@@ -159,27 +174,21 @@ const CarguilloModel = ({ onShowModel, data }) => {
             }`}
             colorOptions={"text-black"}
           />
-          {errores.tipoId && <p className="text-red-500 text-sm">{errores.tipoId}</p>}
+          {errores.tipoId && <MessageValidationInput mensaje={errores.tipoId}/>}
         </FilterOption>
         <FilterOption htmlFor={'TitularModel'} name={'Titular'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.titular ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: Representante 1'
-              value={titular}
-              onChange={(e) => setTitular(e.target.value)}
-            />
-            {errores.titular && <p className="text-red-500 text-sm">{errores.titular}</p>}
-          </>
+          <InputTextCustom textValue={titular} placeholder='Ejm: Representante 1'
+            onChange={setTitular} valueError={errores.titular}
+          />
+          {errores.titular && <MessageValidationInput mensaje={errores.titular}/>}
         </FilterOption>
       </div>
     </SectionModel>
     
-    <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
-      <div className='grid grid-cols-1  justify-between items-center mb-6'>
-        <h2 className='pb-6 text-2xl font-semibold text-gray-100 md:pb-0'>Lista de Placas </h2>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
+    <TableContainerCustom>
+      <TableHeaderCustom grid >
+        <TitleCustom titulo={'Lista de Placas'} />
+        <TableFooterCustom>
           <FilterOption htmlFor={'TipoTransporteModel'} name={'Tipo Transporte'}>
             <ComboBoxCustom initialOptions={carguilloTipoTransporteList}
                 onSelectionChange={handleSelectionTipoTransporteChange}
@@ -188,80 +197,41 @@ const CarguilloModel = ({ onShowModel, data }) => {
                 }`}
                 colorOptions={"text-black"}
             />
-            {errores.tipoTransporteId && <p className="text-red-500 text-sm">{errores.tipoTransporteId}</p>}
+            {errores.tipoTransporteId && <MessageValidationInput mensaje={errores.tipoTransporteId}/>}
           </FilterOption>
           <FilterOption htmlFor={'PlacaModel'} name={'Placa'}>
-            <>
-              <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.placa ? "border-red-500" : ""
-                }`}
-                name='query' placeholder='Ejm: PE-T3X896'
-                value={placa}
-                onChange={(e) => setPlaca(e.target.value)}
-              />
-              {errores.placa && <p className="text-red-500 text-sm">{errores.placa}</p>}
-            </>
+            <InputTextCustom textValue={placa} placeholder={'Ejm: PE-T3X896'}
+              onChange={setPlaca} valueError={errores.placa} />
+            {errores.placa && <MessageValidationInput mensaje={errores.placa}/>}
           </FilterOption>
           <ButtonCustom extraClassName={'mt-6 md:w-28'} name={'Agregar'} onClick={handleAgregarPlaca} />
-        </div>
-      </div>
-      <div className="overflow-auto max-h-[350px]">
-        <table className="table-auto w-full divide-y divide-gray-700">
-          <thead className="bg-gray-900  sticky top-0 z-10">
-            <tr>
-              <th className='px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider'>
-                Tipo Transporte
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider'>
-                Placa
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider'>
-                Estado
-              </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider'>
-                Acción
-              </th>
+        </TableFooterCustom>
+      </TableHeaderCustom>
+      <TableBodyCustom headers={headers}>
+        {placasList.length > 0 ? (
+          placasList.map((placa) =>(
+            <tr key={placa.carguilloDetalleId}>
+              <TableTd hidden> {placa.carguilloDetalleId} </TableTd>
+              <TableTd hidden>{placa.carguilloTipoId}</TableTd>
+              <TableTd>{placa.carguilloTipoDescripcion}</TableTd>
+              <TableTd>{placa.carguilloDetallePlaca}</TableTd>
+              <TableTd>{placa.carguilloDetalleEstado ? 'Activo': 'Inactivo'}</TableTd>
+              <TableTd>
+                <TableButton className={`${placa.carguilloDetalleEstado ? 'text-red-400 hover:text-red-300':'text-blue-400 hover:text-blue-300'} `}
+                  onRowSelect={()=>onRowDelete(placa)}>
+                  {placa.carguilloDetalleEstado ?(
+                    <Trash2 size={18} />
+                  ):(
+                    <Power size={18}/>
+                  )}
+                </TableButton>
+              </TableTd>
             </tr>
-          </thead>
-          <tbody className='divide-y divide-gray-700'>
-            {placasList.length > 0 ? (
-                placasList.map((placa) =>(
-                  <tr key={placa.carguilloDetalleId}>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
-                      {placa.carguilloDetalleId}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300 hidden'>
-                      {placa.carguilloTipoId}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {placa.carguilloTipoDescripcion}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {placa.carguilloDetallePlaca}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {placa.carguilloDetalleEstado ? 'Activo': 'Deshabilitado'}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
-                      <button className={`${placa.carguilloDetalleEstado ? 'text-red-400 hover:text-red-300':'text-blue-400 hover:text-blue-300'} `}
-                      onClick={()=>onRowDelete(placa)}
-                      >
-                        {placa.carguilloDetalleEstado ?(
-                            <Trash2 size={18} />
-                        ):(
-                            <Power size={18}/>
-                        )}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-            ):(<NoRegistros colSpan={4} />)}
-          </tbody>
-        </table>
-        {errores.isRequiredPlaca && <p className="text-red-500 text-sm">{errores.isRequiredPlaca}</p>}
-      </div>
-	</div>
-
+          ))
+          ):(<NoRegistros colSpan={headers.length} />)}
+      </TableBodyCustom>
+      {errores.isRequiredPlaca && <MessageValidationInput mensaje={errores.isRequiredPlaca}/>}
+	  </TableContainerCustom>
     <Footer>
       <FooterButton accion={handleGuardar} name={'Guardar'} />
       <FooterButton accion={handleCancelar} name={'Cancelar'} />
@@ -270,4 +240,4 @@ const CarguilloModel = ({ onShowModel, data }) => {
   )
 }
 
-export default CarguilloModel
+export default CarguilloForm
