@@ -4,7 +4,7 @@ import { RoutesWithNotFound } from "../../utils"
 import { lazy } from "react"
 import { RoleGuard } from "../../guards"
 
-const HomePage = lazy(() => import('../HomePage'))
+const HomePage = lazy(() => import('./HomePage'))
 const UserPage = lazy(() => import('./user/UserPage'))
 const TipoUsuarioPage = lazy(() => import('./tipoUsuario/TipoUsuarioPage'))
 const ProveedorPage  = lazy(() => import('./proveedor/ProveedorPage'))
