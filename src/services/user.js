@@ -52,8 +52,8 @@ export const userGetById = async({id}) => {
       throw new Error('Error al guardar el usuario')
     }
   }
-export const searchUserModules = async(userName, token) => {
-  const url = `${appSetting.apiUrl}User/GetAssignedModules?userName=${userName}`  
+export const searchUserModules = async(token) => {
+  const url = `${appSetting.apiUrl}User/GetAssignedModules`  
   try {
     const response = await fetch(url, {
       method: 'GET', 

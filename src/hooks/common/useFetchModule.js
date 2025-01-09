@@ -10,7 +10,7 @@ export const useFetchModule = () => {
 
   useEffect(() => {
     const getModules = async() =>{
-      const modules = await searchUserModules('flor', userState.token)
+      const modules = await searchUserModules(userState.token)
       setModulesList(modules)
       const moduleNames = modules.flatMap(module => {
         if (module.subModules.length === 0) {
