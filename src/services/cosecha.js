@@ -1,43 +1,21 @@
 import { appSetting } from "../settings/appsetting";
 import { FormatteDecimal } from "../utils";
 
-export const searchCosecha = async({search}) => {
-  if(search == null) console.log("Sin parametros", `${appSetting.apiUrl}Cosecha`)
-  else {
-    const {uc, ut, fechaDesde, fechaHasta} = search
-    console.log("Con parametros", `${appSetting.apiUrl}Cosecha?uc=${uc}&ut=${ut}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`)
-  }
-  
+export const searchCosecha = async(search) => {
+  console.log(search)
+  let url = `${appSetting.apiUrl}Cosecha`
+  if(search != null) 
+    url +=`?tierraUC=${search.uc}&proveedotUT=${search.ut}&fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}&tipoCosechaId=${search.tipoCosechaId}`
   try {
-    const response = await fetch(`${appSetting.apiUrl}Cosecha`, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const cosechas = await response.json()
-    const formatter= cosechas?.map(cosecha => ({
-      id : cosecha.cosechaId,
-      fecha : new Date(`${cosecha.cosechaFecha}`),
-      uc : cosecha.cosechaTierraUC,
-      valle : cosecha.cosechaTierraValle,
-      sector : cosecha.cosechaTierraSector,
-      ut: cosecha.cosechaProveedorUT,
-      supervisor: cosecha.cosechaSupervisor,
-      campo : cosecha.cosechaTierraCampo,
-      has : FormatteDecimal(cosecha.cosechaHAS,2),
-      sac : FormatteDecimal(cosecha.cosechaSac,2),
-      red : FormatteDecimal(cosecha.cosechaRed,2),
-      humedad : FormatteDecimal(cosecha.cosechaHumedad,2),
-      cosecha: cosecha.cosechaCosechaTipo,
-      tipoCosechaId: cosecha.cosechaCosechaId,
-      activo: true
-    }))
-    return formatter
-  
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+    return await response.json()  
   } catch (error) {
     console.log('searchCosecha:', error.message)
     throw new Error('Error al buscar Cosecha')

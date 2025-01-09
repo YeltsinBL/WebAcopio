@@ -1,3 +1,3 @@
 export * from './CosechaFilter'
-export * from './CosechaModel'
+export * from './CosechaForm'
 export * from './CosechaTable'
