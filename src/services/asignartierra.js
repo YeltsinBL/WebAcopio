@@ -1,125 +1,51 @@
 import { appSetting } from "../settings/appsetting";
 
-export const searchAsignaTierra = async({search}) => {
-    if(search == null) console.log("Sin parametros", `${appSetting.apiUrl}AsignaTierra`)
-    else {
-      const {uc, ut, fechaDesde, fechaHasta} = search
-      console.log("Con parametros", `${appSetting.apiUrl}AsignaTierra?uc=${uc}&ut=${ut}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`)
-    }
-  
-    try {
-      const response = await fetch(`${appSetting.apiUrl}AsignaTierra`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+export const searchAsignaTierra = async(search) => {
+  let url= `${appSetting.apiUrl}AsignaTierra`
+  if(search != null) 
+    url += `?tierraUC=${search.uc}&proveedorUT=${search.ut}&fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}`
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
       }
-      const asignaTierra = await response.json()
-      const formatter= asignaTierra?.map(tierra => ({
-        id : tierra.asignarTierraId,
-        uc : tierra.asignarTierraTierraUC,
-        ut : tierra.asignarTierraProveedorUT,
-        fecha : new Date(`${tierra.asignarTierraFecha}T00:00:00`),
-        activo : tierra.asignarTierraStatus,
-        proveedorId: tierra.asignarTierraProveedorId,
-        tierraId: tierra.asignarTierraTierraId,
-        campo:tierra.tierraCampo,
-        proveedoresNombres: tierra.proveedoresNombres,
-      }))    
-      return formatter
-  
-    } catch (error) {
-      console.log('searchAsignaTierra:', error.message)
-      throw new Error('Error al buscar Tierras Asignadas')
-    }
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)      
+    return await response.json()  
+  } catch (error) {
+    console.log('searchAsignaTierra:', error.message)
+    throw new Error('Error al buscar Tierras Asignadas')
   }
-  export const asignaTierraGetById = async({id}) => {
-    try {
-      const response = await fetch(`${appSetting.apiUrl}AsignaTierra/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json()
-      return formatterAsignaTierra(data)
-    } catch (error) {
-      console.log('asignaTierraGetById:', error.message)
-      throw new Error('Error al obtener la tierra asignada')
-    }
+}
+export const asignaTierraGetById = async({id}) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}AsignaTierra/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)      
+    return await response.json()
+  } catch (error) {
+    console.log('asignaTierraGetById:', error.message)
+    throw new Error('Error al obtener la tierra asignada')
   }
-  export const asignaTierraSave = async(tierra) => {
-    try {
-      const response = await fetch(`${appSetting.apiUrl}AsignaTierra`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(tierra)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json()
-      return formatterAsignaTierra(data)
-    } catch (error) {
-      console.log('asignaTierraSave:', error.message)
-      throw new Error('Error al guardar la tierra asignada')
-    }
+}
+export const asignaTierraSave = async(method, tierra) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}AsignaTierra`, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(tierra)
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)      
+    return await response.json()
+  } catch (error) {
+    console.log('asignaTierraSave:', error.message)
+    throw new Error('Error al guardar la tierra asignada')
   }
-  export const asignaTierraUpdate = async(tierra) => {
-    try {
-      const response = await fetch(`${appSetting.apiUrl}AsignaTierra`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(tierra)
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json()
-      return formatterAsignaTierra(data)
-    } catch (error) {
-      console.log('asignaTierraUpdate:', error.message)
-      throw new Error('Error al modificar la tierra asignada')
-    }
-  }
-  export const asignaTierraDelete = async(tierra) => {
-    try {
-      const response = await fetch(`${appSetting.apiUrl}AsignaTierra`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(tierra)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return true
-    } catch (error) {
-      console.log('asignaTierraDelete:', error.message)
-      throw new Error('Error al eliminar la tierra asignada')
-    }
-  }
-  const formatterAsignaTierra = (data) => {
-    return {
-        id : data.asignarTierraId,
-        uc : data.asignarTierraTierraUC,
-        ut : data.asignarTierraProveedorUT,
-        fecha : data.asignarTierraFecha,
-        activo : true,
-        proveedorId:data.asignarTierraProveedorId || 0,
-        tierraId:data.asignarTierraTierraId || 0,
-        campo:data.tierraCampo
-    }
-  }
- 
+}
