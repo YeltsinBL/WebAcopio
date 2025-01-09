@@ -1,6 +1,8 @@
-import { Footer, FooterButton, ModalDelete } from '../common'
-import { recojoSave } from '../../services/recojo'
-import { obtenerFechaLocal } from '../../utils'
+import { 
+  Footer, FooterButton, ModalDelete 
+} from '../../../../components/common'
+import { recojoSave } from '../../../../services/recojo'
+import { obtenerFechaLocal } from '../../../../utils'
 
 export const RecojoModalDelete = ({onShowModel, id}) => {
   const handleGuardar = async(e)=>{

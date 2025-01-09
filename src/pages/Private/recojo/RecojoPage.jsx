@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { ContainerPageCustom, Footer, FooterButton, Header, Main } from '../components/common'
-import { RecojoFilter, RecojoModal, RecojoModalDelete, RecojoTable } from '../components/recojo'
-import { useClosePage } from '../hooks/common'
-import { recojoGetById, searchRecojos } from '../services/recojo'
-import { convertirFechaDDMMYYYY } from '../utils'
+import { ContainerPageCustom, Footer, FooterButton, Header, Main } from '../../../components/common'
+import { RecojoFilter, RecojoModal, RecojoModalDelete, RecojoTable } from './components'
+import { useClosePage } from '../../../hooks/common'
+import { recojoGetById, searchRecojos } from '../../../services/recojo'
+import { convertirFechaDDMMYYYY } from '../../../utils'
 
 const RecojoPage = () => {
   const handleGoBack = useClosePage()

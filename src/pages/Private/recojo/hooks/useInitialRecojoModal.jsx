@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { obtenerFechaLocal } from "../../utils"
+import { obtenerFechaLocal } from "../../../../utils"
 
 export const useInitialRecojoModal = (data) => {
   const [recojoId, setRecojoId] = useState("")
@@ -15,7 +15,7 @@ export const useInitialRecojoModal = (data) => {
   useEffect(() => {
     if (data) {
       setRecojoId(data.recojoId || "")
-      setCampoModel(data.campo || "")
+      setCampoModel(data.recojoCampo || "")
       setFechaInicioModel(
         data.recojoFechaInicio
           || obtenerFechaLocal({ date: new Date() }).split("T")[0]

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { ButtonCustom, InputDateCustom, FilterOption, SectionFilter, ComboBoxCustom } from '../common'
-import { useFetchData } from '../../hooks/common'
-import { formatterDataCombo } from '../../utils'
+import { 
+  ButtonCustom, InputDateCustom, FilterOption, SectionFilter, ComboBoxCustom 
+} from '../../../../components/common'
+import { useFetchData } from '../../../../hooks/common'
+import { formatterDataCombo } from '../../../../utils'
 
 export const RecojoFilter = ({onFiltersValue}) => {
   const [recojoEstadoList, setRecojoEstadoList] = useState([])
@@ -20,14 +22,13 @@ export const RecojoFilter = ({onFiltersValue}) => {
       formatterDataCombo(tipo.recojoEstadoId, tipo.recojoEstadoDescripcion)))
     setRecojoEstadoList(formatter)
   }
-  const handleSelectionChange = (option) =>{
-    setEstadoFilter(option)
-  }
+  const handleSelectionChange = (option) =>
+    setEstadoFilter((option==''|| isNaN(option))?'':option)
+  
   const handleSeachCarguillo = (e) =>{
     e.preventDefault()
     onFiltersValue({
-      fechaDesdeFilter, fechaHastaFilter, 
-      estadoFilter:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter
+      fechaDesdeFilter, fechaHastaFilter, estadoFilter
     })
   }
   return (

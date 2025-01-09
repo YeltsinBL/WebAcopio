@@ -1,15 +1,14 @@
 import { 
-    InputDateCustom, FilterOption, Footer, FooterButton, SectionModel, 
-    InputDecimalCustom,
-    InputTextCustom
-} from '../common'
+  InputDateCustom, FilterOption, Footer, FooterButton, SectionModel, 
+  InputDecimalCustom, InputTextCustom
+} from '../../../../components/common'
 import { 
-    useCalcularRecojoTotal, useInitialRecojoModal, useValidateRecojoModal 
-} from '../../hooks/Recojo'
-import { recojoSave } from '../../services/recojo'
-import { convertirFechaDDMMYYYY, obtenerFechaLocal } from '../../utils'
-
-
+  useCalcularRecojoTotal, useInitialRecojoModal, useValidateRecojoModal
+} from '../hooks'
+import { recojoSave } from '../../../../services/recojo'
+import { 
+  convertirFechaDDMMYYYY, obtenerFechaLocal 
+} from '../../../../utils'
 
 export const RecojoModal = ({onShowModel, data}) => {
   /**Custom Hooks**/
@@ -93,7 +92,8 @@ export const RecojoModal = ({onShowModel, data}) => {
             </>
           </FilterOption>
           <FilterOption htmlFor={'CampoModel'} name={'Campo'}>
-            <InputTextCustom textValue={campoModel}  placeholder='Ingrese el nombre del campo (opcional)' onChange={setCampoModel}/>
+            <InputTextCustom textValue={campoModel} 
+              placeholder='Ingrese el nombre del campo (opcional)' onChange={setCampoModel}/>
           </FilterOption>
           <FilterOption htmlFor={'CantidadCamionModel'} name={'Cantidad Camión'}>
             <>
