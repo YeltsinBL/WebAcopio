@@ -3,10 +3,9 @@ import { FormatteDecimal } from "../utils";
 
 export const searchTickets = async(search) => {
   let url=`${appSetting.apiUrl}Ticket`
-  if(search != null) {
-    const {ingenio, transportista, viaje, fechaDesde, fechaHasta, estado} = search
-    url = `${url}?ingenio=${ingenio}&transportista=${transportista}&viaje=${viaje}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}&estadoId=${estado}`
-  }
+  if(search != null)
+    url = `${url}?ingenio=${search.ingenio}&transportista=${search.transportista}&viaje=${search.viaje}&fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}&estadoId=${search.estado}`
+  
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -14,13 +13,8 @@ export const searchTickets = async(search) => {
         'Content-Type': 'application/json',
       },
     })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const tickets = await response.json()
-    const formatter= tickets?.map(ticket => (formatterticket(ticket))) 
-    return formatter
-
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    return await response.json()
   } catch (error) {
     console.log('searchtickets:', error.message)
     throw new Error('Error al buscar tickets')
@@ -37,8 +31,7 @@ export const searchTicketsEstado = async() => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const ticketEstados = await response.json()
-    return ticketEstados
+    return await response.json()
   } catch (error) {
     console.log('searchticketsAvailable:', error.message)
     throw new Error('Error al buscar tickets disponibles')
@@ -60,6 +53,24 @@ export const ticketGetById = async({id}) => {
   } catch (error) {
     console.log('ticketGetById:', error.message)
     throw new Error('Error al obtener la ticket')
+  }
+}
+export const ticketSave = async(method, ticket) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(ticket)
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json()
+  } catch (error) {
+    console.log('ticketsave:', error.message)
+    throw new Error('Error al guardar la ticket')
   }
 }
 export const searchTicketsByCarguillo = async(carguilloId) => {
@@ -98,63 +109,6 @@ export const searchTicketsByProveedor = async(proveedorId) => {
     throw new Error('Error al buscar tickets')
   }
 }
-export const ticketSave = async(ticket) => {
-  try {
-    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(ticket)
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json()
-    return formatterticket(data)
-  } catch (error) {
-    console.log('ticketsave:', error.message)
-    throw new Error('Error al guardar la ticket')
-  }
-}
-export const ticketUpdate = async(ticket) => {
-  try {
-    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(ticket)
-    })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json()
-    return formatterticket(data)
-  } catch (error) {
-    console.log('ticketUpdate:', error.message)
-    throw new Error('Error al modificar la ticket')
-  }
-}
-export const ticketDelete = async(ticket) => {
-  try {
-    const response = await fetch(`${appSetting.apiUrl}Ticket`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ticket)
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return true
-  } catch (error) {
-    console.log('ticketDelete:', error.message)
-    throw new Error('Error al eliminar la ticket')
-  }
-}
-
 const formatterticket = (data) => {
   return {
     id : data.ticketId,

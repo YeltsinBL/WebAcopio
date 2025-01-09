@@ -1,5 +1,5 @@
 export * from './TicketFilter'
-export * from './TicketModalDelete'
-export * from './TicketModel'
+export * from './TicketForm'
+export * from './TicketFormDelete'
 export * from './TicketTable'
 export * from './index'

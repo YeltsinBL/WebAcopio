@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react'
 import { 
   ComboBoxCustom, FilterOption, Footer, FooterButton, 
+  InputDateCustom, 
   InputTextCustom, 
+  MessageValidationInput, 
   SectionModel 
-} from '../common'
-import { ticketSave, ticketUpdate } from '../../services/ticket'
-import { getCarguilloPlacasList, searchCarguilloList } from '../../services/carguillo'
+} from '../../../../components/common'
+import { ticketSave } from '../../../../services/ticket'
+import { getCarguilloPlacasList, searchCarguilloList } from '../../../../services/carguillo'
 import { 
   convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
-} from '../../utils'
+} from '../../../../utils'
 
-export const TicketModel = ({ onShowModel, data }) => {
-  const [idModel, setIdModel] = useState('')
+export const TicketForm = ({ onShowModel, data }) => {
+  const [idModel, setIdModel] = useState(0)
   const [ingenioModel, setIngenioModel] = useState('')
   const [campoModel, setCampoModel] = useState('')
   const [viajeModel, setViajeModel] = useState('')
   const [carguilloId, setCarguilloId] = useState('')
   const [choferModel, setChoferModel] = useState(null)
-  const [fechaModel, setFechaModel] = useState('')
+  const [fechaModel, setFechaModel] = useState(obtenerFechaLocal({date: new Date()}).split('T')[0])
   const [camionModel, setCamionModel] = useState('')
   const [camionPesoModel, setCamionPesoModel] = useState('')
   const [vehiculoModel, setVehiculoModel] = useState('')
@@ -30,12 +32,12 @@ export const TicketModel = ({ onShowModel, data }) => {
   const [placaCamionList, setPlacaCamionList] = useState([])
   const [placaVehiculoList, setPlacaVehiculoList] = useState([])
   const [seleccionPlacaCamion, setseleccionPlacaCamion] = useState(
-    data.carguilloDetalleCamionId ? 
-    {id:data.carguilloDetalleCamionId, nombre: data.ticketCamion} : null)
+    data?.carguilloDetalleCamionId ? 
+    {id:data?.carguilloDetalleCamionId, nombre: data?.ticketCamion} : null)
   const [seleccionPlacaVehiculo, setseleccionPlacaVehiculo] = useState(
-    data.carguilloDetalleVehiculoId ? 
-    {id:data.carguilloDetalleVehiculoId, nombre: data.ticketVehiculo} : null)
-  const seleccionCarguillo = data.carguilloId ? {id:data.carguilloId, nombre: data.ticketTransportista} : null
+    data?.carguilloDetalleVehiculoId ? 
+    {id:data?.carguilloDetalleVehiculoId, nombre: data?.ticketVehiculo} : null)
+  const seleccionCarguillo = data?.carguilloId ? {id:data?.carguilloId, nombre: data?.ticketTransportista} : null
 
   const [errores, setErrores] = useState({})
   useEffect(() =>{
@@ -49,7 +51,9 @@ export const TicketModel = ({ onShowModel, data }) => {
       setViajeModel(data.ticketViaje || '')
       setCarguilloId(data.carguilloId || '')
       setChoferModel(data.ticketChofer || null)
-      setFechaModel(data.ticketFecha? convertirFechaToYMD(data.ticketFecha) : obtenerFechaLocal({date: new Date()}).split('T')[0])
+      setFechaModel(
+        data.ticketFecha? convertirFechaToYMD(data.ticketFecha) :
+        obtenerFechaLocal({date: new Date()}).split('T')[0])
       setCamionModel(data.carguilloDetalleCamionId || "")
       setCamionPesoModel(data.ticketCamionPeso || "")
       setVehiculoModel(data.carguilloDetalleVehiculoId || "")
@@ -143,13 +147,13 @@ export const TicketModel = ({ onShowModel, data }) => {
           ticketId:idModel,
           userModifiedAt: obtenerFechaLocal({date: new Date()}),
           userModifiedName: "ADMIN" }
-        const ticket = await ticketUpdate(save)
+        const ticket = await ticketSave('PUT',save)
         return retorna(ticket)
       }
       save = {...save,
         userCreatedAt: obtenerFechaLocal({date: new Date()}),
         userCreatedName: "ADMIN" }
-      const ticket = await ticketSave(save)
+      const ticket = await ticketSave('POST',save)
       return retorna(ticket)
     }
   }
@@ -162,34 +166,21 @@ export const TicketModel = ({ onShowModel, data }) => {
   }
   return (
     <>
-    <SectionModel title={(data.id > 0 ? 'Editar' : 'Registrar')+ ' Ticket'} >
+    <SectionModel title={(idModel > 0 ? 'Editar' : 'Registrar')+ ' Ticket'} >
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3'>
         <FilterOption htmlFor={'IngenioModel'} name={'Ingenio'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.ingenio ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: Casa Grande'
-              value={ingenioModel}
-              onChange={(e) => setIngenioModel(e.target.value)}
-            />
-            {errores.ingenio && <p className="text-red-500 text-sm">{errores.ingenio}</p>}
-          </>
+          <InputTextCustom textValue={ingenioModel} placeholder={'Ejm: Casa Grande'}
+            onChange={setIngenioModel} valueError={errores.ingenio} />
+          {errores.ingenio && <MessageValidationInput mensaje={errores.ingenio}/>}
         </FilterOption>
         <FilterOption htmlFor={'CampoModel'} name={'Campo'}>
-          <InputTextCustom textValue={campoModel}  placeholder='Ingrese el nombre del campo (opcional)' onChange={setCampoModel}/>
+          <InputTextCustom textValue={campoModel}  placeholder='Ingrese el nombre del campo (opcional)'
+            onChange={setCampoModel}/>
         </FilterOption>
         <FilterOption htmlFor={'ViajeModel'} name={'Viaje'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.viaje ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: 508689'
-              value={viajeModel}
-              onChange={(e) => setViajeModel(e.target.value)}
-            />
-            {errores.viaje && <p className="text-red-500 text-sm">{errores.viaje}</p>}
-          </>
+          <InputTextCustom textValue={viajeModel} placeholder={'Ejm: 508689'}
+            onChange={setViajeModel} valueError={errores.viaje} />
+          {errores.viaje && <MessageValidationInput mensaje={errores.viaje}/>}
         </FilterOption>
         <FilterOption htmlFor={'CarguilloModel'} name={'Transportista'}>
           <ComboBoxCustom initialOptions={carguilloList} selectedOption={seleccionCarguillo}
@@ -199,26 +190,16 @@ export const TicketModel = ({ onShowModel, data }) => {
             }`}
             colorOptions={"text-black"}
           />
-          {errores.transportista && <p className="text-red-500 text-sm">{errores.transportista}</p>}
+          {errores.transportista && <MessageValidationInput mensaje={errores.transportista}/>}
         </FilterOption>
         <FilterOption htmlFor={'ChoferModel'} name={'Chofer'}>
-          <input type='text' className='bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500'
-            name='query' placeholder='Ingrese el nombre'
-            value={choferModel}
-            onChange={(e) => setChoferModel(e.target.value)}
-          />
+          <InputTextCustom textValue={choferModel} placeholder='Ingrese el nombre'          
+            onChange={setChoferModel} />
         </FilterOption>
         <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
-          <>
-            <input type='date' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.fecha ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: 20/11/2024'
-              value={fechaModel}
-              onChange={(e) => setFechaModel(e.target.value)}
-            />
-            {errores.fecha && <p className="text-red-500 text-sm">{errores.fecha}</p>}
-          </>
+          <InputDateCustom fechaValue={fechaModel} setFechaValue={setFechaModel}
+            valueError={errores.fecha} />
+          {errores.fecha && <MessageValidationInput mensaje={errores.fecha}/>}
         </FilterOption>
         <FilterOption htmlFor={'CamionModel'} name={'Camión'}>
           <ComboBoxCustom initialOptions={placaCamionList} selectedOption={seleccionPlacaCamion}
@@ -228,19 +209,12 @@ export const TicketModel = ({ onShowModel, data }) => {
             }`}
             colorOptions={"text-black"}
           />
-          {errores.camion && <p className="text-red-500 text-sm">{errores.camion}</p>}
+          {errores.camion && <MessageValidationInput mensaje={errores.camion}/>}
         </FilterOption>
         <FilterOption htmlFor={'CamionPesoModel'} name={'Camión Peso'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.camionPeso ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: 19.590'
-              value={camionPesoModel}
-              onChange={(e) => setCamionPesoModel(e.target.value)}
-            />
-            {errores.camionPeso && <p className="text-red-500 text-sm">{errores.camionPeso}</p>}
-          </>
+          <InputTextCustom textValue={camionPesoModel} placeholder={'Ejm: 19.590'}
+            onChange={setCamionPesoModel} valueError={errores.camionPeso} />
+          {errores.camionPeso && <MessageValidationInput mensaje={errores.camionPeso}/>}
         </FilterOption>
         <FilterOption htmlFor={'VehiculoModel'} name={'Vehículo'}>
           <ComboBoxCustom initialOptions={placaVehiculoList} selectedOption={seleccionPlacaVehiculo}
@@ -250,62 +224,36 @@ export const TicketModel = ({ onShowModel, data }) => {
             }`}
             colorOptions={"text-black"}
           />
-          {errores.vehiculo && <p className="text-red-500 text-sm">{errores.vehiculo}</p>}
+          {errores.vehiculo && <MessageValidationInput mensaje={errores.vehiculo}/>}
         </FilterOption>
         <FilterOption htmlFor={'VehiculoPesoModel'} name={'Vehículo Peso'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.vehiculoPeso ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: 31.860'
-              value={vehiculoPesoModel}
-              onChange={(e) => setVehiculoPesoModel(e.target.value)}
-            />
-            {errores.vehiculoPeso && <p className="text-red-500 text-sm">{errores.vehiculoPeso}</p>}
-          </>
+          <InputTextCustom textValue={vehiculoPesoModel} placeholder={'Ejm: 31.860'}
+            onChange={setVehiculoPesoModel} valueError={errores.vehiculoPeso} />
+          {errores.vehiculoPeso && <MessageValidationInput mensaje={errores.vehiculoPeso}/>}
         </FilterOption>
         <FilterOption htmlFor={'UnidadPesoModel'} name={'Unidad Peso'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.unidadPeso ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Ejm: Kg'
-              value={unidadPesoModel}
-              onChange={(e) => setUnidadPesoModel(e.target.value)}
-            />
-            {errores.unidadPeso && <p className="text-red-500 text-sm">{errores.unidadPeso}</p>}
-          </>
+          <InputTextCustom textValue={unidadPesoModel} placeholder={'Ejm: Kg'}
+            onChange={setUnidadPesoModel} valueError={errores.unidadPeso} />
+          {errores.unidadPeso && <MessageValidationInput mensaje={errores.unidadPeso}/>}
         </FilterOption>
         <FilterOption htmlFor={'PesoBrutoModel'} name={'Peso Bruto'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.pesoBruto ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Automático'
-              value={pesoBrutoModel}
-              onChange={(e) => setPesoBrutoModel(e.target.value)}
-              readOnly
-            />
-            {errores.pesoBruto && <p className="text-red-500 text-sm">{errores.pesoBruto}</p>}
-          </>
+          <InputTextCustom textValue={pesoBrutoModel} placeholder='Automático'
+            onChange={setPesoBrutoModel} valueError={errores.pesoBruto}
+            readOnly />
+          {errores.pesoBruto && <MessageValidationInput mensaje={errores.pesoBruto}/>}
         </FilterOption>
         <FilterOption htmlFor={'EstadoModel'} name={'Estado'}>
-          <>
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.estado ? "border-red-500" : ""
-              }`}
-              name='query' placeholder='Automático'
-              value={estadoModel}
-              onChange={(e) => setEstadoModel(e.target.value)}
-              readOnly
-            />
-            {errores.estado && <p className="text-red-500 text-sm">{errores.estado}</p>}
-          </>
+          <InputTextCustom textValue={estadoModel} placeholder='Automático'
+            onChange={setEstadoModel} valueError={errores.estado}
+            readOnly />
+          {errores.estado && <MessageValidationInput mensaje={errores.estado}/>}
         </FilterOption>
       </div>
     </SectionModel>
     <Footer>
-      <FooterButton accion={handleGuardar} name={"Guardar"}/>
+      { estadoModel =='Activo'?
+        <FooterButton accion={handleGuardar} name={"Guardar"}/> :''
+      }
       <FooterButton accion={handleCancelar} name={"Cancelar"}/>
     </Footer>
     </>
