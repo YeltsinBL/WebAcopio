@@ -1,5 +1,5 @@
 import { appSetting } from "../settings/appsetting";
-import { FormatteDecimal } from "../utils";
+import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimal } from "../utils";
 
 export const searchTickets = async(search) => {
   let url=`${appSetting.apiUrl}Ticket`
@@ -14,7 +14,8 @@ export const searchTickets = async(search) => {
       },
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    return await response.json()
+    const data = await response.json()
+    return formatteTickets(data)
   } catch (error) {
     console.log('searchtickets:', error.message)
     throw new Error('Error al buscar tickets')
@@ -109,6 +110,16 @@ export const searchTicketsByProveedor = async(proveedorId) => {
     throw new Error('Error al buscar tickets')
   }
 }
+
+const formatteTickets =(tickets) =>{
+  return tickets.map(ticket =>{
+    return {...ticket, 
+      ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(ticket.ticketFecha)),
+      ticketPesoBruto : FormatteDecimal(ticket.ticketPesoBruto, 3)
+    }
+  })
+}
+  
 const formatterticket = (data) => {
   return {
     id : data.ticketId,

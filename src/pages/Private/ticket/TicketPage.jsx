@@ -23,13 +23,7 @@ const TicketPage = () => {
   }, [])
   const getTickets = async(filter) => {
     const tickets = await searchTickets(filter)
-    const formatteTickets = tickets.map(ticket =>{
-      return {...ticket, 
-        ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(ticket.ticketFecha)),
-        ticketPesoBruto : FormatteDecimal(ticket.ticketPesoBruto, 3)
-      }
-    })
-    setListTicket(formatteTickets|| [])
+    setListTicket(tickets|| [])
   }
   const handleGoBack = () => {
     navigate('/')
