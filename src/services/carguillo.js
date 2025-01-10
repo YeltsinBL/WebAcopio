@@ -46,9 +46,9 @@ export const getCarguillobyId = async(id) =>{
     throw new Error('Error al buscar el carguillo')
   }
 }
-export const getCarguilloPlacasList = async(carguilloId,carguilloTipoId)=>{
+export const getCarguilloPlacasList = async(carguilloId)=>{
   try {
-    const response = await fetch(`${appSetting.apiUrl}Carguillo/${carguilloId}/Tipo/${carguilloTipoId}`,{
+    const response = await fetch(`${appSetting.apiUrl}Carguillo/${carguilloId}/Tipo`,{
       method:'GET',
       headers:{'Content-Type': 'application/json'}
     })
