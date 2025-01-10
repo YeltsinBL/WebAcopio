@@ -67,7 +67,7 @@ export const TipoUsuarioTable = ({data, onSave, onDelete}) => {
               textValue={nameModel} onChange={setNameModel}/>
             {errores.nombre && <MessageValidationInput mensaje={errores.nombre}/> }
           </FilterOption>
-          <div className="  md:flex md:gap-4">
+          <div className="grid grid-cols-1 md:flex md:gap-4">
           <ButtonCustom extraClassName={'max-h-9 mt-6 md:w-28 '} 
             name={'Agregar'} 
             onClick={handleAgregarTipoUsuario} />
