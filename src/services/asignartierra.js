@@ -1,6 +1,6 @@
 import { appSetting } from "../settings/appsetting";
 
-export const searchAsignaTierra = async(search) => {
+export const searchAsignaTierra = async(search=null) => {
   let url= `${appSetting.apiUrl}AsignaTierra`
   if(search != null) 
     url += `?tierraUC=${search.uc}&proveedorUT=${search.ut}&fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}`
