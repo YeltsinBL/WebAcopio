@@ -21,7 +21,7 @@ import {
 } from '../../../../utils'
 
 const CarguilloForm = ({ onShowModel, data }) => {
-  const [carguilloId, setCarguilloId] = useState('')
+  const [carguilloId, setCarguilloId] = useState(0)
   const [tipoId, setTipoId] = useState('')
   const [titular, setTitular] = useState('')
   const [tipoTransporteId, setTipoTransporteId] = useState('')
@@ -32,7 +32,7 @@ const CarguilloForm = ({ onShowModel, data }) => {
   const [carguilloTipoList, setCarguilloTipoList] = useState([])
   const [carguilloTipoTransporteList, setCarguilloTipoTransporteList] = useState([])
   const [placasList, setPlacasList] = useState([])
-  const TIPO_TRANSPORTISTA = 2
+  const TIPO_TRANSPORTISTAID = import.meta.env.VITE_TIPOTRANSPORTISTAId
   const [isRequiredPlaca, setIsRequiredPlaca] = useState(false)
 
   const headers= ['Tipo Transporte', 'Placa','Estado','Acción ']
@@ -61,8 +61,9 @@ const CarguilloForm = ({ onShowModel, data }) => {
   }
   const handleSelectionChange = (option) => {
     setTipoId(option)
-    if(option==TIPO_TRANSPORTISTA) setIsRequiredPlaca(true)
+    if(option==TIPO_TRANSPORTISTAID) setIsRequiredPlaca(true)
     else setIsRequiredPlaca(false)
+    setPlacasList([])
   }
   const validarCampos = (isPlaca= false) => {
     const nuevosErrores = {}
@@ -164,7 +165,7 @@ const CarguilloForm = ({ onShowModel, data }) => {
   };
   return (
     <>
-    <SectionModel title={(data.carguilloId > 0 ? 'Información del':'Registrar') + ' Carguillo'}>
+    <SectionModel title={(carguilloId > 0 ? 'Información del':'Registrar') + ' Carguillo'}>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
         <FilterOption htmlFor={'TipoModel'} name={'Tipo'}>
           <ComboBoxCustom initialOptions={carguilloTipoList} selectedOption={seleccionTipo}
@@ -173,6 +174,7 @@ const CarguilloForm = ({ onShowModel, data }) => {
               errores.tipoId ? "border-red-500" : ""
             }`}
             colorOptions={"text-black"}
+            allDisabled={carguilloId>0}
           />
           {errores.tipoId && <MessageValidationInput mensaje={errores.tipoId}/>}
         </FilterOption>
@@ -204,7 +206,8 @@ const CarguilloForm = ({ onShowModel, data }) => {
               onChange={setPlaca} valueError={errores.placa} />
             {errores.placa && <MessageValidationInput mensaje={errores.placa}/>}
           </FilterOption>
-          <ButtonCustom extraClassName={'mt-6 md:w-28'} name={'Agregar'} onClick={handleAgregarPlaca} />
+          <ButtonCustom extraClassName={'mt-6 md:w-28'} name={'Agregar'} 
+            onClick={handleAgregarPlaca} disabled={tipoId != TIPO_TRANSPORTISTAID} />
         </TableFooterCustom>
       </TableHeaderCustom>
       <TableBodyCustom headers={headers}>
