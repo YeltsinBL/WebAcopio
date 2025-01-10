@@ -1,49 +1,48 @@
 import { useEffect, useState } from 'react'
 import { ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom, InputTextCustom, MessageValidationInput, SectionModel } from '../../../../components/common'
 import { searchAsignaTierra } from '../../../../services/asignartierra'
-import { cosechaSave, cosechaUpdate, searchCosechaTipo } from '../../../../services/cosecha'
+import { cosechaSave, searchCosechaTipo } from '../../../../services/cosecha'
 import { formatterDataCombo, obtenerFechaLocal } from '../../../../utils'
 
 export const CosechaModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState(0)
   const [ucModel, setUCModel] = useState('')
   const [campoModel, setCampoModel] = useState('')
-  const [utModel, setUTModel] = useState('')
-  const [fechaModel, setFechaModel] = useState('')
-  const [supervisorModel, setSupervisorModel] = useState(null)
-  const [hasModel, setHasModel] = useState(null)
-  const [sacModel, setSacModel] = useState(null)
-  const [redModel, setRedModel] = useState(null)
-  const [humedadModel, setHumedadModel] = useState(null)
+  const [utModel, setUTModel] = useState({proveedorId: 0, ut: '' })
+  const [fechaModel, setFechaModel] = useState(obtenerFechaLocal({date: new Date()}).split('T')[0])
+  const [supervisorModel, setSupervisorModel] = useState('')
+  const [hasModel, setHasModel] = useState('')
+  const [sacModel, setSacModel] = useState('')
+  const [redModel, setRedModel] = useState('')
+  const [humedadModel, setHumedadModel] = useState('')
   const [cosechaModel, setCosechaModel] = useState('')
 
   const [tierras, setTierras] = useState([])
   const [cosechaTipo, setCosechaTipo] = useState([])
   const [listAsigna, setListAsigna] = useState([])
   
-  const seleccionTierra = data.tierraId ? {id: data.tierraId, uc: data.uc } : null
-  const seleccionProveedor = data.proveedorId ? {proveedorId: data.proveedorId, ut: data.ut } : null
-  const seleccionCosechaTipo = data.tipoCosecha ? {id: data.tipoCosecha, uc: data.cosecha } : null
+  const seleccionTierra = data?.cosechaTierraId ? {id: data?.cosechaTierraId, uc: data?.cosechaTierraUC } : null
+  const seleccionProveedor = {proveedorId: data?.cosechaProveedorId ?? 0, ut: data?.cosechaProveedorUT ?? '' }
+  const seleccionCosechaTipo = data?.cosechaCosechaId ? {id: data?.cosechaCosechaId, uc: data?.cosechaCosechaTipo } : null
 
 
   const [errores, setErrores] = useState({})
 
   useEffect(() => {
     fetchListAsigna()
-    fetchOptionsTierras()
     fetchOptionCosechaTipo()
     if (data) {
-      setIdModel(data.id || 0);
-      setUCModel(data.tierraId || 0);
-      setCampoModel(data.campo || '');
+      setIdModel(data.cosechaId || 0);
+      setUCModel(data.cosechaTierraId || 0);
+      setCampoModel(data.cosechaTierraCampo || '');
       setUTModel(seleccionProveedor);
-      setFechaModel(data.fecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
-      setSupervisorModel(data.supervisor || null);
-      setHasModel(data.has || null);
-      setSacModel(data.sac || null);
-      setRedModel(data.red || null);
-      setHumedadModel(data.humedad || null);
-      setCosechaModel(data.tipoCosecha || 0);
+      setFechaModel(data.cosechaFecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
+      setSupervisorModel(data.cosechaSupervisor || '');
+      setHasModel(data.cosechaHAS || '');
+      setSacModel(data.cosechaSac || '');
+      setRedModel(data.rcosechaReded || '');
+      setHumedadModel(data.cosechaHumedad || '');
+      setCosechaModel(data.cosechaCosechaId || 0);
     }
   }, []);
 
@@ -65,42 +64,25 @@ export const CosechaModel = ({ onShowModel, data }) => {
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
   }
   const fetchListAsigna= async() => {
-    try {
-      const responseTierra = await searchAsignaTierra({})
-      setListAsigna(responseTierra)
-    } catch (error) {
-      console.error('Error al cargar fetchOptionsTierras:', error);
-    }
-  }
-  const fetchOptionsTierras = async () => {
-    try {
-      const responseTierra = await searchAsignaTierra({})
-      const formatter= responseTierra?.map(tipo =>(
-        formatterDataCombo(tipo.tierraId, tipo.uc)))
-      setTierras(formatter)
-    } catch (error) {
-      console.error('Error al cargar fetchOptionsTierras:', error);
-    }
+    const responseTierra = await searchAsignaTierra()
+    setListAsigna(responseTierra)
+    const formatter= responseTierra?.map(tipo =>(
+      formatterDataCombo(tipo.asignarTierraTierraId, tipo.asignarTierraTierraUC)))
+    setTierras(formatter)
   }
   const fetchOptionCosechaTipo = async() => {
-    try {
-      const responseTipo = await searchCosechaTipo()
-      const formatter= responseTipo?.map(tipo =>(
-        formatterDataCombo(tipo.cosechaTipoId, tipo.descripcion)))
-      setCosechaTipo(formatter)
-    } catch (error) {
-      console.error('Error al cargar fetchOptionCosechaTipo:', error);
-    }
+    const responseTipo = await searchCosechaTipo()
+    const formatter= responseTipo?.map(tipo =>(
+      formatterDataCombo(tipo.cosechaTipoId, tipo.descripcion)))
+    setCosechaTipo(formatter)
   }
   const handleSelectionChangeTierra = (option) => {
     setUCModel(option)
-    const selected = listAsigna.find(tierra => tierra.tierraId === option)
-    setCampoModel(selected.campo)
-    setUTModel({proveedorId:selected.proveedorId, ut:selected.ut})
-  };
-  const handleSelectionChangeCosechaTipo = (option) => {
-    setCosechaModel(option)
-  };
+    const selected = listAsigna.find(tierra => tierra.asignarTierraId === option)
+    setCampoModel(selected.tierraCampo)
+    setUTModel({proveedorId:selected.asignarTierraProveedorId, ut:selected.asignarTierraProveedorUT})
+  }
+  const handleSelectionChangeCosechaTipo = (option) => setCosechaModel(option)
   const handleGuardar = async(e) => {
     e.preventDefault()
     if (validarCampos()) {
@@ -112,53 +94,51 @@ export const CosechaModel = ({ onShowModel, data }) => {
         cosechaCosechaTipoId: cosechaModel,
       }
       if(idModel > 0){
-        save.cosechaId= idModel
-        save.userModifiedName= "ADMIN"
-        save.userModifiedAt= obtenerFechaLocal({date: new Date()}).split('T')[0]
-        const resp = await cosechaUpdate(save)
-       return retorna(resp)
+        save = {...save,
+          cosechaId: idModel,
+          userModifiedName: "ADMIN",
+          userModifiedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
+        }        
+        const resp = await cosechaSave('PUT', save)
+       return onShowModel(resp)
       }
-      save.cosechaFecha= fechaModel
-      save.cosechaSupervisor= supervisorModel || null
-      save.cosechaTierraId= ucModel
-      save.cosechaProveedorId= utModel.proveedorId
-      save.userCreatedName= "ADMIN"
-      save.userCreatedAt= obtenerFechaLocal({date: new Date()}).split('T')[0]
-      const resp = await cosechaSave(save)
-      return retorna(resp)
+      save = {...save,
+        cosechaFecha: fechaModel,
+        cosechaSupervisor: supervisorModel || null,
+        cosechaTierraId: ucModel,
+        cosechaProveedorId: utModel.proveedorId,
+        userCreatedName: "ADMIN",
+        userCreatedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
+      }      
+      const resp = await cosechaSave('POST', save)
+      return onShowModel(resp)
     }
-  }
-  const retorna = (resp) => {
-    return onShowModel({
-      id:resp.id, ut:resp.ut, uc:resp.uc, fecha:fechaModel, supervisor:supervisorModel, 
-      has: hasModel, sac:sacModel, red:redModel, humedad:humedadModel, cosecha:resp.cosecha,
-      valle:resp.valle, sector: resp.sector, campo: resp.campo
-    })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({id:0})
+    onShowModel({cosechaId:0})
   }
 
   return (
     <SectionModel title={(idModel > 0 ? 'Editar' : 'Registrar') + ' Cosecha'} >
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 '>
         <FilterOption htmlFor={'AsignaTierraUTModal'} name={'UC/Tierra'}>
-          <ComboBoxCustom initialOptions={tierras} selectedOption={seleccionTierra} 
+           <ComboBoxCustom initialOptions={tierras} selectedOption={seleccionTierra} 
             onSelectionChange={handleSelectionChangeTierra}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.uc ? "border-red-500" : ""
             }`}
             colorOptions={"text-black"}
-          />
+            allDisabled={idModel > 0}
+          /> 
           {errores.uc && <MessageValidationInput mensaje={errores.uc}/>}
         </FilterOption>
         <FilterOption htmlFor={'CampoForm'} name={'Campo'}>
           <InputTextCustom placeholder='Automático ' textValue={campoModel} readOnly />
         </FilterOption>
         <FilterOption htmlFor={'CosechaUT'} name={'UT'}>
-          <InputTextCustom placeholder='Automático ' textValue={utModel?.ut} readOnly />            
-        </FilterOption>
+          <InputTextCustom placeholder='Automático ' textValue={utModel.ut} readOnly />            
+        </FilterOption> 
         <FilterOption htmlFor={'CosechaFecha'} name={'Fecha'}>
           <InputDateCustom fechaValue={fechaModel}
             valueError={errores.fecha ? true: false}
@@ -170,7 +150,7 @@ export const CosechaModel = ({ onShowModel, data }) => {
             onChange={setSupervisorModel}
             placeholder='Ingrese el nombre (opcional)'
             textValue={supervisorModel} 
-            readOnly={data.id > 0}
+            readOnly={idModel > 0}
           />
         </FilterOption>
         <FilterOption htmlFor={'CosechaHAS'} name={'HAS'}>

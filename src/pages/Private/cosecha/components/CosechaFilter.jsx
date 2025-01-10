@@ -45,11 +45,11 @@ export const CosechaFilter = ({onFiltersValue}) => {
         <InputTextCustom textValue={ucFilter} 
           placeholder='Ingrese el código UC' onChange={setUCFilter} />
       </FilterOption>
-      <FilterOption htmlFor="CosechaUT" name={'UTUC'}>
+      <FilterOption htmlFor="CosechaUT" name={'UT'}>
         <InputTextCustom textValue={ucFilter} 
           placeholder='Ingrese el código UT' onChange={setUTFilter} />
       </FilterOption>
-      <FilterOption htmlFor="CosechaUT" name={'UTUC'}>
+      <FilterOption htmlFor="CosechaTipo" name={'Tipo Cosecha'}>
         <ComboBoxCustom initialOptions={cosechaTipo} disabled={false}
           onSelectionChange={handleSelectionChangeCosechaTipo}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}

@@ -39,15 +39,14 @@ const CosechaPage = () => {
   }
   // Funciones para manejar botones de la tabla
   const handleRowSelect = async(rowData) => {
-    console.log(rowData)
     if(rowData.cosechaId != null){
       const cosechaById = await cosechaGetById({id:rowData.cosechaId})
       setSelectedRowData(cosechaById)
-    } else setSelectedRowData(rowData)
+    } else setSelectedRowData(null)
     setShowModel(false)
   }
   const handleShowModel = (data) => {
-    if(data.id>0) getProducts()    
+    if(data.cosechaId>0) getProducts()    
     setShowModel(true)
   }
   return (
