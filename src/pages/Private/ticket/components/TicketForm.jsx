@@ -18,7 +18,7 @@ export const TicketForm = ({ onShowModel, data }) => {
   const [campoModel, setCampoModel] = useState('')
   const [viajeModel, setViajeModel] = useState('')
   const [carguilloId, setCarguilloId] = useState('')
-  const [choferModel, setChoferModel] = useState(null)
+  const [choferModel, setChoferModel] = useState('')
   const [fechaModel, setFechaModel] = useState(obtenerFechaLocal({date: new Date()}).split('T')[0])
   const [camionModel, setCamionModel] = useState('')
   const [camionPesoModel, setCamionPesoModel] = useState('')
@@ -50,7 +50,7 @@ export const TicketForm = ({ onShowModel, data }) => {
       setCampoModel(data.ticketCampo || '')
       setViajeModel(data.ticketViaje || '')
       setCarguilloId(data.carguilloId || '')
-      setChoferModel(data.ticketChofer || null)
+      setChoferModel(data.ticketChofer || '')
       setFechaModel(
         data.ticketFecha? convertirFechaToYMD(data.ticketFecha) :
         obtenerFechaLocal({date: new Date()}).split('T')[0])
@@ -75,8 +75,7 @@ export const TicketForm = ({ onShowModel, data }) => {
 
   useEffect(()=>{
     if(carguilloId>0){
-      listCarguilloPlacas(carguilloId, 3)
-      listCarguilloPlacas(carguilloId, 4)
+      listCarguilloPlacas(carguilloId)
     }
   },[carguilloId])
   const listCarguillos = async() =>{
@@ -86,12 +85,16 @@ export const TicketForm = ({ onShowModel, data }) => {
       (formatterDataCombo(carguillo.carguilloId,carguillo.carguilloTitular)))
     setCarguilloList(formatter)
   }
-  const listCarguilloPlacas =async(carguilloId,carguilloTipoId)=>{
-    const placaCamiones = await getCarguilloPlacasList(carguilloId, carguilloTipoId)
-    const formatter = await placaCamiones.map(placa =>
+  const listCarguilloPlacas =async(carguilloId)=>{
+    const placaCamiones = await getCarguilloPlacasList(carguilloId)
+    setPlacaCamionList( 
+      placaCamiones.carguilloTipoCamion.map(placa =>
       (formatterDataCombo(placa.carguilloDetalleId,placa.carguilloDetallePlaca)))
-    if(carguilloTipoId == 3) setPlacaVehiculoList(formatter)
-    else setPlacaCamionList(formatter)
+    )
+    setPlacaVehiculoList(
+      placaCamiones.carguilloTipoVehiculo.map(placa =>
+        (formatterDataCombo(placa.carguilloDetalleId,placa.carguilloDetallePlaca)))
+    )
   }
 
   const handleSelectionChange = async(option) => {
@@ -193,7 +196,7 @@ export const TicketForm = ({ onShowModel, data }) => {
           {errores.transportista && <MessageValidationInput mensaje={errores.transportista}/>}
         </FilterOption>
         <FilterOption htmlFor={'ChoferModel'} name={'Chofer'}>
-          <InputTextCustom textValue={choferModel} placeholder='Ingrese el nombre'          
+          <InputTextCustom textValue={choferModel} placeholder='Ingrese el nombre (opcional)'          
             onChange={setChoferModel} />
         </FilterOption>
         <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
