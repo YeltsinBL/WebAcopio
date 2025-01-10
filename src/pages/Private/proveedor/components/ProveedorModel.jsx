@@ -21,7 +21,6 @@ export const ProveedorModel = ({ onShowModel, data }) => {
 
   const headers= ['DNI', 'Nombre','Apellido Paterno','Apellido Materno','Estado', 'Acciones']
   useEffect(() => {
-    console.log(data)
     if(data.proveedorId){
       setId(data.proveedorId || 0)
       setUt(data.proveedorUT || '')
@@ -180,7 +179,7 @@ export const ProveedorModel = ({ onShowModel, data }) => {
         <TableBodyCustom headers={headers}>
           {proveedoresList.length > 0 ? (
             proveedoresList.map((item) => (
-              <tr key={item.id}>
+              <tr key={item.proveedorPersonId}>
                 <TableTd hidden>{item.proveedorPersonId}</TableTd>
                 <TableTd hidden>{item.proveedorId}</TableTd>
                 <TableTd hidden>{item.personId}</TableTd>
