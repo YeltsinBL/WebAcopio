@@ -1,5 +1,5 @@
 import { appSetting } from "../settings/appsetting";
-import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimal } from "../utils";
+import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath } from "../utils";
 
 export const searchTickets = async(search) => {
   let url=`${appSetting.apiUrl}Ticket`
@@ -86,8 +86,7 @@ export const searchTicketsByCarguillo = async(carguilloId) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const tickets = await response.json()
-    const formatter= tickets?.map(ticket => (formatterticket(ticket))) 
-    return formatter
+    return formatteTickets(tickets)
 
   } catch (error) {
     console.log('searchtickets:', error.message)
@@ -115,9 +114,9 @@ const formatteTickets =(tickets) =>{
   return tickets.map(ticket =>{
     return {...ticket, 
       ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(ticket.ticketFecha)),
-      ticketCamionPeso : FormatteDecimal(ticket.ticketCamionPeso, 3),
-      ticketVehiculoPeso : FormatteDecimal(ticket.ticketVehiculoPeso, 3),
-      ticketPesoBruto : FormatteDecimal(ticket.ticketPesoBruto, 3)
+      ticketCamionPeso : FormatteDecimalMath(ticket.ticketCamionPeso, 3),
+      ticketVehiculoPeso : FormatteDecimalMath(ticket.ticketVehiculoPeso, 3),
+      ticketPesoBruto : FormatteDecimalMath(ticket.ticketPesoBruto, 3)
     }
   })
 }
@@ -132,18 +131,18 @@ const formatterticket = (data) => {
     transportista :  data.ticketTransportista ,
     chofer : data.ticketChofer,
     camion : data.ticketCamion,
-    camionPeso : FormatteDecimal(data.ticketCamionPeso, 3),
+    camionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
     vehiculo : data.ticketVehiculo,
-    vehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
+    vehiculoPeso : FormatteDecimalMath(data.ticketVehiculoPeso, 3),
     unidadPeso : data.ticketUnidadPeso,
-    pesoBruto : FormatteDecimal(data.ticketPesoBruto, 3),
+    pesoBruto : FormatteDecimalMath(data.ticketPesoBruto, 3),
     estado : data.ticketEstadoDescripcion
   }
 }
 const newFormatterTicket = (data) => {
   return {...data, ticketFecha: new Date(data.ticketFecha ),
-    ticketCamionPeso : FormatteDecimal(data.ticketCamionPeso, 3),
-    ticketVehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
-    ticketPesoBruto : FormatteDecimal(data.ticketPesoBruto, 3)
+    ticketCamionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
+    ticketVehiculoPeso : FormatteDecimalMath(data.ticketVehiculoPeso, 3),
+    ticketPesoBruto : FormatteDecimalMath(data.ticketPesoBruto, 3)
   }
 }
