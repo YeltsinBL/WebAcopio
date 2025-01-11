@@ -19,9 +19,9 @@ export const CorteFilter = ({onFiltersValue}) => {
     getListCombos()
   },[])
   const getListCombos = async() => {
-    const ucs = await searchAsignaTierra({})
+    const ucs = await searchAsignaTierra()
     const formatter= ucs?.map(tipo =>
-      (formatterDataCombo(tipo.tierraId,tipo.uc)))
+      (formatterDataCombo(tipo.asignarTierraTierraId,tipo.asignarTierraTierraUC)))
     setUcLista(formatter)
 
     const estados = await searchCorteEstados()
@@ -29,18 +29,18 @@ export const CorteFilter = ({onFiltersValue}) => {
       (formatterDataCombo(tipo.corteTipoId,tipo.corteDescripcion)))
     setEstadoLista(formatterEstados)
   }
-  const handleSelectionChange = (option) => {
-    setUcFilter(option)
-  }
-  const handleSelectionChangeEstado = (option) => {
-    setEstadoFilter(option)
-  }
+  const handleSelectionChange = (option) => 
+    setUcFilter((option==''|| isNaN(option))?'':option)
+  
+  const handleSelectionChangeEstado = (option) => 
+    setEstadoFilter((option==''|| isNaN(option))?'':option)
+  
   const handleSearch = (e) => {
     e.preventDefault()
     onFiltersValue({
-      tierraId:(ucFilter==''|| isNaN(ucFilter))?'':ucFilter, 
-        fechaDesde:fechaDesdeFilter, fechaHasta:fechaHastaFilter, 
-        estadoId:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter}
+      tierraId:ucFilter, 
+      fechaDesde:fechaDesdeFilter, fechaHasta:fechaHastaFilter, 
+      estadoId:estadoFilter}
     )
   }
   return (

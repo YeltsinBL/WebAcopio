@@ -1,73 +1,33 @@
 import React from 'react'
-import { NoRegistros } from '../common'
+import { NoRegistros, TableBodyCustom, TableTd } from '../common'
 
 const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
   return (
-    <div className='pl-6 pr-6'>
-      <div className="overflow-auto max-h-[350px] ">
-        <table className="w-auto table-auto md:w-full divide-y divide-gray-700 ">
-          <thead className="bg-gray-900  sticky top-0 z-10">
-            <tr>
-              { headers.map((header, index) => (
-                <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
-                  {header}
-                </th>
-              ))}
-              <th className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}>
-                Seleccionar
-              </th>
+      <TableBodyCustom headers={headers}>
+        {ticketList ? (
+          ticketList.map((ticket) => (
+            <tr key={ticket.ticketId} >
+              <TableTd hidden>{ticket.ticketId}</TableTd>
+              <TableTd>{ticket.ticketIngenio}</TableTd>
+              <TableTd>{ticket.ticketCampo}</TableTd>
+              <TableTd>{ticket.ticketViaje}</TableTd>
+              <TableTd>{ticket.ticketFecha}</TableTd>
+              <TableTd>{ticket.ticketTransportista}</TableTd>
+              <TableTd>{ticket.ticketCamion}</TableTd>
+              <TableTd>{ticket.ticketCamionPeso}</TableTd>
+              <TableTd>{ticket.ticketVehiculo}</TableTd>
+              <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+              <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd>
+                <input
+                type="checkbox"
+                onChange={() => handleCheckboxChange(ticket)}
+                />
+              </TableTd>
             </tr>
-          </thead>
-          <tbody className='divide-y divide-gray-700'>
-            {ticketList ? (
-              ticketList.map((ticket) => (
-                <tr key={ticket.id} >
-                  <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
-                      {ticket.id}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.ingenio}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.campo}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.viaje}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.fecha.toLocaleDateString('es-PE')}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.transportista}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.camion}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.camionPeso}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.vehiculo}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.vehiculoPeso}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.pesoBruto}
-                  </td>
-                  <td className=' px-14 py-4 whitespace-nowrap text-sm text-gray-300'>
-                    <input
-                    type="checkbox"
-                    onChange={() => handleCheckboxChange(ticket)}
-                    />
-                  </td>
-                </tr>
-              ))
-            ): ( <NoRegistros colSpan={headers.length} /> )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          ))
+        ): ( <NoRegistros colSpan={headers.length} /> )}
+      </TableBodyCustom>
   )
 }
 

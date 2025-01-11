@@ -18,7 +18,6 @@ const CorteTicketPopup = ({onShowModel, headers, proveedorId= null}) => {
       setTICKET_DATA(tickets)
     }else{const tickets = await searchTicketsByProveedor(proveedorId)
       setTICKET_DATA(tickets)
-      console.log(tickets)
     }
   }
 

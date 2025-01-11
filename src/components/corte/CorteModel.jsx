@@ -5,15 +5,24 @@ import { corteSave } from '../../services/corte'
 import { searchAsignaTierra } from '../../services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
+  InputDateCustom, 
   InputTextCustom, 
-  NoRegistros, SectionModel 
+  MessageValidationInput, 
+  NoRegistros, SectionModel, 
+  TableBodyCustom, 
+  TableButton, 
+  TableContainerCustom,
+  TableFooterCustom,
+  TableHeaderCustom,
+  TableTd,
+  TitleCustom
 } from '../common'
 import { 
   convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
 } from '../../utils'
 
 export const CorteModel = ({ onShowModel, data }) => {
-  const [idModel, setIdModel] = useState('')
+  const [idModel, setIdModel] = useState(0)
   const [ucModel, setUcModel] = useState('')
   const [campoModel, setCampoModel] = useState('')
   const [fechaModel, setFechaModel] = useState('')
@@ -29,8 +38,8 @@ export const CorteModel = ({ onShowModel, data }) => {
   const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
-  const headers = ['ID', 'Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
+  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
+    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Acción']
 
   useEffect(()=> {
     getListUC()
@@ -63,18 +72,17 @@ export const CorteModel = ({ onShowModel, data }) => {
     return setTotalModel('')
   },[precioModel, sumaPesoBrutoModel])
   const getSum=(total, num) =>{
-    return total + parseFloat(num.pesoBruto)
+    return total + parseFloat(num.ticketPesoBruto)
   }
   const getListUC = async() => {
-    const ucs = await searchAsignaTierra({})
+    const ucs = await searchAsignaTierra()
     setUcLista(ucs)
     const formatter= ucs?.map(tipo =>
-      (formatterDataCombo(tipo.tierraId, tipo.uc)))
+      (formatterDataCombo(tipo.asignarTierraTierraId, tipo.asignarTierraTierraUC)))
     setUcListaCombo(formatter)
   }
   const validarCampos = () => {
     const nuevosErrores = {}
-    //if (!idModel) nuevosErrores.id = "El campo ID es obligatorio."
     if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo FECHA es obligatorio."
     if (!precioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
@@ -87,8 +95,8 @@ export const CorteModel = ({ onShowModel, data }) => {
   }
   const handleSelectionChange = (option) => {
     setUcModel(option)
-    var uc = ucLista.find((item) => item.tierraId === option)
-    setCampoModel(uc.campo)
+    var uc = ucLista.find((item) => item.asignarTierraTierraId === option)
+    setCampoModel(uc.tierraCampo)
     setProvedoresModel(uc.proveedoresNombres)
   }
   const handleShowModel = () => setShowPopup(true)
@@ -97,7 +105,7 @@ export const CorteModel = ({ onShowModel, data }) => {
       if(ticketSelected.length > 0){
         const mergedArray = [
           ...ticketSelected,
-          ...data.filter((item2) => !ticketSelected.some((item1) => item1.id === item2.id)),
+          ...data.filter((item2) => !ticketSelected.some((item1) => item1.ticketId === item2.ticketId)),
         ]
         setTicketSelected(mergedArray)
       }else setTicketSelected(data)
@@ -115,210 +123,103 @@ export const CorteModel = ({ onShowModel, data }) => {
         corteTotal: totalModel,
         userCreatedName: 'ADMIN',
         userCreatedAt: obtenerFechaLocal({date: new Date()}),
-        corteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.id}))
+        corteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.ticketId}))
       })
       onShowModel(corte)
     }
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({id:0})
+    onShowModel({corteId:0})
   }
   const onRowDelete= (data)=>{
-    setTicketSelected(ticketSelected.filter(ticket => ticket.id !== data.id))
+    setTicketSelected(ticketSelected.filter(ticket => ticket.ticketId !== data.ticketId))
   }
   return (
     <>
-    <SectionModel title={(data.corteId > 0 ? 'Información del': 'Registrar') + ' Corte'}>
+    <SectionModel title={(idModel > 0 ? 'Información del': 'Registrar') + ' Corte'}>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3'>
-        <div className='space-y-2 hidden'>
-          <label htmlFor="IdModel" className="text-white ">ID</label>
-          <input type='text' className={`bg-transparent  focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-            errores.id ? "border-red-500" : "" 
-          } `}
-            name='query' placeholder='Automático'
-            value={idModel}
-            onChange={(e) => setIdModel(e.target.value)}
-          />
-        </div>
-        <div className='space-y-2'>
-          <label htmlFor="FechaModel" className="text-white">Fecha </label>
-          <input type='date' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.fecha ? "border-red-500" : ""
-            }`}
-            name='query' placeholder='Ejm: 20/11/2024'
-            value={fechaModel}
-            onChange={(e) => setFechaModel(e.target.value)}
-            readOnly={data.corteId > 0}
-          />
-          {errores.fecha && <p className="text-red-500 text-sm">{errores.fecha}</p>}
-        </div>           
+        <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
+          <InputDateCustom fechaValue={fechaModel} setFechaValue={setFechaModel}
+            valueError={errores.fecha ? true: false} readOnly={idModel > 0} />
+          {errores.fecha && <MessageValidationInput mensaje={errores.fecha}/>}
+        </FilterOption>           
         <FilterOption htmlFor={'UCFilter'} name={'UC'} >
-          {data.corteId > 0 ?
-            (
-            <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                errores.uc ? "border-red-500" : ""
-              }`}
-              name='query' 
-              value={ucModel}
-              readOnly
-            />
-            ):
-            (
-              <>
           <ComboBoxCustom  initialOptions={ucListaCombo} selectedOption={seleccionTierra} 
             onSelectionChange={handleSelectionChange}
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.uc ? "border-red-500" : ""
             }`}
             colorOptions={"text-black"}
+            allDisabled={idModel > 0 }
           />
-          {errores.uc && <p className="text-red-500 text-sm">{errores.uc}</p>}
-              </>
-            )
-          }
+          {errores.uc && <MessageValidationInput mensaje={errores.uc} />}
         </FilterOption>
         <FilterOption htmlFor={'CampoModel'} name={'Campo'}>
-          <InputTextCustom textValue={campoModel} placeholder='Automático' readOnly={true}/>
+          <InputTextCustom textValue={campoModel} placeholder='Automático' readOnly/>
         </FilterOption>
-        <div className='space-y-2'>
-          <label htmlFor="PrecioModel" className="text-white">Precio Corte</label>
-          <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.precio ? "border-red-500" : ""
-            }`}
-            name='query' placeholder='Ejm: 85.60'
-            value={precioModel}
-            onChange={(e) => setPrecioModel(e.target.value)}
-            readOnly={data.corteId > 0}
-          />
-          {errores.precio && <p className="text-red-500 text-sm">{errores.precio}</p>}
-        </div>
-        <div className='space-y-2'>
-          <label htmlFor="EstadoModel" className="text-white">Estado</label>
-          <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.estado ? "border-red-500" : ""
-          }`}
-              name='query' placeholder='Automático'
-              value={estadoModel}
-              onChange={(e) => setEstadoModel(e.target.value)}
-              readOnly
-          />
-          {errores.estado && <p className="text-red-500 text-sm">{errores.estado}</p>}
-        </div>
+        <FilterOption htmlFor={'PrecioModel'} name={'Precio Corte'}>
+          <InputTextCustom textValue={precioModel} placeholder='Ejm: 85.60'
+            onChange={setPrecioModel} valueError={errores.precio}
+            readOnly={idModel > 0} />
+          {errores.precio && <MessageValidationInput mensaje={errores.precio} />}
+        </FilterOption>
+        <FilterOption htmlFor={'EstadoModel'} name={'Estado'}>
+          <InputTextCustom textValue={estadoModel} placeholder='Automático' readOnly />
+        </FilterOption>
         <div className='space-y-2 md:col-span-2 lg:col-span-4 '>
-          <label htmlFor="ProveedoresModel" className="text-white">Proveedores</label>
-          <InputTextCustom textValue={proveedoresModel} placeholder='Automático' readOnly={true}/>
+          <FilterOption htmlFor="ProveedoresModel" name={'Proveedores'}>
+            <InputTextCustom textValue={proveedoresModel} placeholder='Automático' readOnly />
+          </FilterOption>
         </div>
       </div>        
     </SectionModel>
-    <div>
-    <div className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8'>
-      <div className='grid grid-cols-1 md:flex justify-between items-center mb-6'>
-        <h2 className='pb-6 text-xl font-semibold text-gray-100 md:pb-0'>Lista de Tickets Seleccionados</h2>
-        <ButtonCustom name={'Agregar'} onClick={handleShowModel} extraClassName={data.corteId > 0 ? 'hidden' : ''}/>
-      </div>
-      <div className="overflow-auto max-h-[350px]">
-        <table className="table-auto w-full divide-y divide-gray-700">
-            <thead className="bg-gray-900  sticky top-0 z-10">
-              <tr>
-                { headers.map((header, index) => (
-                  <th key={index} className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ${header =='ID' ? 'hidden':''}`}>
-                    {header}
-                  </th>
-                ))}
-                {data.corteId > 0 ?(''):(                    
-                <th className={`px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider`}>
-                  Acción
-                </th>
-                )}
-              </tr>
-            </thead>
-            <tbody className='divide-y divide-gray-700'>
-            {ticketSelected.length > 0 ? (
-              ticketSelected.map((ticket) => (
-                <tr key={ticket.id} >
-                  <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 gap-2 items-center hidden'>
-                      {ticket.id}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.ingenio}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.campo}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.viaje}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.fecha.toLocaleDateString('es-PE')}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.transportista}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.camion}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.camionPeso}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.vehiculo}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.vehiculoPeso}
-                  </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                      {ticket.pesoBruto}
-                  </td>
-                  {data.corteId > 0 ?(''):(
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-30 '>
-                    <button className='text-red-400 hover:text-red-300'
-                      onClick={()=>onRowDelete(ticket)}
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
-                  )}                  
-                </tr>
-              ))
-            ): ( <NoRegistros colSpan={headers.length -1}/> )}
-            </tbody>
-        </table>
-      </div>
-      <div className='grid grid-cols-1 pt-6 md:grid-cols-2 lg:grid-cols-4 gap-4 '>  
-        <div className='space-y-2'>
-          <label htmlFor="PesoBrutoModel" className="text-white">Suma Peso Bruto</label>
-          <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.suma ? "border-red-500" : ""
-            }`}
-            name='query' placeholder='Automático'
-            value={sumaPesoBrutoModel}
-            onChange={(e) => setSumaPesoBrutoModel(e.target.value)}
-            readOnly
-          />
-          {errores.suma && <p className="text-red-500 text-sm">{errores.suma}</p>}
-        </div>
-        <div className='space-y-2'>
-          <label htmlFor="totalModel" className="text-white">Total</label>
-          <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.total ? "border-red-500" : ""
-            }`}
-            name='query' placeholder='Automático'
-            value={totalModel}
-            onChange={(e) => setTotalModel(e.target.value)}
-            readOnly
-          />
-          {errores.total && <p className="text-red-500 text-sm">{errores.total}</p>}
-        </div>
-      </div>
-	  </div>
-    </div> 
+    <TableContainerCustom>
+      <TableHeaderCustom>
+        <TitleCustom titulo={'Lista de Tickets Seleccionados'} />
+        <ButtonCustom name={'Agregar'} onClick={handleShowModel} extraClassName={idModel > 0 ? 'hidden' : ''} />
+      </TableHeaderCustom>
+      <TableBodyCustom headers={headers}>
+        {ticketSelected.length > 0 ? (
+          ticketSelected.map((ticket) => (
+            <tr key={ticket.ticketId} >
+              <TableTd hidden>{ticket.ticketId}</TableTd>
+              <TableTd>{ticket.ticketIngenio}</TableTd>
+              <TableTd>{ticket.ticketCampo}</TableTd>
+              <TableTd>{ticket.ticketViaje}</TableTd>
+              <TableTd>{ticket.ticketFecha}</TableTd>
+              <TableTd>{ticket.ticketTransportista}</TableTd>
+              <TableTd>{ticket.ticketCamion}</TableTd>
+              <TableTd>{ticket.ticketCamionPeso}</TableTd>
+              <TableTd>{ticket.ticketVehiculo}</TableTd>
+              <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+              <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd hidden={idModel > 0}>
+                <TableButton className='text-red-400 hover:text-red-300'
+                  onRowSelect={()=>onRowDelete(ticket)} >
+                  <Trash2 size={18} />
+                </TableButton>
+              </TableTd>                
+            </tr>
+          ))
+        ): ( <NoRegistros colSpan={headers.length -1}/> )}
+      </TableBodyCustom>
+      <TableFooterCustom>  
+        <FilterOption htmlFor={'PesoBrutoModel'} name={'Suma Peso Bruto'}>
+          <InputTextCustom textValue={sumaPesoBrutoModel} placeholder='Automático'
+            readOnly />
+          {errores.suma && <MessageValidationInput mensaje={errores.suma} />}
+        </FilterOption>
+        <FilterOption htmlFor={'totalModel'} name={'Total'}>
+          <InputTextCustom textValue={totalModel} placeholder='Automático'
+            readOnly />
+          {errores.total && <MessageValidationInput mensaje={errores.total} />}
+        </FilterOption>
+      </TableFooterCustom>
+	  </TableContainerCustom>
 
     <Footer>
-      {
-        data.corteId > 0 ?
-        (''):( <FooterButton accion={handleGuardar} name={"Guardar"}/> )
-      }
+      { idModel > 0  || (<FooterButton accion={handleGuardar} name={"Guardar"}/>) }
       <FooterButton accion={handleCancelar} name={"Cancelar"}/>
     </Footer>
     {showPopup ? <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers}/>    : ''}
