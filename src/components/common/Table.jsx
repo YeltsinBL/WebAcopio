@@ -35,7 +35,7 @@ export const TableContainerCustom = ({children}) => {
 }
 export const TableHeaderCustom = ({grid=false, children}) => {
   return (
-    <div className={`${grid? 'grid grid-cols-1':'flex'} justify-between items-center mb-6`}>
+    <div className={`grid grid-cols-1 ${grid? '':'gap-6 md:flex'} justify-between items-center mb-6`}>
       {children}
     </div>
   )
