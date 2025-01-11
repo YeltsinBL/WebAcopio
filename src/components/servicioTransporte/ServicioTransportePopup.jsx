@@ -17,10 +17,10 @@ export const ServicioTransportePopup = ({onShowModel, headers, carguilloId}) => 
   }
 
   const handleCheckboxChange = (row) => {
-    const isSelected = selectedRows.some((selectedRow) => selectedRow.id === row.id)
+    const isSelected = selectedRows.some((selectedRow) => selectedRow.ticketId === row.ticketId)
     if (isSelected) {
       // Si ya está seleccionado, eliminar de selectedRows
-      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.id !== row.id);
+      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.ticketId !== row.ticketId);
       setSelectedRows(updatedRows);
     } else {
       // Si no está seleccionado, lo agregamos
@@ -50,7 +50,7 @@ export const ServicioTransportePopup = ({onShowModel, headers, carguilloId}) => 
             </h3>
           </div>
           {/*body*/}
-          <CorteTicketPopupTable headers={headers} ticketList={ticketList} selectedRows={selectedRows} handleCheckboxChange={handleCheckboxChange} />
+          <CorteTicketPopupTable headers={headers} ticketList={ticketList} handleCheckboxChange={handleCheckboxChange} />
           {/*footer*/}
           <Footer>
             <FooterButton name={'Agregar'} accion={handleAgregar}/>

@@ -2,16 +2,16 @@ import { servicioTransporteSave } from "../../services/serviciotransporte"
 import { obtenerFechaLocal } from "../../utils"
 import { Footer, FooterButton, ModalDelete } from "../common"
 
-export const ServicioTransporteModalDelete = ({onShowModel, id}) => {
+export const ServicioTransporteModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e)=>{
     e.preventDefault()
     const servicioDto={
-      servicioTransporteId: id,
+      servicioTransporteId: data.servicioTransporteId,
       userModifiedAt : obtenerFechaLocal({date: new Date()}),
       userModifiedName: "ADMIN"
     }
     const servicio = await servicioTransporteSave({ method:'DELETE', servicioTransporte: servicioDto })
-    if (servicio) return sendDataDismissModel(id)
+    if (servicio) return sendDataDismissModel(data.servicioTransporteId)
     return sendDataDismissModel(0)
   }
   const handleCancelar =(e)=>{
@@ -22,7 +22,7 @@ export const ServicioTransporteModalDelete = ({onShowModel, id}) => {
     onShowModel(valor)
   }
   return (
-    <ModalDelete title={'Eliminar Servicio Transporte'} message={'¿Estás seguro(a) que deseas eliminar el Servicio Transporte?'}>
+    <ModalDelete title={'Eliminar Servicio Transporte'} message={`¿Estás seguro(a) que deseas eliminar el Servicio Transporte: ${data.servicioTransporteFecha} - ${data.servicioTransporteCarguilloTitular}?`}>
       <Footer>
         <FooterButton accion={handleGuardar} name={'Eliminar'} />
         <FooterButton accion={handleCancelar} name={'Cancelar'}/>

@@ -32,15 +32,12 @@ export const ServicioTransporteFilter = ({onFiltersValue}) => {
     setCarguilloList(formatter)
   }
 
-  const handleSelectionCarguilloChange = (option) => setCarguilloFilter(option)
-  const handleSelectionEstadoChange = (option) => setEstadoFilter(option)
+  const handleSelectionCarguilloChange = (option) => setCarguilloFilter((option==''|| isNaN(option))?'':option)
+  const handleSelectionEstadoChange = (option) => setEstadoFilter((option==''|| isNaN(option))?'':option)
+  
   const handleSeachCarguillo = (e) =>{
     e.preventDefault()
-    onFiltersValue({
-      fechaDesdeFilter, fechaHastaFilter, 
-      carguilloFilter: (carguilloFilter==''|| isNaN(carguilloFilter))?'':carguilloFilter,
-      estadoFilter:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter
-    })
+    onFiltersValue({ fechaDesdeFilter, fechaHastaFilter,  carguilloFilter, estadoFilter })
   }
   return (
     <SectionFilter>

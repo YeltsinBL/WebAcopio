@@ -4,7 +4,6 @@ import { useClosePage } from '../hooks/common'
 import { ServicioTransporteFilter } from '../components/servicioTransporte/ServicioTransporteFilter'
 import { ServicioTransporteTable } from '../components/servicioTransporte/ServicioTransporteTable'
 import { servicioTransporteGetById, servicioTransporteSearch } from '../services/serviciotransporte'
-import { convertirFechaDDMMYYYY } from '../utils'
 import { ServicioTransporteModal } from '../components/servicioTransporte/ServicioTransporteModal'
 import { ServicioTransporteModalDelete } from '../components/servicioTransporte/ServicioTransporteModalDelete'
 
@@ -14,18 +13,14 @@ const ServicioTransportePage = () => {
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [showModelDelete, setShowModelDelete] = useState(false)
-  const [idModelDelete, setIdModelDelete] = useState(false)
+  const [modelDelete, setModelDelete] = useState(false)
   
   useEffect(()=>{
     getServicios()
   },[])
   const getServicios = async(filters) =>{
     const servicios = await servicioTransporteSearch(filters)
-    const formatteServicios = servicios.map(servicio =>{
-      return {...servicio, 
-        servicioTransporteFecha: convertirFechaDDMMYYYY(servicio.servicioTransporteFecha)}
-    })
-    setServicioList(formatteServicios)
+    setServicioList(servicios)
   }
   const handleDataFromChild = (data)=>{
     const {
@@ -53,8 +48,8 @@ const ServicioTransportePage = () => {
     }
     setShowModal(false)
   }
-  const handleRowDelete = (id) =>{
-    setIdModelDelete(id)
+  const handleRowDelete = (data) =>{
+    setModelDelete(data)
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (servicioId) =>{
@@ -75,7 +70,7 @@ const ServicioTransportePage = () => {
           </Footer>
         </>:        
          <ServicioTransporteModal onShowModel={handleSaveModel} data={selectedRowData}/>}
-        {showModelDelete && <ServicioTransporteModalDelete id={idModelDelete} onShowModel={handleShowModelDelete}/>}
+        {showModelDelete && <ServicioTransporteModalDelete data={modelDelete} onShowModel={handleShowModelDelete}/>}
       </Main>
     </ContainerPageCustom>
   )
