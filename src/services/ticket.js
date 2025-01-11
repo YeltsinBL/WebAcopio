@@ -115,6 +115,8 @@ const formatteTickets =(tickets) =>{
   return tickets.map(ticket =>{
     return {...ticket, 
       ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(ticket.ticketFecha)),
+      ticketCamionPeso : FormatteDecimal(ticket.ticketCamionPeso, 3),
+      ticketVehiculoPeso : FormatteDecimal(ticket.ticketVehiculoPeso, 3),
       ticketPesoBruto : FormatteDecimal(ticket.ticketPesoBruto, 3)
     }
   })
