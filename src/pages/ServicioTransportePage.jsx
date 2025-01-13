@@ -6,6 +6,8 @@ import { ServicioTransporteTable } from '../components/servicioTransporte/Servic
 import { servicioTransporteGetById, servicioTransporteSearch } from '../services/serviciotransporte'
 import { ServicioTransporteModal } from '../components/servicioTransporte/ServicioTransporteModal'
 import { ServicioTransporteModalDelete } from '../components/servicioTransporte/ServicioTransporteModalDelete'
+import ExportToExcel from '../components/excel/ExportToExcel'
+import { ServicioTransporteExcelFile } from '../components/servicioTransporte'
 
 const ServicioTransportePage = () => {
   const handleGoBack = useClosePage()
@@ -56,6 +58,10 @@ const ServicioTransportePage = () => {
     if(servicioId > 0) getServicios()
     setShowModelDelete(false)
   }
+  const handleRowExportExcel = async(servicioId) =>{
+    const corte = await servicioTransporteGetById({id: servicioId})
+    await ExportToExcel(ServicioTransporteExcelFile(corte), 'ServicioTransporteReporte')
+  }
   return (
     <ContainerPageCustom>
       <Header title={'Servicio Transporte'}/>
@@ -63,7 +69,7 @@ const ServicioTransportePage = () => {
         {!showModal ?
         <>
           <ServicioTransporteFilter onFiltersValue={handleDataFromChild} />
-          <ServicioTransporteTable data={servicioList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete} /> 
+          <ServicioTransporteTable data={servicioList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete} exportExcel={handleRowExportExcel} /> 
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect} />
             <FooterButton name={'Salir'} accion={handleGoBack} />
