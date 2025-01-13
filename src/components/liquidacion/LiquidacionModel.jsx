@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
-import { ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom, InputDecimalCustom, InputNumberCustom, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom, TableHeaderCustom, TableTd, TitleCustom } from "../common";
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom, 
+  InputDecimalCustom, InputNumberCustom, InputTextCustom, MessageValidationInput, NoRegistros, 
+  SectionModel, TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom, 
+  TableHeaderCustom, TableTd, TitleCustom 
+} from "../common";
 import { Trash2 } from "lucide-react";
-import { convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal } from "../../utils";
+import { 
+  convertirFechaToISO,
+  convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal 
+} from "../../utils";
 import { liquidacionSave, searchProveedorALiquidar } from "../../services/liquidacion";
 import CorteTicketPopup from "../corte/CorteTicketPopup";
 
@@ -12,7 +20,7 @@ export function LiquidacionModel({onShowModel, data}) {
   const [financiamientoList, setFinanciamientoList] = useState([])
   const [adicionalesList, setAdicionalesList] = useState([])
 
-  const [liquidacionIdModel, setLiquidacionIdModel] = useState('')
+  const [liquidacionIdModel, setLiquidacionIdModel] = useState(0)
   const [personaIdModel, setPersonaIdModel] = useState("")
   const [proveedorIdModel, setProveedorIdModel] = useState("")
   const [tierraIdModel, setTierraIdModel] = useState("")
@@ -44,8 +52,8 @@ export function LiquidacionModel({onShowModel, data}) {
 
   const [errores, setErrores] = useState({})
   const seleccionPersona = data.personaId ? {id: data.personaId, nombre: data.personaNombre } : null
-  const headers = ['ID', 'Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto']
+  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
+    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
   const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo','Interes Mes %','Interes S/', 'Total','Acciones']
   const headersAdicionales= ['Motivo', 'Monto','Acciones']
   
@@ -53,7 +61,7 @@ export function LiquidacionModel({onShowModel, data}) {
     proveedorListAliquidar()
     console.log(data)
     if(data){
-      setLiquidacionIdModel(data.liquidacionId || '')
+      setLiquidacionIdModel(data.liquidacionId || 0)
       setPersonaIdModel(data.personaId || '')
       setCampoModel(data.tierraCampo || '')
       setUtModel(data.proveedorUT || '')
@@ -95,7 +103,8 @@ export function LiquidacionModel({onShowModel, data}) {
     let interes = null
     if(parseFloat(financiamientoACuentaModel) && parseFloat(financiamientoTiempoModel)
       && parseFloat(financiamientoInteresMesModel)){
-      interes =financiamientoACuentaModel * parseInt(financiamientoTiempoModel) * parseFloat(financiamientoInteresMesModel) / 100
+      //interes = financiamientoACuentaModel * parseInt(financiamientoTiempoModel) * parseFloat(financiamientoInteresMesModel) / 100
+      interes = financiamientoACuentaModel * parseInt(financiamientoTiempoModel) * (parseFloat(financiamientoInteresMesModel) / 30) / 100
       setFinanciamientoInteresModel(interes)
     }else setFinanciamientoInteresModel(0)
     const total = parseFloat(financiamientoACuentaModel) + interes
@@ -120,7 +129,7 @@ export function LiquidacionModel({onShowModel, data}) {
     }else setLiquidacionPorPagar('0')
   },[toneladasTotalModel, financiamientoACuentaTotal, adicionalesTotal])
   const getSum=(total, num) =>{
-    return total + parseFloat(num.pesoBruto)
+    return total + parseFloat(num.ticketPesoBruto)
   }
   const getSumFina=(total, num) =>{
     return total + parseFloat(num.liquidacionFinanciamientoTotal)
@@ -156,20 +165,25 @@ export function LiquidacionModel({onShowModel, data}) {
       if(ticketsSeleccionadosList.length > 0){
         mergedArray = [
           ...ticketsSeleccionadosList,
-          ...data.filter((item2) => !ticketsSeleccionadosList.some((item1) => item1.id === item2.id)),
+          ...data.filter((item2) => !ticketsSeleccionadosList.some((item1) => item1.ticketId === item2.ticketId)),
         ]
       }else mergedArray = data
-      const sortedArray = mergedArray.sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
+      const sortedArray = mergedArray.sort((a, b) => {
+        const dateA = convertirFechaToISO(a.ticketFecha)
+        const dateB = convertirFechaToISO(b.ticketFecha)
+        return dateA - dateB;
+      })
       setTicketsSeleccionadosList(sortedArray)
 
       const { minDate, maxDate } = sortedArray.reduce(
         (acc, current) => {
-          const currentFecha = new Date(current.fecha)
+          const currentFecha = convertirFechaToISO(current.ticketFecha)
           if (currentFecha < acc.minDate) acc.minDate = currentFecha
           if (currentFecha > acc.maxDate) acc.maxDate = currentFecha
           return acc
         },
-        { minDate: new Date(data[0].fecha), maxDate: new Date(data[0].fecha) }
+        { minDate: convertirFechaToISO(data[0].ticketFecha),
+          maxDate: convertirFechaToISO(data[0].ticketFecha) }
       )
       setFechaInicioModel(convertirFechaToYMD(minDate))
       setFechaFinModel(convertirFechaToYMD(maxDate))
@@ -183,7 +197,9 @@ export function LiquidacionModel({onShowModel, data}) {
       setShowPopup(true)
     }
   }
-
+  const onRowDeleteTicket= (data)=>{
+    setTicketsSeleccionadosList(ticketsSeleccionadosList.filter(ticket => ticket.ticketId !== data.ticketId))
+  }
   const handleAgregarFinanciamiento = (e) => {
     e.preventDefault()
     if (validarCampos({financiamiento:true})) {
@@ -199,7 +215,7 @@ export function LiquidacionModel({onShowModel, data}) {
       setFinanciamientoList(updateFinanciamientoList)
     }
   }
-  const onRowDelete = (financiamiento) => {
+  const onRowDeleteFinanciamiento = (financiamiento) => {
     if (typeof financiamiento.liquidacionFinanciamientoId === "string" && financiamiento.liquidacionFinanciamientoId.startsWith("temp")) {
       setFinanciamientoList(financiamientoList.filter((item) => item.liquidacionFinanciamientoId !== financiamiento.liquidacionFinanciamientoId));
     } 
@@ -250,7 +266,7 @@ export function LiquidacionModel({onShowModel, data}) {
         tierraId: tierraIdModel,
         proveedorId: proveedorIdModel,
 
-        liquidacionTickets: ticketsSeleccionadosList?.map(ticket => ({ticketId :ticket.id})),
+        liquidacionTickets: ticketsSeleccionadosList?.map(ticket => ({ticketId :ticket.ticketId})),
         liquidacionFechaInicio: fechaInicioModel,
         liquidacionFechaFin: fechaFinModel,
         liquidacionPesoBruto: sumaPesoBrutoModel,
@@ -282,7 +298,7 @@ export function LiquidacionModel({onShowModel, data}) {
 
   return (
     <>
-      <SectionModel title={(data.liquidacionToneladasId > 0 ? 'Información de':'Registrar') + ' Liquidación'}>
+      <SectionModel title={(liquidacionIdModel > 0 ? 'Información de':'Registrar') + ' Liquidación'}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3">
           <FilterOption htmlFor={'SembradorModel'} name={'Sembrador'}>
             <ComboBoxCustom  initialOptions={proveedoresComboList} selectedOption={seleccionPersona}
@@ -290,7 +306,7 @@ export function LiquidacionModel({onShowModel, data}) {
               className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                 errores.ut ? "border-red-500" : ""
               }`}
-              colorOptions={"text-black"}
+              colorOptions={"text-black"} allDisabled={liquidacionIdModel > 0}
             />
             {errores.ut && <p className="text-red-500 text-sm">{errores.ut}</p>}
           </FilterOption>
@@ -305,25 +321,34 @@ export function LiquidacionModel({onShowModel, data}) {
       <TableContainerCustom>
         <TableHeaderCustom>
           <TitleCustom titulo={'Selecciona los tickes'}  />
-          { liquidacionIdModel =='' ? (
+          { liquidacionIdModel > 0 || (
           <ButtonCustom extraClassName={'mt-6 md:w-28'} name={'Agregar'} onClick={handleAddTickerts} />
-          ) :''}
+          )}
         </TableHeaderCustom>
         <TableBodyCustom headers={headers}>
           {ticketsSeleccionadosList.length > 0 ? (
-            ticketsSeleccionadosList.map((item) => (
-              <tr key={item.id}>
-                <TableTd hidden>{item.id}</TableTd>
-                <TableTd>{item.ingenio}</TableTd>
-                <TableTd>{item.campo}</TableTd>
-                <TableTd>{item.viaje}</TableTd>
-                <TableTd>{item.fecha.toLocaleDateString('es-PE')}</TableTd>
-                <TableTd>{item.transportista}</TableTd>
-                <TableTd>{item.camion}</TableTd>
-                <TableTd>{item.camionPeso}</TableTd>
-                <TableTd>{item.vehiculo}</TableTd>
-                <TableTd>{item.vehiculoPeso}</TableTd>
-                <TableTd>{item.pesoBruto}</TableTd>
+            ticketsSeleccionadosList.map((ticket) => (
+              <tr key={ticket.ticketId} >
+                <TableTd hidden>{ticket.ticketId}</TableTd>
+                <TableTd>{ticket.ticketIngenio}</TableTd>
+                <TableTd>{ticket.ticketCampo}</TableTd>
+                <TableTd>{ticket.ticketViaje}</TableTd>
+                <TableTd>{ticket.ticketFecha}</TableTd>
+                <TableTd>{ticket.ticketTransportista}</TableTd>
+                <TableTd>{ticket.ticketCamion}</TableTd>
+                <TableTd>{ticket.ticketCamionPeso}</TableTd>
+                <TableTd>{ticket.ticketVehiculo}</TableTd>
+                <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+                <TableTd>{ticket.ticketPesoBruto}</TableTd>
+                <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
+                <TableTd>
+                { liquidacionIdModel > 0 ?? (
+                  <TableButton className={'text-red-400 hover:text-red-300'}
+                  onRowSelect={()=>onRowDeleteTicket(ticket)}>
+                    <Trash2 size={18} />
+                  </TableButton>
+                )}
+                </TableTd>
               </tr>
             )
           ))
@@ -331,31 +356,25 @@ export function LiquidacionModel({onShowModel, data}) {
         </TableBodyCustom>
         <TableFooterCustom>          
           <FilterOption htmlFor={'FechaInicioModel'} name={'Fecha Inicio'}>
-            <>
             <InputDateCustom fechaValue={fechaInicioModel}
               valueError={errores.fechaInicio ? true: false}
-              setFechaValue={setFechaInicioModel}/>
+              setFechaValue={setFechaInicioModel} readOnly={liquidacionIdModel > 0} />
             {errores.fechaInicio && <p className="text-red-500 text-sm">{errores.fechaInicio}</p>}
-            </>
           </FilterOption>
           <FilterOption htmlFor={'FechaFinalModel'} name={'Fecha Final'}>
-            <>
             <InputDateCustom fechaValue={fechaFinModel}
               valueError={errores.fechaFin ? true: false}
-              setFechaValue={setFechaFinModel}/>
+              setFechaValue={setFechaFinModel} readOnly={liquidacionIdModel > 0} />
             {errores.fechaFin && <p className="text-red-500 text-sm">{errores.fechaFin}</p>}
-            </>
           </FilterOption>
           <FilterOption html={'PesoBrutoModel'} name={'Peso Bruto'}>
             <InputTextCustom textValue={sumaPesoBrutoModel} placeholder="Automático" readOnly />
           </FilterOption>
           <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Peso Neto'}>
-            <>
-              <InputDecimalCustom onChange={setToneladasPesosNetosModel}
-                valueError={errores.toneladasPesosNetos}
-                placeholder={'Ejm: 10.55'} textValue={toneladasPesosNetosModel} />
-              {errores.toneladasPesosNetos && <p className="text-red-500 text-sm">{errores.toneladasPesosNetos}</p>}
-            </>
+            <InputDecimalCustom  textValue={toneladasPesosNetosModel}onChange={setToneladasPesosNetosModel}
+              valueError={errores.toneladasPesosNetos}
+              placeholder={'Ejm: 10.55'} readOnly={liquidacionIdModel > 0} />
+            {errores.toneladasPesosNetos && <p className="text-red-500 text-sm">{errores.toneladasPesosNetos}</p>}
           </FilterOption>
         </TableFooterCustom>
       </TableContainerCustom>
@@ -370,13 +389,10 @@ export function LiquidacionModel({onShowModel, data}) {
               placeholder='Automático' textValue={toneladasPesosNetosModel} />
           </FilterOption>
           <FilterOption htmlFor={'ToneladasPCompraModel'} name={'P. Compra'}>
-            <>
-              <InputDecimalCustom onChange={setpComprasModel} decimales={2}
-                textValue={pCompraModel} 
-                valueError={errores.pCompra} 
-                placeholder="Ejm: 115.00"/>
-              {errores.pCompra && <MessageValidationInput mensaje={errores.pCompra}/>}
-            </>
+            <InputDecimalCustom onChange={setpComprasModel} decimales={2}
+              textValue={pCompraModel} valueError={errores.pCompra} 
+              placeholder="Ejm: 115.00" readOnly={liquidacionIdModel > 0} />
+            {errores.pCompra && <MessageValidationInput mensaje={errores.pCompra}/>}
           </FilterOption>
           <FilterOption htmlFor={'ToneladasTotalModel'} name={'Total'}>
             <InputDecimalCustom readOnly
@@ -392,28 +408,28 @@ export function LiquidacionModel({onShowModel, data}) {
             <FilterOption htmlFor={'FinanciamientoFechaModel'} name={'Fecha'}>
               <InputDateCustom fechaValue={financiamientoFechaModel}
                 valueError={errores.financiamientoFecha}
-                setFechaValue={setFinanciamientoFechaModel}/>
+                setFechaValue={setFinanciamientoFechaModel} readOnly={liquidacionIdModel > 0} />
               {errores.financiamientoFecha && <MessageValidationInput mensaje={errores.financiamientoFecha}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoACuenta'} name={'A Cuenta'}>
               <InputDecimalCustom onChange={setFinanciamientoACuentaModel} decimales={2}
                 textValue={financiamientoACuentaModel} 
                 valueError={errores.financiamientoACuenta} 
-                placeholder="Ejm: 115.00"/>
+                placeholder="Ejm: 115.00" readOnly={liquidacionIdModel > 0} />
               {errores.financiamientoACuenta && <MessageValidationInput mensaje={errores.financiamientoACuenta}/>}
             </FilterOption>
-            <FilterOption htmlFor={'FinanciamientoTiempo'} name={'Tiempo/Meses'}>
+            <FilterOption htmlFor={'FinanciamientoTiempo'} name={'Tiempo/Días'}>
               <InputNumberCustom onChange={setFinanciamientoTiempoModel}
                 textValue={financiamientoTiempoModel} 
                 valueError={errores.financiamientoTiempo} 
-                placeholder="Ejm: 12"/>
+                placeholder="Ejm: 12" readOnly={liquidacionIdModel > 0} />
               {errores.financiamientoTiempo && <MessageValidationInput mensaje={errores.financiamientoTiempo}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoInteresMes'} name={'Interes Mes %'}>
               <InputDecimalCustom onChange={setFinanciamientoInteresMesModel} decimales={2}
                 textValue={financiamientoInteresMesModel} 
                 valueError={errores.financiamientoInteresMes} 
-                placeholder="Ejm: 115.00"/>
+                placeholder="Ejm: 115.00" readOnly={liquidacionIdModel > 0} />
               {errores.financiamientoInteresMes && <MessageValidationInput mensaje={errores.financiamientoInteresMes}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoInteres'} name={'Interes S/.'}>
@@ -429,9 +445,9 @@ export function LiquidacionModel({onShowModel, data}) {
                 valueError={errores.financiamientoTotal} readOnly
                 placeholder="Automático"/>
             </FilterOption>
-            { liquidacionIdModel =='' ? (
+            { liquidacionIdModel > 0 || (
             <ButtonCustom extraClassName={'max-h-9 mt-6 md:w-28 '} name={'Agregar'} onClick={handleAgregarFinanciamiento} />
-            ):''}
+            )}
           </TableFooterCustom>
         </TableHeaderCustom>
         <TableBodyCustom headers={headersFinanciamiento}>
@@ -445,12 +461,12 @@ export function LiquidacionModel({onShowModel, data}) {
                 <TableTd>{item.liquidacionFinanciamientoInteres}</TableTd>
                 <TableTd>{item.liquidacionFinanciamientoTotal}</TableTd>
                 <TableTd>
-                { liquidacionIdModel =='' ? (
+                { liquidacionIdModel > 0 || (
                   <TableButton className={'text-red-400 hover:text-red-300'}
-                  onRowSelect={()=>onRowDelete(item)}>
+                  onRowSelect={()=>onRowDeleteFinanciamiento(item)}>
                     <Trash2 size={18} />
                   </TableButton>
-                ):''}
+                )}
                 </TableTd>
               </tr>
             ))
@@ -472,19 +488,19 @@ export function LiquidacionModel({onShowModel, data}) {
             <FilterOption htmlFor={'AdicionalMotivoModel'} name={'Motivo'}>
               <InputTextCustom textValue={adicionalesMotivoModel} placeholder="Ingresa un motivo"
                 valueError={errores.adicionalesMotivo}
-                onChange={setAdicionalesMotivoModel}/>
+                onChange={setAdicionalesMotivoModel} readOnly={liquidacionIdModel > 0} />
               {errores.adicionalesMotivo && <MessageValidationInput mensaje={errores.adicionalesMotivo}/>}
             </FilterOption>
             <FilterOption htmlFor={'AdicionalTotalModel'} name={'Monto'}>
               <InputDecimalCustom onChange={setAdicionalesTotalModel} decimales={2}
                 textValue={adicionalesTotalModel} 
                 valueError={errores.adicionalTotalModel} 
-                placeholder="Ejm:490.00"/>
+                placeholder="Ejm:490.00" readOnly={liquidacionIdModel > 0} />
               {errores.adicionalTotalModel && <MessageValidationInput mensaje={errores.adicionalTotalModel}/>}
             </FilterOption>
-            { liquidacionIdModel =='' ? (
+            { liquidacionIdModel > 0 || (
             <ButtonCustom extraClassName={'max-h-9 mt-6 md:w-28 '} name={'Agregar'} onClick={handleAgregarAdicionales} />
-            ):''}
+            )}
           </TableFooterCustom>
         </TableHeaderCustom>
         <TableBodyCustom headers={headersAdicionales}>
@@ -494,12 +510,12 @@ export function LiquidacionModel({onShowModel, data}) {
                 <TableTd>{item.liquidacionAdicionalMotivo}</TableTd>
                 <TableTd>{item.liquidacionAdicionalTotal}</TableTd>
                 <TableTd>
-                { liquidacionIdModel =='' ? (
+                { liquidacionIdModel >0 || (
                   <TableButton className={'text-red-400 hover:text-red-300'}
                   onRowSelect={()=>onRowDeleteAdicionales(item)}>
                     <Trash2 size={18} />
                   </TableButton>
-                ):''}
+                )}
                 </TableTd>
               </tr>
             ))
@@ -518,11 +534,7 @@ export function LiquidacionModel({onShowModel, data}) {
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
-        {
-          liquidacionIdModel =='' ? (
-            <FooterButton accion={handleGuardar} name={'Guardar'} />
-          ):''
-        }
+        { liquidacionIdModel > 0 || ( <FooterButton accion={handleGuardar} name={'Guardar'} /> ) }
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
       </Footer>
       {showPopup ? <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers} proveedorId={proveedorIdModel}/>    : ''}
