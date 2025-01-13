@@ -7,6 +7,8 @@ import { corteGetById, searchCortes } from '../services/corte'
 import { 
   CorteFilter, CorteModel, CorteTable 
 } from '../components/corte'
+import ExportToExcel from '../components/excel/ExportToExcel'
+import { CorteExcelFile } from '../components/corte/CorteExcelFile'
 
 const CortePage = () => {
   const navigate = useNavigate()
@@ -45,6 +47,10 @@ const CortePage = () => {
     if(data.corteId > 0) getCortes()
     setShowModel(false)
   }
+  const handleRowExportExcel = async(corteId) =>{
+    const corte = await corteGetById({id: corteId})
+    await ExportToExcel(CorteExcelFile(corte), 'CorteReporte')
+  }
   // const handleRowDelete = (id) =>{
   //   setIdModelDelete(id)
   //   setShowModelDelete(true)
@@ -60,7 +66,7 @@ const CortePage = () => {
         {!showModel ?
           <>
             <CorteFilter onFiltersValue={handleDataFromChild}/>
-            <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} />
+            <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} exportExcel={handleRowExportExcel}/>
             <Footer>
               <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
               <FooterButton name={'Salir'} accion={handleGoBack} /> 
