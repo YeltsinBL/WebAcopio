@@ -1,5 +1,7 @@
 import { appSetting } from "../settings/appsetting"
-import { FormatteDecimal } from "../utils"
+import { 
+  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath
+} from "../utils"
 
 export const liquidacionEstadosList = async() => {
   try {
@@ -41,9 +43,8 @@ export const liquidacionGetById = async({id}) => {
       headers: { 'Content-Type': 'application/json' }
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    //return await response.json()
     const data = await response.json()
-    return formatterCorteById(data)
+    return formatterLiquidacionById(data)
   } catch (error) {
     console.log('liquidacionGetById:', error.message)
     throw new Error('Error al obtener la Liquidación')
@@ -94,58 +95,35 @@ export const liquidacionGetCortes = async() => {
       throw new Error('Error al buscar las cortes disponibles a liquidar')
     }
   }
-const formatterCorteById = (corte) => {
-  const formatter= corte.liquidacionTickets?.map(ticket => (formatterticket(ticket)))
-  return {...corte,
-    liquidacionTickets : formatter
+const formatterLiquidacionById = (liquidacion) => {
+  const tickets= liquidacion.liquidacionTickets?.map(ticket => (formatterTicket(ticket)))
+  const financiamientos= liquidacion.liquidacionFinanciamiento?.map(financiamiento => (formatterFinanciamiento(financiamiento)))
+  const adicionales= liquidacion.liquidacionAdicionals?.map((adicional) => formatterAdicional(adicional))
+  return {...liquidacion,
+    liquidacionTickets : tickets,
+    liquidacionFinanciamiento: financiamientos,
+    liquidacionAdicionals: adicionales
   }
 }
-const formatterticket = (data) => {
-    return {...data,
-      id : data.ticketId,
-      ingenio : data.ticketIngenio,
-      fecha : new Date(data.ticketFecha ),
-      viaje : data.ticketViaje,
-      transportista :  data.ticketTransportista ,
-      chofer : data.ticketChofer,
-      camion : data.ticketCamion,
-      camionPeso : FormatteDecimal(data.ticketCamionPeso, 3),
-      vehiculo : data.ticketVehiculo,
-      vehiculoPeso : FormatteDecimal(data.ticketVehiculoPeso, 3),
-      unidadPeso : data.ticketUnidadPeso,
-      pesoBruto : FormatteDecimal(data.ticketPesoBruto, 3),
-      estado : data.ticketEstadoDescripcion,
-      campo: data.ticketCampo
-    }
+const formatterTicket = (ticket) => {
+  return {...ticket, 
+    ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(ticket.ticketFecha)),
+    ticketCamionPeso : FormatteDecimalMath(ticket.ticketCamionPeso, 3),
+    ticketVehiculoPeso : FormatteDecimalMath(ticket.ticketVehiculoPeso, 3),
+    ticketPesoBruto : FormatteDecimalMath(ticket.ticketPesoBruto, 3)
   }
-
-// export const prueba = async() => {
-//     try {
-//       const response = await fetch('http://localhost:5010/api/User/New', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           "nIdPersona": 4,
-//           "nIdRol": 1,
-//           "sUsuLogin": "string",
-//           "sUsuContrasenia": "string",
-//           "lUsuActivo": true,
-//           "email": "string2"
-//         })
-//       });
-//       if (!response.ok) {
-//         const errorData = await response.json()
-//         console.log( Error(`HTTP error! status: ${errorData}`))
-//         console.log('Error:', errorData.title);  // Título del error
-//         console.log('Descripción:', errorData.errors[0].description);  // Descripción del error
-
-//         throw new Error(`HTTP error! status: ${response.status}`)
-//       }
-//       return await response.json()
-//     } catch (error) {
-//       console.log('prueba:', error.message)
-//       console.log( Error('Error al guardar la prueba'))
-//     }
-//   }
+}
+const formatterFinanciamiento = (financiamiento) => {
+  return {...financiamiento,
+    liquidacionFinanciamientoFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(financiamiento.liquidacionFinanciamientoFecha)),
+    liquidacionFinanciamientoACuenta: FormatteDecimalMath(financiamiento.liquidacionFinanciamientoACuenta, 2),
+    liquidacionFinanciamientoInteres: FormatteDecimalMath(financiamiento.liquidacionFinanciamientoInteres, 2),
+    liquidacionFinanciamientoInteresMes: FormatteDecimalMath(financiamiento.liquidacionFinanciamientoInteresMes, 2),
+    liquidacionFinanciamientoTotal: FormatteDecimalMath(financiamiento.liquidacionFinanciamientoTotal,2)
+  }
+}
+const formatterAdicional =(adicional)=>{
+  return {...adicional,
+    liquidacionAdicionalTotal:FormatteDecimalMath(adicional.liquidacionAdicionalTotal,2)
+  }
+}
