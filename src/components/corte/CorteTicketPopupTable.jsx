@@ -18,6 +18,7 @@ const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
               <TableTd>{ticket.ticketVehiculo}</TableTd>
               <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
               <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
               <TableTd>
                 <input
                 type="checkbox"

@@ -39,7 +39,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
   const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Acción']
+    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
 
   useEffect(()=> {
     getListUC()
@@ -194,6 +194,7 @@ export const CorteModel = ({ onShowModel, data }) => {
               <TableTd>{ticket.ticketVehiculo}</TableTd>
               <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
               <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
               <TableTd hidden={idModel > 0}>
                 <TableButton className='text-red-400 hover:text-red-300'
                   onRowSelect={()=>onRowDelete(ticket)} >
