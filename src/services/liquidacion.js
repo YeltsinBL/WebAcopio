@@ -100,6 +100,14 @@ const formatterLiquidacionById = (liquidacion) => {
   const financiamientos= liquidacion.liquidacionFinanciamiento?.map(financiamiento => (formatterFinanciamiento(financiamiento)))
   const adicionales= liquidacion.liquidacionAdicionals?.map((adicional) => formatterAdicional(adicional))
   return {...liquidacion,
+    liquidacionFechaFin: convertirFechaToYMD(liquidacion.liquidacionFechaFin),
+    liquidacionFechaInicio: convertirFechaToYMD(liquidacion.liquidacionFechaInicio),
+    liquidacionPesoBruto: FormatteDecimalMath(liquidacion.liquidacionPesoBruto,3),
+    liquidacionPesoNeto: FormatteDecimalMath(liquidacion.liquidacionPesoNeto,3),
+    liquidacionToneladaPrecioCompra: FormatteDecimalMath(liquidacion.liquidacionToneladaPrecioCompra,2),
+    liquidacionToneladaTotal: FormatteDecimalMath(liquidacion.liquidacionToneladaTotal,2),
+    liquidacionFinanciamientoACuenta: FormatteDecimalMath(liquidacion.liquidacionFinanciamientoACuenta,2),
+    liquidacionPagar: FormatteDecimalMath(liquidacion.liquidacionPagar,2),
     liquidacionTickets : tickets,
     liquidacionFinanciamiento: financiamientos,
     liquidacionAdicionals: adicionales
