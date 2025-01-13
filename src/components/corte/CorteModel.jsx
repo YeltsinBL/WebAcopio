@@ -57,7 +57,7 @@ export const CorteModel = ({ onShowModel, data }) => {
       setSumaPesoBrutoModel(data.cortePesoBrutoTotal || '')
       setTotalModel(data.corteTotal || '')
       setEstadoModel(data.corteEstadoDescripcion || 'Activo')
-      setTicketSelected(data.tickets || [])
+      setTicketSelected(data.corteDetail || [])
       setProvedoresModel(data.proveedoresNombres || '')
     }
   }, [data])
