@@ -90,7 +90,7 @@ const formatterCorteById = (corte) => {
     cortePesoBrutoTotal : FormatteDecimalMath(corte.cortePesoBrutoTotal,3),
     corteTotal          : FormatteDecimalMath(corte.corteTotal,2),
     carguilloPrecio     : FormatteDecimalMath(corte.carguilloPrecio, 2),
-    tickets : formatter
+    corteDetail : formatter
   }
 }
 const formatterticket = (ticket) => {
