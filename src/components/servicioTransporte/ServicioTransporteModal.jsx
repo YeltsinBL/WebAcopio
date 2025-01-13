@@ -39,7 +39,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
   const seleccionCarguilloPalero = data.carguilloIdPalero ? {id: data.carguilloIdPalero, nombre: data.carguilloTitularPalero } : null
   
   const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Acción']
+    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
 
   useEffect(() => {
     const total = ticketSelected.reduce(getSum, 0)
@@ -224,6 +224,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
                 <TableTd>{ticket.ticketVehiculo}</TableTd>
                 <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
                 <TableTd>{ticket.ticketPesoBruto}</TableTd> 
+                <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
                 <TableTd hidden={servicioIdModel > 0}>
                   <TableButton className='text-red-400 hover:text-red-300'
                     onRowSelect={()=>onRowDelete(ticket)} >
