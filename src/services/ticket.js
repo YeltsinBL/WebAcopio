@@ -101,8 +101,7 @@ export const searchTicketsByProveedor = async(proveedorId) => {
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
     const tickets = await response.json()
-    const formatter= tickets?.map(ticket => (formatterticket(ticket))) 
-    return formatter
+    return formatteTickets(tickets)
 
   } catch (error) {
     console.log('searchtickets:', error.message)
@@ -120,25 +119,7 @@ const formatteTickets =(tickets) =>{
     }
   })
 }
-  
-const formatterticket = (data) => {
-  return {
-    id : data.ticketId,
-    ingenio : data.ticketIngenio,
-    campo: data.ticketCampo,
-    fecha : new Date(data.ticketFecha ),
-    viaje : data.ticketViaje,
-    transportista :  data.ticketTransportista ,
-    chofer : data.ticketChofer,
-    camion : data.ticketCamion,
-    camionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
-    vehiculo : data.ticketVehiculo,
-    vehiculoPeso : FormatteDecimalMath(data.ticketVehiculoPeso, 3),
-    unidadPeso : data.ticketUnidadPeso,
-    pesoBruto : FormatteDecimalMath(data.ticketPesoBruto, 3),
-    estado : data.ticketEstadoDescripcion
-  }
-}
+
 const newFormatterTicket = (data) => {
   return {...data, ticketFecha: new Date(data.ticketFecha ),
     ticketCamionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
