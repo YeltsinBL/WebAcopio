@@ -22,7 +22,7 @@ export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete}) => {
                 <Edit size={18} />
               </TableButton>
               {
-                servicio.servicioTransporteEstadoDescripcion.toLowerCase() =='anulado' ? '':
+                servicio.servicioTransporteEstadoDescripcion.toLowerCase() =='activo' &&
                 (
                   <TableButton className={'text-red-400 hover:text-red-300 '} 
                     onRowSelect={()=>onRowDelete(servicio)}>
