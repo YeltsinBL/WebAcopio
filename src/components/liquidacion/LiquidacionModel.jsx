@@ -342,7 +342,7 @@ export function LiquidacionModel({onShowModel, data}) {
                 <TableTd>{ticket.ticketPesoBruto}</TableTd>
                 <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
                 <TableTd>
-                { liquidacionIdModel > 0 ?? (
+                { liquidacionIdModel > 0 || (
                   <TableButton className={'text-red-400 hover:text-red-300'}
                   onRowSelect={()=>onRowDeleteTicket(ticket)}>
                     <Trash2 size={18} />
