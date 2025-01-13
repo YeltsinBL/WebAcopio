@@ -78,7 +78,7 @@ export const CosechaModel = ({ onShowModel, data }) => {
   }
   const handleSelectionChangeTierra = (option) => {
     setUCModel(option)
-    const selected = listAsigna.find(tierra => tierra.asignarTierraId === option)
+    const selected = listAsigna.find(tierra => tierra.asignarTierraTierraId === option)
     setCampoModel(selected.tierraCampo)
     setUTModel({proveedorId:selected.asignarTierraProveedorId, ut:selected.asignarTierraProveedorUT})
   }
