@@ -59,7 +59,6 @@ export function LiquidacionModel({onShowModel, data}) {
   
   useEffect(()=>{
     proveedorListAliquidar()
-    console.log(data)
     if(data){
       setLiquidacionIdModel(data.liquidacionId || 0)
       setPersonaIdModel(data.personaId || '')
@@ -96,7 +95,6 @@ export function LiquidacionModel({onShowModel, data}) {
   useEffect(()=>{
     if(!parseFloat(pCompraModel)) return setToneladasTotalModel('')
     const total = toneladasPesosNetosModel * pCompraModel
-    console.log(total)
     setToneladasTotalModel(FormatteDecimalMath(total,2))
   }, [pCompraModel])
   useEffect(()=>{
@@ -140,19 +138,15 @@ export function LiquidacionModel({onShowModel, data}) {
 
   const proveedorListAliquidar = async()=>{
     const proveedores = await searchProveedorALiquidar()
-    console.log(proveedores)
     setProveedorALiquidarList(proveedores)
     const formatter= proveedores?.map(ut =>(
       formatterDataCombo(ut.personId, ut.proveedorNombre)))
-    console.log(formatter)
     setProveedorComboList(formatter)
-    console.log("se borró", proveedoresComboList)
 
   }
   const handleSelectionUTChange = (option) =>{
     setPersonaIdModel(option)
     const proveedor = proveedoresALiquidarList.find(p => p.personId == option)
-    console.log(proveedor)
     setTierraIdModel(proveedor.tierraId)
     setCampoModel(proveedor.tierraCampo)
     setUtModel(proveedor.proveedorUT)
@@ -160,7 +154,6 @@ export function LiquidacionModel({onShowModel, data}) {
   }
   const resspuestaShowModel = (data) => {
     if(data.length > 0) {
-      console.log(data)
       let mergedArray = []
       if(ticketsSeleccionadosList.length > 0){
         mergedArray = [
@@ -192,7 +185,6 @@ export function LiquidacionModel({onShowModel, data}) {
   }
   const handleAddTickerts = async(e)=>{
     e.preventDefault()
-    console.log(validarCampos({tickets:true}))
     if(validarCampos({tickets:true})){
       setShowPopup(true)
     }
@@ -286,7 +278,6 @@ export function LiquidacionModel({onShowModel, data}) {
         userCreatedName: "ADMIN",
         userCreatedAt: obtenerFechaLocal({date: new Date()})
       }
-      console.log(liquidacion)
       const save = await liquidacionSave({method: 'POST', liquidacion})
       return onShowModel(save)
     }

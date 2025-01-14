@@ -1,7 +1,6 @@
 import ExcelJS from "exceljs"
 import { convertirFechaDDMMYYYY } from "../../utils"
 export const LiquidacionExcelFile = (data) => {
-    console.log(data)
   let currentRow = 21;
   // Crear el workbook y una hoja
   const workbook = new ExcelJS.Workbook()

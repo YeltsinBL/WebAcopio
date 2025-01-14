@@ -3,11 +3,11 @@ import { ContainerPageCustom, Footer, FooterButton, Header, Main } from "../comp
 import { useClosePage } from "../hooks/common";
 import { convertirFechaDDMMYYYY } from "../utils";
 import { liquidacionGetById, liquidacionSearch } from "../services/liquidacion";
-import { LiquidacionModel } from "../components/liquidacion/LiquidacionModel";
-import { LiquidacionFilter } from "../components/liquidacion/LiquidacionFilter";
-import { LiquidacionTable } from "../components/liquidacion/LiquidacionTable";
-import { LiquidacionExcelFile } from "../components/liquidacion/LiquidacionExcelFile";
-import ExportToExcel from "../components/excel/ExportToExcel";
+import { ExportToExcel, ExportToPdf } from "../components/download";
+import { 
+  LiquidacionFilter, LiquidacionTable, LiquidacionModel,
+  LiquidacionExcelFile, LiquidacionPdfFile,
+ } from "../components/liquidacion";
 
 function LiquidacionPage() {
   const handleGoBack = useClosePage()
@@ -27,7 +27,6 @@ function LiquidacionPage() {
         liquidacionFechaInicio: convertirFechaDDMMYYYY(liquidacion.liquidacionFechaInicio),
         liquidacionFechaFin   : convertirFechaDDMMYYYY(liquidacion.liquidacionFechaFin)}
     })
-    console.log(formatteliquidaciones)
     setLiquidacionList(formatteliquidaciones)
   }
   const handleDataFromChild = (data)=>{
@@ -68,6 +67,10 @@ function LiquidacionPage() {
     const liquidacion = await liquidacionGetById({id: liquidacionId})
     await ExportToExcel(LiquidacionExcelFile(liquidacion), 'LiquidaciónReporte')
   }
+  const handleRowExportPdf = async(liquidacionId) =>{
+    const liquidacion = await liquidacionGetById({id: liquidacionId})
+    ExportToPdf(LiquidacionPdfFile(liquidacion), 'LiquidaciónReporte')
+  }
   return (
     <ContainerPageCustom>
       <Header title={'Liquidación'}/>
@@ -75,7 +78,8 @@ function LiquidacionPage() {
         {!showModal ?
         <>
           <LiquidacionFilter onFiltersValue={handleDataFromChild} />
-          <LiquidacionTable data={liquidacionList} onRowSelect={handleRowSelect} exportExcel={handleRowExportExcel} />
+          <LiquidacionTable data={liquidacionList} onRowSelect={handleRowSelect}
+            exportExcel={handleRowExportExcel} exportPdf={handleRowExportPdf} />
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect}/>
             <FooterButton name={'Salir'} accion={handleGoBack}/>
