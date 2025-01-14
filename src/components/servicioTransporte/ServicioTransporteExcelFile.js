@@ -65,7 +65,6 @@ export const ServicioTransporteExcelFile = (data) => {
     })
   })
 
-  console.log(sumaPesoBruto)
   // Agregar el total al lado de la suma de peso bruto
   const totalRow2 = worksheet.addRow([
     null, // Dejar las celdas vacías hasta llegar a la posición deseada

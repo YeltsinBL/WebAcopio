@@ -1,8 +1,8 @@
 import { Edit, Trash2 } from 'lucide-react'
 import { NoRegistros, Table, TableButton, TableTd } from '../common'
-import { ExcelIcon } from '../../assets/icons'
+import { ExcelIcon, PDFIcon } from '../../assets/icons'
 
-export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete, exportExcel}) => {
+export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete, exportExcel, exportPdf}) => {
   const headers =['Fecha', 'Transportista', 'Trans. Precio', 'Palero', 'Pala Precio','Total', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Servicio Transporte'} headers={headers}>
@@ -34,6 +34,10 @@ export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete, exportE
               <TableButton className="text-blue-500 hover:text-blue-700 px-3"
                 onRowSelect={()=>exportExcel(servicio.servicioTransporteId)} >
                 <ExcelIcon />
+              </TableButton>
+              <TableButton className="text-blue-500 hover:text-blue-700 px-3"
+                onRowSelect={()=>exportPdf(servicio.servicioTransporteId)} >
+                <PDFIcon />
               </TableButton>
             </TableTd>
           </tr>
