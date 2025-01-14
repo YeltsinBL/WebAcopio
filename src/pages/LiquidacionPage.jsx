@@ -6,6 +6,8 @@ import { liquidacionGetById, liquidacionSearch } from "../services/liquidacion";
 import { LiquidacionModel } from "../components/liquidacion/LiquidacionModel";
 import { LiquidacionFilter } from "../components/liquidacion/LiquidacionFilter";
 import { LiquidacionTable } from "../components/liquidacion/LiquidacionTable";
+import { LiquidacionExcelFile } from "../components/liquidacion/LiquidacionExcelFile";
+import ExportToExcel from "../components/excel/ExportToExcel";
 
 function LiquidacionPage() {
   const handleGoBack = useClosePage()
@@ -62,6 +64,10 @@ function LiquidacionPage() {
     if(liquidacionId > 0) getLiquidacion()
     setShowModelDelete(false)
   }
+  const handleRowExportExcel = async(liquidacionId) =>{
+    const liquidacion = await liquidacionGetById({id: liquidacionId})
+    await ExportToExcel(LiquidacionExcelFile(liquidacion), 'LiquidaciónReporte')
+  }
   return (
     <ContainerPageCustom>
       <Header title={'Liquidación'}/>
@@ -69,7 +75,7 @@ function LiquidacionPage() {
         {!showModal ?
         <>
           <LiquidacionFilter onFiltersValue={handleDataFromChild} />
-          <LiquidacionTable data={liquidacionList} onRowSelect={handleRowSelect} />
+          <LiquidacionTable data={liquidacionList} onRowSelect={handleRowSelect} exportExcel={handleRowExportExcel} />
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect}/>
             <FooterButton name={'Salir'} accion={handleGoBack}/>

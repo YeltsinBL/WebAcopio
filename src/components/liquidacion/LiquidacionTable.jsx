@@ -1,7 +1,8 @@
 import { Edit, Trash2 } from "lucide-react"
 import { NoRegistros, Table, TableButton, TableTd } from "../common"
+import { ExcelIcon } from "../../assets/icons"
 
-export function LiquidacionTable({data, onRowSelect, onRowDelete}) {
+export function LiquidacionTable({data, onRowSelect, onRowDelete, exportExcel}) {
   console.log(data)
   const headers = ['Sembrador','Campo','UT','Fecha Inicio', 'Fecha Final','Peso Neto', 
     'Toneladas Por Pagar Total', 'Financiamiento A Cuenta', 'Adicional Total','Por Pagar', 'Estado', 'Acciones'
@@ -38,6 +39,10 @@ export function LiquidacionTable({data, onRowSelect, onRowDelete}) {
                   </TableButton>
                 )
               } */}
+              <TableButton className="text-blue-500 hover:text-blue-700 px-3"
+                onRowSelect={()=>exportExcel(liquidacion.liquidacionId)} >
+                <ExcelIcon />
+              </TableButton>
             </TableTd>
           </tr>
         ))

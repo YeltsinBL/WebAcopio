@@ -54,7 +54,7 @@ export function LiquidacionModel({onShowModel, data}) {
   const seleccionPersona = data.personaId ? {id: data.personaId, nombre: data.personaNombre } : null
   const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
-  const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo','Interes Mes %','Interes S/', 'Total','Acciones']
+  const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo','Interes Dia %','Interes S/', 'Total','Acciones']
   const headersAdicionales= ['Motivo', 'Monto','Acciones']
   
   useEffect(()=>{
@@ -66,11 +66,11 @@ export function LiquidacionModel({onShowModel, data}) {
       setCampoModel(data.tierraCampo || '')
       setUtModel(data.proveedorUT || '')
       setFechaInicioModel(
-        data.liquidacionFechaInicio ? convertirFechaToYMD(data.liquidacionFechaInicio) : 
+        data.liquidacionFechaInicio ? data.liquidacionFechaInicio : 
         obtenerFechaLocal({date: new Date()}).split('T')[0]
       )
       setFechaFinModel(
-        data.liquidacionFechaFin ? convertirFechaToYMD(data.liquidacionFechaFin) : 
+        data.liquidacionFechaFin ? data.liquidacionFechaFin : 
         obtenerFechaLocal({date: new Date()}).split('T')[0]
       )
       setSumaPesoBrutoModel(data.liquidacionPesoBruto || '')
