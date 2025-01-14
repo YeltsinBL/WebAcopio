@@ -5,10 +5,10 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { corteGetById, searchCortes } from '../services/corte'
 import { 
-  CorteFilter, CorteModel, CorteTable 
+  CorteFilter, CorteModel, CorteTable ,
+  CorteExcelFile, CortePdfFile
 } from '../components/corte'
-import ExportToExcel from '../components/excel/ExportToExcel'
-import { CorteExcelFile } from '../components/corte/CorteExcelFile'
+import { ExportToExcel, ExportToPdf } from '../components/download'
 
 const CortePage = () => {
   const navigate = useNavigate()
@@ -51,6 +51,10 @@ const CortePage = () => {
     const corte = await corteGetById({id: corteId})
     await ExportToExcel(CorteExcelFile(corte), 'CorteReporte')
   }
+  const handleRowExportPdf = async(corteId) =>{
+    const corte = await corteGetById({id: corteId})
+    ExportToPdf(CortePdfFile(corte))
+  }
   // const handleRowDelete = (id) =>{
   //   setIdModelDelete(id)
   //   setShowModelDelete(true)
@@ -66,7 +70,7 @@ const CortePage = () => {
         {!showModel ?
           <>
             <CorteFilter onFiltersValue={handleDataFromChild}/>
-            <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} exportExcel={handleRowExportExcel}/>
+            <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} exportExcel={handleRowExportExcel} exporPdf={handleRowExportPdf} />
             <Footer>
               <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
               <FooterButton name={'Salir'} accion={handleGoBack} /> 

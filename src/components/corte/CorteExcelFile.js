@@ -49,7 +49,7 @@ export const CorteExcelFile = (data) => {
         const row = worksheet.addRow([
           detalle.ticketIngenio,
           detalle.ticketViaje,
-          detalle.ticketCampo,
+          detalle.ticketCampo || "",
           detalle.ticketCamion,
           detalle.ticketVehiculo,
           detalle.ticketTransportista,
