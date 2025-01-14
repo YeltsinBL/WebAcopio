@@ -53,7 +53,7 @@ const CortePage = () => {
   }
   const handleRowExportPdf = async(corteId) =>{
     const corte = await corteGetById({id: corteId})
-    ExportToPdf(CortePdfFile(corte))
+    ExportToPdf(CortePdfFile(corte), 'CortePdf')
   }
   // const handleRowDelete = (id) =>{
   //   setIdModelDelete(id)
