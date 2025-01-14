@@ -1,3 +1,5 @@
+import { convertirFechaDDMMYYYY, convertirFechaToYMD } from "../../utils"
+
 export const CortePdfFile = (data) => {
   // Configurar el contenido del PDF
   return {
@@ -9,7 +11,7 @@ export const CortePdfFile = (data) => {
         table: {
           widths: ["auto", "*"],
           body: [
-            ["Fecha:", data.corteFecha],
+            ["Fecha:", convertirFechaDDMMYYYY(convertirFechaToYMD(data.corteFecha))],
             ["Proveedores:", data.proveedoresNombres],
             ["Campo:", data.tierraCampo],
             //["UC:", data.tierraUC],
