@@ -18,9 +18,7 @@ export const ServicioTransporteExcelFile = (data) => {
   worksheet.addRow(["Información del Servicio Transporte"]).font = boldStyle
   worksheet.addRow(["Fecha", data.servicioTransporteFecha]).font = boldStyle
   worksheet.addRow(["Transportista", data.carguilloTitular]).font = boldStyle
-  worksheet.addRow(["Precio Transportista", data.servicioTransportePrecio]).font = boldStyle
-  worksheet.addRow(["Palero", data.carguilloTitularPalero]).font = boldStyle
-  worksheet.addRow(["Precio Transportista", FormatteDecimalMath(data.carguilloPaleroPrecio,2)]).font = boldStyle
+  worksheet.addRow(["Precio", data.servicioTransportePrecio]).font = boldStyle
   worksheet.addRow(["Estado", data.servicioTransporteEstadoDescripcion]).font = boldStyle
 
   // Separador vacío

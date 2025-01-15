@@ -8,6 +8,9 @@ import { ServicioTransporteModal } from '../components/servicioTransporte/Servic
 import { ServicioTransporteModalDelete } from '../components/servicioTransporte/ServicioTransporteModalDelete'
 import { ServicioTransporteExcelFile, ServicioTransportePdfFile } from '../components/servicioTransporte'
 import { ExportToExcel, ExportToPdf } from '../components/download'
+import { 
+  AdapterData, AdapterListado
+} from '../components/servicioTransporte/adapters'
 
 const ServicioTransportePage = () => {
   const handleGoBack = useClosePage()
@@ -22,7 +25,7 @@ const ServicioTransportePage = () => {
   },[])
   const getServicios = async(filters) =>{
     const servicios = await servicioTransporteSearch(filters)
-    setServicioList(servicios)
+    setServicioList(AdapterListado(servicios))
   }
   const handleDataFromChild = (data)=>{
     const {
@@ -35,7 +38,7 @@ const ServicioTransportePage = () => {
   const handleRowSelect = async(rowData) =>{
     if(rowData.servicioTransporteId){
       const servicio = await servicioTransporteGetById({id:rowData.servicioTransporteId})
-      setSelectedRowData(servicio)
+      setSelectedRowData(AdapterData(servicio))
     }else setSelectedRowData(rowData)
     setShowModal(true)
   }  
@@ -59,12 +62,18 @@ const ServicioTransportePage = () => {
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(servicioId) =>{
-    const corte = await servicioTransporteGetById({id: servicioId})
-    await ExportToExcel(ServicioTransporteExcelFile(corte), 'ServicioTransporteReporte')
+    const servicio = await servicioTransporteGetById({id: servicioId})
+    await ExportToExcel(
+      ServicioTransporteExcelFile(AdapterData(servicio)),
+      'ServicioTransporteReporte'
+    )
   }
   const handleRowExportPdf = async(servicioId) =>{
-    const corte = await servicioTransporteGetById({id: servicioId})
-    ExportToPdf(ServicioTransportePdfFile(corte), 'ServicioTransporteReporte')
+    const servicio = await servicioTransporteGetById({id: servicioId})
+    ExportToPdf(
+      ServicioTransportePdfFile(AdapterData(servicio)), 
+      'ServicioTransporteReporte'
+    )
   }
   return (
     <ContainerPageCustom>

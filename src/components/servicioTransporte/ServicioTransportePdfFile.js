@@ -33,8 +33,6 @@ export const ServicioTransportePdfFile = (data) => {
             ["Fecha:", data.servicioTransporteFecha],
             ["Transportista:", data.carguilloTitular],
             ["Precio Transportista", data.servicioTransportePrecio],
-            ["Palero", data.carguilloTitularPalero],
-            ["Precio Transportista", FormatteDecimalMath(data.carguilloPaleroPrecio,2)],
             ["Estado:", data.servicioTransporteEstadoDescripcion],
           ],
         },
