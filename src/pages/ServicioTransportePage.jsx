@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
-import { ContainerPageCustom, Footer, FooterButton, Header, Main } from '../components/common'
-import { useClosePage } from '../hooks/common'
-import { ServicioTransporteFilter } from '../components/servicioTransporte/ServicioTransporteFilter'
-import { ServicioTransporteTable } from '../components/servicioTransporte/ServicioTransporteTable'
-import { servicioTransporteGetById, servicioTransporteSearch } from '../services/serviciotransporte'
-import { ServicioTransporteModal } from '../components/servicioTransporte/ServicioTransporteModal'
-import { ServicioTransporteModalDelete } from '../components/servicioTransporte/ServicioTransporteModalDelete'
-import { ServicioTransporteExcelFile, ServicioTransportePdfFile } from '../components/servicioTransporte'
-import { ExportToExcel, ExportToPdf } from '../components/download'
 import { 
-  AdapterData, AdapterListado
-} from '../components/servicioTransporte/adapters'
+  ContainerPageCustom, Footer, FooterButton, Header, Main 
+} from '~components/common'
+import { useClosePage } from '~hooks/common'
+import { 
+  servicioTransporteGetById, servicioTransporteSearch 
+} from '~services/servicio'
+import { 
+  ServicioTransporteExcelFile, ServicioTransporteFilter, ServicioTransporteModal, 
+  ServicioTransporteModalDelete, ServicioTransportePdfFile, ServicioTransporteTable
+} from '~components/servicioTransporte'
+import { ExportToExcel, ExportToPdf } from '~components/download'
+import {
+  AdapterListadoServicio,
+  AdapterServicioGetData,
+  AdapterServicioGetDataExport
+} from '~/adapters/ServicioAdapter'
 
 const ServicioTransportePage = () => {
   const handleGoBack = useClosePage()
@@ -25,7 +30,7 @@ const ServicioTransportePage = () => {
   },[])
   const getServicios = async(filters) =>{
     const servicios = await servicioTransporteSearch(filters)
-    setServicioList(AdapterListado(servicios))
+    setServicioList(AdapterListadoServicio(servicios))
   }
   const handleDataFromChild = (data)=>{
     const {
@@ -36,15 +41,15 @@ const ServicioTransportePage = () => {
     return getServicios({fechaDesdeFilter, fechaHastaFilter, carguilloFilter, estadoFilter})
   }
   const handleRowSelect = async(rowData) =>{
-    if(rowData.servicioTransporteId){
-      const servicio = await servicioTransporteGetById({id:rowData.servicioTransporteId})
-      setSelectedRowData(AdapterData(servicio))
+    if(rowData.servicioId){
+      const servicio = await servicioTransporteGetById({id:rowData.servicioId})
+      setSelectedRowData(AdapterServicioGetData(servicio))
     }else setSelectedRowData(rowData)
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.servicioTransporteId>0){
-      const existingIndex = servicioList.findIndex((item) => item.servicioTransporteId === data.servicioTransporteId)
+    if(data.servicioId>0){
+      const existingIndex = servicioList.findIndex((item) => item.servicioId === data.servicioId)
       if (existingIndex >= 0) {
         const updatedList = [...servicioList]
         updatedList[existingIndex] = data
@@ -64,14 +69,14 @@ const ServicioTransportePage = () => {
   const handleRowExportExcel = async(servicioId) =>{
     const servicio = await servicioTransporteGetById({id: servicioId})
     await ExportToExcel(
-      ServicioTransporteExcelFile(AdapterData(servicio)),
+      ServicioTransporteExcelFile(AdapterServicioGetDataExport(servicio)),
       'ServicioTransporteReporte'
     )
   }
   const handleRowExportPdf = async(servicioId) =>{
     const servicio = await servicioTransporteGetById({id: servicioId})
     ExportToPdf(
-      ServicioTransportePdfFile(AdapterData(servicio)), 
+      ServicioTransportePdfFile(AdapterServicioGetDataExport(servicio)), 
       'ServicioTransporteReporte'
     )
   }

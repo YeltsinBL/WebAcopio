@@ -1,7 +1,5 @@
 import ExcelJS from "exceljs"
-import { FormatteDecimalMath } from "../../utils"
 export const ServicioTransporteExcelFile = (data) => {
-  let sumaPesoBruto=0
   // Crear el workbook y una hoja
   const workbook = new ExcelJS.Workbook()
   const worksheet = workbook.addWorksheet("Reporte")
@@ -16,10 +14,10 @@ export const ServicioTransporteExcelFile = (data) => {
   }
 
   worksheet.addRow(["Información del Servicio Transporte"]).font = boldStyle
-  worksheet.addRow(["Fecha", data.servicioTransporteFecha]).font = boldStyle
+  worksheet.addRow(["Fecha", data.servicioFecha]).font = boldStyle
   worksheet.addRow(["Transportista", data.carguilloTitular]).font = boldStyle
-  worksheet.addRow(["Precio", data.servicioTransportePrecio]).font = boldStyle
-  worksheet.addRow(["Estado", data.servicioTransporteEstadoDescripcion]).font = boldStyle
+  worksheet.addRow(["Precio", data.servicioPrecio]).font = boldStyle
+  worksheet.addRow(["Estado", data.servicioEstadoDescripcion]).font = boldStyle
 
   // Separador vacío
   worksheet.addRow([])
@@ -43,7 +41,7 @@ export const ServicioTransporteExcelFile = (data) => {
   })
 
   // Agregar datos de la tabla
-  data.servicioTransporteDetails.forEach((detalle) => {
+  data.servicioDetails.forEach((detalle) => {
     const row = worksheet.addRow([
       detalle.ticketIngenio,
       detalle.ticketViaje,
@@ -57,7 +55,6 @@ export const ServicioTransporteExcelFile = (data) => {
       detalle.ticketPesoBruto,
       detalle.ticketEstadoDescripcion,
     ])
-    sumaPesoBruto += parseFloat(detalle.ticketPesoBruto )
     row.eachCell((cell) => {
       cell.border = borderStyle
     })
@@ -74,8 +71,8 @@ export const ServicioTransporteExcelFile = (data) => {
     null,
     null,
     "Total:",
-    FormatteDecimalMath(sumaPesoBruto,3),
-    data.servicioTransporteTotal, // Total
+    data.servicioPesoBruto,
+    data.servicioTotal
   ]);
 
   // Formatear la celda con bordes y negrita

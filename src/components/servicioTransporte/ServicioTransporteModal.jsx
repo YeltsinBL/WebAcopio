@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react"
+import { Trash2 } from "lucide-react"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom,
   InputDecimalCustom, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, 
-  TableBodyCustom, 
-  TableButton, 
-  TableContainerCustom,
-  TableFooterCustom,
-  TableHeaderCustom,
-  TableTd,
-  TitleCustom
-} from "../common"
-import { getCarguilloInTickets } from "../../services/carguillo"
-import { convertirFechaDDMMYYYY, FormatteDecimalMath, 
+  TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom, TableHeaderCustom,
+  TableTd, TitleCustom
+} from "~components/common"
+import { getCarguilloInTickets } from "~services/carguillo"
+import { 
+  FormatteDecimalMath, 
   formatterDataCombo, obtenerFechaLocal 
-} from "../../utils"
-import { servicioTransporteSave } from "../../services/serviciotransporte"
-import { Trash2 } from "lucide-react"
+} from "~utils/index"
+import { servicioTransporteSave } from "~services/servicio"
 import { ServicioTransportePopup } from "./ServicioTransportePopup"
+import { 
+  AdapterServicioResponseSave, AdapterServicioTransporteSave 
+} from "~/adapters/ServicioAdapter"
+
 
 export const ServicioTransporteModal = ({onShowModel, data}) => {
   const [carguilloList, setCarguilloList] = useState([])
-  //const [carguilloPaleroLista, setCarguilloPaleroLista] = useState([])
   const [servicioIdModel, setServicioIdModel] = useState(0)
   const [fechaModel, setFechaModel] = useState('')
   const [carguilloIdModel, setCarguilloIdModel] = useState(0)
@@ -30,14 +29,10 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
   const [ticketSelected, setTicketSelected] = useState([])
   const [servicioDescripcion, setServicioDescripcion] = useState('')
   const [showPopup, setShowPopup] = useState(false)
-  //const [carguilloIdPaleroModel, setCarguilloIdPaleroModel] = useState('')
-  //const [carguilloPaleroPrecioModel, setCarguilloPaleroPrecioModel] = useState('')
-
   const [errores, setErrores] = useState({})
 
   const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
-  //const seleccionCarguilloPalero = data.carguilloIdPalero ? {id: data.carguilloIdPalero, nombre: data.carguilloTitularPalero } : null
-  
+
   const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
     'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
 
@@ -57,15 +52,13 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
   useEffect(()=>{    
     getCarguillo()
     if(data){
-      setServicioIdModel(data.servicioTransporteId || 0)
+      setServicioIdModel(data.servicioId || 0)
       setFechaModel(
-        data.servicioTransporteFecha || obtenerFechaLocal({ date: new Date() }).split("T")[0])
+        data.servicioFecha || obtenerFechaLocal({ date: new Date() }).split("T")[0])
       setCarguilloIdModel(data.carguilloId || 0)
-      setServicioPrecioModel(data.servicioTransportePrecio || '')
-      setServicioDescripcion(data.servicioTransporteEstadoDescripcion || 'Activo')
-      setTicketSelected(data.servicioTransporteDetails || [])
-      //setCarguilloIdPaleroModel(data.carguilloIdPalero || '')
-      //setCarguilloPaleroPrecioModel(data.carguilloPaleroPrecio || '')
+      setServicioPrecioModel(data.servicioPrecio || '')
+      setServicioDescripcion(data.servicioEstadoDescripcion || 'Activo')
+      setTicketSelected(data.servicioDetails || [])
     }
   }, [])
   const getCarguillo = async() =>{
@@ -74,12 +67,6 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
       formatterDataCombo(tipo.carguilloId,tipo.carguilloTitular)))
     setCarguilloList(formatter)
   }
-  // const getListCarguilloPalero = async() => {
-  //   const paleros = await searchCarguilloList({tipoCarguilloId:1, titular:'', estado: 1})
-  //   const formatter = paleros.map(palero =>
-  //     (formatterDataCombo(palero.carguilloId, palero.carguilloTitular)))
-  //   setCarguilloPaleroLista(formatter)
-  // }
   const validarCampos = (viewPopUp = false) => {
     const nuevosErrores = {}
     if(!viewPopUp){
@@ -99,7 +86,6 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
     setCarguilloIdModel(option)
     setTicketSelected([])
   }
-  // const handleSelectionCarguilloPaleroChange = (option) => setCarguilloIdPaleroModel(option)
   const handleShowModel = () => {
     if(validarCampos(true)){
       setShowPopup(true)
@@ -121,32 +107,14 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
     e.preventDefault()
     if(validarCampos()){
       let servicioModel = {
-        servicioTransporteFecha: fechaModel,
-        carguilloId: carguilloIdModel,
-        servicioTransportePrecio: servicioPrecioModel,
-        servicioTransporteTotal: totalModel,
-        servicioTransporteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.ticketId}))
+        fechaModel, carguilloIdModel,
+        servicioPrecioModel, sumaPesoBrutoModel,
+        totalModel, ticketSelected
       }
-      if(servicioIdModel >0){
-        servicioModel = {...servicioModel, 
-          servicioTransporteId: servicioIdModel,
-          servicioTransporteEstadoDescripcion: servicioDescripcion,
-          userModifiedAt: obtenerFechaLocal({date: new Date()}),
-          userModifiedName: "ADMIN"
-        }
-        // const servicioSave = await servicioTransporteSave({method:'PUT',servicioTransporte: servicioModel})
-        // return onShowModel({...servicioSave,
-        //   servicioTransporteFecha: convertirFechaDDMMYYYY(servicioSave.servicioTransporteFecha)
-        // })
-        return console.log(servicioModel)
-      }      
-
-      servicioModel.userCreatedAt= obtenerFechaLocal({date: new Date()})
-      servicioModel.userCreatedName= "ADMIN"
-      const servicioSave = await servicioTransporteSave({method:'POST', servicioTransporte: servicioModel})
-      return onShowModel({...servicioSave,
-        servicioTransporteFecha: convertirFechaDDMMYYYY(servicioSave.servicioTransporteFecha)
+      const servicioSave = await servicioTransporteSave({
+        method:'POST', servicioTransporte: AdapterServicioTransporteSave(servicioModel)
       })
+      return onShowModel(AdapterServicioResponseSave(servicioSave))
     }
   }
   const onRowDelete= (data)=>{
@@ -187,18 +155,6 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
             <InputTextCustom onChange={setServicioDescripcion}
               textValue={servicioDescripcion} readOnly={true} />
           </FilterOption>
-          {/* <FilterOption htmlFor={'CarguilloIdPaleroModel'} name={'Palero'}>
-            <ComboBoxCustom  initialOptions={carguilloPaleroLista} selectedOption={seleccionCarguilloPalero} 
-              onSelectionChange={handleSelectionCarguilloPaleroChange}
-              className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500`}
-              colorOptions={"text-black"}
-              disabled={false} allDisabled={servicioIdModel > 0}
-            />
-        </FilterOption>
-        <FilterOption htmlFor={'PrecioModel'} name={'Precio Pala'}>
-            <InputTextCustom onChange={setCarguilloPaleroPrecioModel} placeholder='Ejm: 85.60'
-              textValue={carguilloPaleroPrecioModel} readOnly={servicioIdModel > 0}/>
-          </FilterOption> */}
         </div>
       </SectionModel>
       <TableContainerCustom>

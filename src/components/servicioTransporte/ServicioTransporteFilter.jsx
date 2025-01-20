@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter } from '../common'
-import { servicioTransporteEstadosList } from '../../services/serviciotransporte'
-import { formatterDataCombo } from '../../utils'
-import { searchCarguilloList } from '../../services/carguillo'
+import { useEffect, useState } from 'react'
+import {
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter 
+} from '~components/common'
+import { searchCarguilloList } from '~services/carguillo'
+import { servicioTransporteEstadosList } from '~services/servicio'
+import { formatterDataCombo } from '~utils/index'
 
 export const ServicioTransporteFilter = ({onFiltersValue}) => {
   const [estadoList, setEstadoList] = useState([])

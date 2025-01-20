@@ -1,26 +1,4 @@
-import { FormatteDecimalMath } from "../../utils"
-
 export const ServicioTransportePdfFile = (data) => {
-  //let sumaPesoBruto=0
-  const { sumaPesoBruto, detalleFilas } = data.servicioTransporteDetails.reduce(
-    (acc, detalle) => {
-      acc.sumaPesoBruto += parseFloat(detalle.ticketPesoBruto || 0); // Manejar valores nulos o indefinidos
-      acc.detalleFilas.push([
-        { text: detalle.ticketIngenio, alignment: "center" },
-        { text: detalle.ticketViaje, alignment: "center" },
-        { text: detalle.ticketCampo, alignment: "center" },
-        { text: detalle.ticketCamion, alignment: "center" },
-        { text: detalle.ticketVehiculo, alignment: "center" },
-        { text: detalle.ticketTransportista, alignment: "center" },
-        { text: detalle.ticketFecha, alignment: "center" },
-        { text: detalle.ticketCamionPeso, alignment: "right" },
-        { text: detalle.ticketVehiculoPeso, alignment: "right" },
-        { text: detalle.ticketPesoBruto, alignment: "right" },
-      ]);
-      return acc;
-    },
-    { sumaPesoBruto: 0, detalleFilas: [] }
-  )
   return {
     pageOrientation: 'landscape',
     content: [
@@ -30,10 +8,10 @@ export const ServicioTransportePdfFile = (data) => {
         table: {
           widths: ["auto", "*"],
           body: [
-            ["Fecha:", data.servicioTransporteFecha],
+            ["Fecha:", data.servicioFecha],
             ["Transportista:", data.carguilloTitular],
-            ["Precio Transportista", data.servicioTransportePrecio],
-            ["Estado:", data.servicioTransporteEstadoDescripcion],
+            ["Precio Transportista", data.servicioPrecio],
+            ["Estado:", data.servicioEstadoDescripcion],
           ],
         },
         layout: "noBorders", // Sin bordes
@@ -62,7 +40,18 @@ export const ServicioTransportePdfFile = (data) => {
               // { text: "Estado", bold: true },
             ],            
             // Datos
-            ...detalleFilas
+            ...data.servicioDetails.map((detalle) => [
+              { text: detalle.ticketIngenio, alignment: "center" },
+              { text: detalle.ticketViaje, alignment: "center" },
+              { text: detalle.ticketCampo, alignment: "center" },
+              { text: detalle.ticketCamion, alignment: "center" },
+              { text: detalle.ticketVehiculo, alignment: "center" },
+              { text: detalle.ticketTransportista, alignment: "center" },
+              { text: detalle.ticketFecha, alignment: "center" },
+              { text: detalle.ticketCamionPeso, alignment: "right" },
+              { text: detalle.ticketVehiculoPeso, alignment: "right" },
+              { text: detalle.ticketPesoBruto, alignment: "right" },
+            ]),
           ]
         },
         layout: {
@@ -78,10 +67,10 @@ export const ServicioTransportePdfFile = (data) => {
           body: [
             [
               {text: "Suma Peso Bruto:", bold: true, alignment: "right"},
-              {text: FormatteDecimalMath(sumaPesoBruto, 3), bold: true, alignment: "right"}],
+              {text: data.servicioPesoBruto, bold: true, alignment: "right"}],
             [
               {text: "Total:", bold: true, alignment: "right"}, 
-              {text: data.servicioTransporteTotal, bold: true, alignment: "right"}],
+              {text: data.servicioTotal, bold: true, alignment: "right"}],
           ],
         },
         layout: {
