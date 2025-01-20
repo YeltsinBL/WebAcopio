@@ -42,7 +42,7 @@ export const AdapterServicioPaleroSave = (data) => {
     servicioPrecio: data.servicioPrecioModel,
     servicioPesoBruto: data.sumaPesoBrutoModel,
     servicioTotal: data.totalModel,
-    servicioDetail: data.servicioTransporteSelected?.map(servicioTransporte => ({servicioTransporteId :servicioTransporte.servicioTransporteId})),
+    servicioDetail: data.servicioTransporteSelected?.map(servicioTransporte => ({servicioTransporteId :servicioTransporte.servicioId})),
     userCreatedAt: obtenerFechaLocal({date: new Date()}),
     userCreatedName: "ADMIN"
   }
