@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~assets/*": [
+        "src/assets/*"
+      ],
+      "~components/*": [
+        "src/components/*"
+      ],
+      "~guards/*": [
+        "src/guards/*"
+      ],
+      "~hooks/*": [
+        "src/hooks/*"
+      ],
+      "~pages/*": [
+        "src/pages/*"
+      ],
+      "~redux/*": [
+        "src/redux/*"
+      ],
+      "~services/*": [
+        "src/services/*"
+      ],
+      "~settings/*": [
+        "src/settings/*"
+      ],
+      "~utils/*": [
+        "src/utils/*"
+      ],
+      "~/*": [
+        "src/*"
+      ],
+      "~adapters/*": [
+        "src/adapters/*"
+      ]
+    }
+  }
+}
