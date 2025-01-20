@@ -7,7 +7,7 @@ import {
   servicioPaleroGetById, servicioPaleroSearch 
 } from "~services/servicio"
 import { 
-  AdapterListadoServicioTransporte, AdapterServicioGetData,
+  AdapterListadoServicio, AdapterServicioGetData,
   AdapterServicioGetDataExport
 } from "~/adapters/ServicioAdapter"
 import { 
@@ -29,7 +29,7 @@ const handleGoBack = useClosePage()
   },[])
   const getServicios = async(filters) =>{
     const servicios = await servicioPaleroSearch(filters)
-    setServicioList(AdapterListadoServicioTransporte(servicios))
+    setServicioList(AdapterListadoServicio(servicios))
   }
   const handleDataFromChild = (data)=>{
     const {
@@ -40,15 +40,15 @@ const handleGoBack = useClosePage()
     return getServicios({fechaDesdeFilter, fechaHastaFilter, carguilloFilter, estadoFilter})
   }
   const handleRowSelect = async(rowData) =>{
-    if(rowData.servicioTransporteId){
-      const servicio = await servicioPaleroGetById({id:rowData.servicioTransporteId})
+    if(rowData.servicioId){
+      const servicio = await servicioPaleroGetById({id:rowData.servicioId})
       setSelectedRowData(AdapterServicioGetData(servicio))
     }else setSelectedRowData(rowData)
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.servicioTransporteId>0){
-      const existingIndex = servicioList.findIndex((item) => item.servicioTransporteId === data.servicioTransporteId)
+    if(data.servicioId>0){
+      const existingIndex = servicioList.findIndex((item) => item.servicioId === data.servicioId)
       if (existingIndex >= 0) {
         const updatedList = [...servicioList]
         updatedList[existingIndex] = data

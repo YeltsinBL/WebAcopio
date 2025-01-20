@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
-import { AdapterDataServicioTransporte } from '~/adapters/ServicioAdapter'
+import { 
+  AdapterServicioGetDataExport
+} from '~/adapters/ServicioAdapter'
 import { 
   Footer, FooterButton, TableBodyCustom, TableTd, TitleCustom 
 } from '~components/common'
-import { servicioPaleroGetServicioTransporte } from '~services/servicio'
-import { convertirFechaDDMMYYYY } from '~utils/index'
+import { 
+  servicioPaleroGetServicioTransporte 
+} from '~services/servicio'
 
 
 export const ServicioTransportePopup = ({onShowModel}) => {
@@ -19,15 +22,15 @@ export const ServicioTransportePopup = ({onShowModel}) => {
   const getTicketActive = async() => {
     const servicios = await servicioPaleroGetServicioTransporte()
     setServicioTransporteList(
-      servicios.map(servicio =>AdapterDataServicioTransporte(servicio))) 
+      servicios.map(servicio =>AdapterServicioGetDataExport(servicio))) 
   }
 
   const handleCheckboxChange = (row) => {
     console.log(row)
-    const isSelected = selectedRows.some((selectedRow) => selectedRow.servicioTransporteId === row.servicioTransporteId)
+    const isSelected = selectedRows.some((selectedRow) => selectedRow.servicioId === row.servicioId)
     if (isSelected) {
       // Si ya está seleccionado, eliminar de selectedRows
-      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.servicioTransporteId !== row.servicioTransporteId)
+      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.servicioId !== row.servicioId)
       return setSelectedRows(updatedRows)
     }
     // Si no está seleccionado, agregar al selectedRows
@@ -57,13 +60,13 @@ export const ServicioTransportePopup = ({onShowModel}) => {
           <TableBodyCustom headers={headers}>
             {servicioTransporteList ? (
               servicioTransporteList.map((servicio) => (
-                <tr key={servicio.servicioTransporteId}>
-                  <TableTd hidden={true}>{servicio.servicioTransporteId} </TableTd>
-                  <TableTd>{convertirFechaDDMMYYYY(servicio.servicioTransporteFecha)}</TableTd>
+                <tr key={servicio.servicioId}>
+                  <TableTd hidden={true}>{servicio.servicioId} </TableTd>
+                  <TableTd>{servicio.servicioFecha}</TableTd>
                   <TableTd>{servicio.carguilloTitular}</TableTd>
-                  <TableTd> {servicio.servicioTransportePrecio} </TableTd>
-                  <TableTd> {servicio.servicioTransporteTotal} </TableTd>
-                  <TableTd> {servicio.servicioTransporteEstadoDescripcion} </TableTd>
+                  <TableTd> {servicio.servicioPrecio} </TableTd>
+                  <TableTd> {servicio.servicioTotal} </TableTd>
+                  <TableTd> {servicio.servicioEstadoDescripcion} </TableTd>
                   <TableTd>
                     <input
                     type="checkbox"

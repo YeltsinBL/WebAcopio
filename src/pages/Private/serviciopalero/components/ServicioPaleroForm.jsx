@@ -91,14 +91,14 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
       if(ticketSelected.length > 0){
         const mergedArray = [
           ...servicioTransporteSelected,
-          ...data.filter((item2) => !servicioTransporteSelected.some((item1) => item1.servicioTransporteId === item2.servicioTransporteId)),
+          ...data.filter((item2) => !servicioTransporteSelected.some((item1) => item1.servicioId === item2.servicioId)),
         ]
         setServicioTransporteSelected(mergedArray)
-        const rest = mergedArray.flatMap(servicio => {return servicio.servicioTransporteDetails})
+        const rest = mergedArray.flatMap(servicio => {return servicio.servicioDetails})
         setTicketSelected(rest)
       } else {
         setServicioTransporteSelected(data)
-        const rest = data.flatMap(servicio => {return servicio.servicioTransporteDetails})
+        const rest = data.flatMap(servicio => {return servicio.servicioDetails})
         setTicketSelected(rest)
       }
     }
@@ -121,7 +121,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   }
   const handleCancelar = (e)=>{
     e.preventDefault()
-    onShowModel({servicioTransporteId:0})
+    onShowModel({servicioId:0})
   }
   return (
     <>

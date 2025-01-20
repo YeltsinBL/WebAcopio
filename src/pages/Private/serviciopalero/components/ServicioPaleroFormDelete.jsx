@@ -6,23 +6,22 @@ export const ServicioPaleroFormDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e)=>{
     e.preventDefault()
     const servicioDto={
-      servicioId: data.servicioTransporteId,
+      servicioId: data.servicioId,
       userModifiedAt : obtenerFechaLocal({date: new Date()}),
       userModifiedName: "ADMIN"
     }
     const servicio = await servicioPaleroSave({ method:'DELETE', servicioPalero: servicioDto })
-    if (servicio) return sendDataDismissModel(data.servicioTransporteId)
+    if (servicio) return sendDataDismissModel(data.servicioId)
     return sendDataDismissModel(0)
   }
   const handleCancelar =(e)=>{
     e.preventDefault()
     sendDataDismissModel(0)
   }
-  const sendDataDismissModel = (valor) => {
-    onShowModel(valor)
-  }
+  const sendDataDismissModel = (valor) => onShowModel(valor)
+
   return (
-    <ModalDelete title={'Eliminar Servicio Palero'} message={`¿Estás seguro(a) que deseas eliminar el Servicio Palero: ${data.servicioTransporteFecha} - ${data.servicioTransporteCarguilloTitular}?`}>
+    <ModalDelete title={'Eliminar Servicio Palero'} message={`¿Estás seguro(a) que deseas eliminar el Servicio Palero: ${data.servicioFecha} - ${data.servicioCarguilloTitular}?`}>
       <Footer>
         <FooterButton accion={handleGuardar} name={'Eliminar'} />
         <FooterButton accion={handleCancelar} name={'Cancelar'}/>
