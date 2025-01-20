@@ -21,7 +21,7 @@ export const liquidacionSearch = async(search) => {
   let url=`${appSetting.apiUrl}Liquidacion`
   if(search != null) {
     const {fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter} = search
-    url = `${url}?fechaDesde=${fechaDesdeFilter}&fechaHasta=${fechaHastaFilter}&ut=${utFilter}&estadoId=${estadoFilter}`
+    url = `${url}?fechaDesde=${fechaDesdeFilter}&fechaHasta=${fechaHastaFilter}&proveedorId=${utFilter}&estadoId=${estadoFilter}`
   }
   try {
     const response = await fetch(url, {
