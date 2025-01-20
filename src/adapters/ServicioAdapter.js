@@ -3,22 +3,10 @@ import {
   obtenerFechaLocal
 } from "~utils/index"
 
-export const AdapterListadoServicioTransporte = (servicios=[]) => {
+export const AdapterListadoServicio = (servicios=[]) => {
   return servicios.map(servicio =>{
       return AdapterServicioResponseSave(servicio)
     })
-}
-export const AdapterDataServicioTransporte = (servicio) => {
-  const formatter= servicio.servicioDetails?.map(ticket => (formatterticket(ticket)))
-  return {...servicio,
-    servicioTransporteId: servicio.servicioId,
-    servicioTransporteFecha : servicio.servicioFecha.split("T")[0],
-    servicioTransportePrecio: FormatteDecimalMath(servicio.servicioPrecio,2),
-    servicioTransporteTotal : FormatteDecimalMath(servicio.servicioTransporteTotal,2),
-    servicioTransporteEstadoDescripcion: servicio.servicioEstadoDescripcion,
-    servicioTransporteTotal:servicio.servicioTotal,
-    servicioTransporteDetails : formatter
-  }
 }
 export const AdapterServicioGetData = (servicio) => {
   const formatter= servicio.servicioDetails?.map(ticket => (formatterticket(ticket)))
@@ -40,14 +28,11 @@ export const AdapterServicioGetDataExport = (servicio) => {
   }
 }
 export const AdapterServicioResponseSave = (servicio) => {
-  return {
-    servicioTransporteId: servicio.servicioId,
-    servicioTransporteFecha: convertirFechaDDMMYYYY(servicio.servicioFecha),
-    servicioTransporteCarguilloTitular: servicio.servicioCarguilloTitular,
-    servicioTransportePrecio: FormatteDecimalMath(servicio.servicioPrecio,2),
-    servicioTransportePesoBruto : FormatteDecimalMath(servicio.servicioPesoBruto,3),
-    servicioTransporteTotal : FormatteDecimalMath(servicio.servicioTotal,2),
-    servicioTransporteEstadoDescripcion: servicio.servicioEstadoDescripcion
+  return {...servicio,
+    servicioFecha: convertirFechaDDMMYYYY(servicio.servicioFecha),
+    servicioPrecio: FormatteDecimalMath(servicio.servicioPrecio,2),
+    servicioPesoBruto : FormatteDecimalMath(servicio.servicioPesoBruto,3),
+    servicioTotal : FormatteDecimalMath(servicio.servicioTotal,2)
   }
 }
 export const AdapterServicioPaleroSave = (data) => {
@@ -58,6 +43,18 @@ export const AdapterServicioPaleroSave = (data) => {
     servicioPesoBruto: data.sumaPesoBrutoModel,
     servicioTotal: data.totalModel,
     servicioDetail: data.servicioTransporteSelected?.map(servicioTransporte => ({servicioTransporteId :servicioTransporte.servicioTransporteId})),
+    userCreatedAt: obtenerFechaLocal({date: new Date()}),
+    userCreatedName: "ADMIN"
+  }
+}
+export const AdapterServicioTransporteSave = (data) => {
+  return {
+    servicioFecha: data.fechaModel,
+    carguilloId: data.carguilloIdModel,
+    servicioPrecio: data.servicioPrecioModel,
+    servicioPesoBruto: data.sumaPesoBrutoModel,
+    servicioTotal: data.totalModel,
+    servicioDetail: data.ticketSelected?.map(ticket => ({ticketId :ticket.ticketId})),
     userCreatedAt: obtenerFechaLocal({date: new Date()}),
     userCreatedName: "ADMIN"
   }
