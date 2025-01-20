@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { liquidacionEstadosList } from "../../services/liquidacion";
-import { searchProveedorAvailable } from "../../services/proveedor";
 import { ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter } from "../common";
 import { formatterDataCombo } from "../../utils";
+import { searchAsignaTierra } from "~services/asignartierra";
 
 export function LiquidacionFilter({onFiltersValue}) {
   const [utList, setUtList] = useState([])
@@ -17,9 +17,9 @@ export function LiquidacionFilter({onFiltersValue}) {
   }, [])
 
   const getUts = async() => {
-    const uts = await searchProveedorAvailable()
+    const uts = await searchAsignaTierra()
     const formatter= uts?.map(ut =>(
-      formatterDataCombo(ut.id, ut.ut)))
+      formatterDataCombo(ut.asignarTierraProveedorId, ut.asignarTierraProveedorUT)))
     setUtList(formatter)
     
   }
