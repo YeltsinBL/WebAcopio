@@ -25,14 +25,14 @@ export const ServicioPaleroExcelFile = (data) => {
 
   const headerRow = worksheet.addRow([
     "Ingenio",
-    "Viaje",
     "Campo",
-    "Camión",
-    "Vehículo",
-    "Transportista",
+    "Viaje",
     "Fecha",
-    "Peso Camión",
+    "Vehículo",
+    "Camión",
+    "Transportista",
     "Peso Vehículo",
+    "Peso Camión",
     "Peso Bruto",
     "Estado",
   ])
@@ -45,14 +45,14 @@ export const ServicioPaleroExcelFile = (data) => {
   data.servicioDetails.forEach((detalle) => {
     const row = worksheet.addRow([
       detalle.ticketIngenio,
-      detalle.ticketViaje,
       detalle.ticketCampo || '',
-      detalle.ticketCamion,
-      detalle.ticketVehiculo,
-      detalle.ticketTransportista,
+      detalle.ticketViaje,
       detalle.ticketFecha,
-      detalle.ticketCamionPeso,
+      detalle.ticketVehiculo,
+      detalle.ticketCamion,
+      detalle.ticketTransportista,
       detalle.ticketVehiculoPeso,
+      detalle.ticketCamionPeso,
       detalle.ticketPesoBruto,
       detalle.ticketEstadoDescripcion,
     ])
