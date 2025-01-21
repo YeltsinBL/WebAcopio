@@ -1,3 +1,3 @@
 export const appSetting= {
-    apiUrl:"http://localhost:5257/api/"
+    apiUrl: import.meta.env.VITE_URLAPI || "http://localhost:5257/api/"
 }
