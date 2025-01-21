@@ -52,8 +52,8 @@ export function LiquidacionModel({onShowModel, data}) {
 
   const [errores, setErrores] = useState({})
   const seleccionPersona = data.personaId ? {id: data.personaId, nombre: data.personaNombre } : null
-  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
+  const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
   const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo','Interes Dia %','Interes S/', 'Total','Acciones']
   const headersAdicionales= ['Motivo', 'Monto','Acciones']
   
@@ -322,15 +322,15 @@ export function LiquidacionModel({onShowModel, data}) {
               <tr key={ticket.ticketId} >
                 <TableTd hidden>{ticket.ticketId}</TableTd>
                 <TableTd>{ticket.ticketIngenio}</TableTd>
-                <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketViaje}</TableTd>
                 <TableTd>{ticket.ticketFecha}</TableTd>
-                <TableTd>{ticket.ticketTransportista}</TableTd>
-                <TableTd>{ticket.ticketCamion}</TableTd>
-                <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketVehiculo}</TableTd>
+                <TableTd>{ticket.ticketCamion}</TableTd>
+                <TableTd>{ticket.ticketTransportista}</TableTd>
                 <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+                <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketPesoBruto}</TableTd>
+                <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
                 <TableTd>
                 { liquidacionIdModel > 0 || (
