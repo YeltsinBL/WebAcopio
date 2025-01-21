@@ -153,8 +153,13 @@ export function UserModel({onShowModel, data}) {
             <InputTextCustom textValue={maternoModel} valueError={errores.apeMat}
               placeholder="Ingrese el Apellido Materno" onChange={setMaternoModel} />
             {errores.apeMat && <MessageValidationInput mensaje={errores.apeMat}/>}
-          </FilterOption>          
-          <div className='grid grid-cols-5 '>
+          </FilterOption>
+          <FilterOption htmlFor={'UserNameModel'} name={'Usuario'}>
+            <InputTextCustom textValue={userNameModel} valueError={errores.userName} 
+              placeholder="Ingrese un usuario" onChange={setUserNameModel} />
+            {errores.userName && <MessageValidationInput mensaje={errores.userName}/>}
+          </FilterOption>
+          {/* <div className='grid grid-cols-5 '>
             <div className="col-span-4">
             <FilterOption htmlFor={'UserNameModel'} name={'Usuario'}>
               <InputTextCustom textValue={userNameModel} valueError={errores.userName} 
@@ -167,7 +172,7 @@ export function UserModel({onShowModel, data}) {
               <Search size={18}/>
             </TableButton>
             </div>
-          </div>
+          </div> */}
           <FilterOption htmlFor={'PasswordModel'} name={'Contraseña'}>
             <InputTextCustom textValue={userPasswordModel} valueError={errores.userPassword}
               placeholder="Ingrese una contraseña" onChange={setUserPasswordModel} />
