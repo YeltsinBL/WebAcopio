@@ -65,8 +65,6 @@ export const CorteExcelFile = (data) => {
           cell.border = borderStyle
         })
       })
-      // Calcular la fila donde irá la suma
-      const lastRowNumber = worksheet.lastRow.number + 1;
       // Agregar el total al lado de la suma de peso bruto
       const totalRow2 = worksheet.addRow([
         null, // Dejar las celdas vacías hasta llegar a la posición deseada
