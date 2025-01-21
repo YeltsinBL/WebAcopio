@@ -1,19 +1,10 @@
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import { clearLocalStorage } from "../../utils"
-import { resetUser, UserKey } from "../../redux/states/user"
-import { ButtonCustom } from "../common"
+import { ButtonCustom } from "~components/common"
+import { LogOutSession } from "~hooks/common"
 
 export const Logout = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const logOut = () => {
-    clearLocalStorage(UserKey)
-    dispatch(resetUser())
-    navigate('login', {replace:true})
-  }
+  const logOut = LogOutSession()
   return (
-    <ButtonCustom 
+    <ButtonCustom
       extraClassName={' '}
       name={'Cerrar Sesión'}
       onClick={logOut}

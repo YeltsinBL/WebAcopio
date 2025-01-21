@@ -1,4 +1,5 @@
 import { appSetting } from "../settings/appsetting";
+import { LogOutSession } from "~hooks/common";
 
 export const searchUser = async(search) => {
   let url = `${appSetting.apiUrl}User`
@@ -62,7 +63,12 @@ export const searchUserModules = async(token) => {
         'authorization': `Bearer ${token}`
       }
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    if (!response.ok){ 
+      if(response.status==401){
+        LogOutSession()
+      }
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
     return await response.json()
   } catch (error) {
     console.log('searchUser:', error.message)
