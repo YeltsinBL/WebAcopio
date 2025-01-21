@@ -33,8 +33,8 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
 
   const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
 
-  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
+  const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
 
   useEffect(() => {
     const total = ticketSelected.reduce(getSum, 0)
@@ -168,15 +168,15 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
               <tr key={ticket.ticketId} >
                  <TableTd hidden>{ticket.ticketId}</TableTd>
                 <TableTd>{ticket.ticketIngenio}</TableTd>
-                <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketViaje}</TableTd>
                 <TableTd>{ticket.ticketFecha}</TableTd>
-                <TableTd>{ticket.ticketTransportista}</TableTd>
-                <TableTd>{ticket.ticketCamion}</TableTd>
-                <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketVehiculo}</TableTd>
+                <TableTd>{ticket.ticketCamion}</TableTd>
+                <TableTd>{ticket.ticketTransportista}</TableTd>
                 <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+                <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketPesoBruto}</TableTd> 
+                <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
                 <TableTd hidden={servicioIdModel > 0}>
                   <TableButton className='text-red-400 hover:text-red-300'
