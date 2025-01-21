@@ -14,8 +14,6 @@ export const CortePdfFile = (data) => {
             ["Fecha:", convertirFechaDDMMYYYY(convertirFechaToYMD(data.corteFecha))],
             ["Proveedores:", data.proveedoresNombres],
             ["Campo:", data.tierraCampo],
-            //["UC:", data.tierraUC],
-            //["Precio Corte:", data.cortePrecio],
             ["Estado:", data.corteEstadoDescripcion],
           ],
         },
@@ -73,6 +71,9 @@ export const CortePdfFile = (data) => {
             [
               {text: "Suma Peso Bruto:", bold: true, alignment: "right"},
               {text: data.cortePesoBrutoTotal, bold: true, alignment: "right"}],
+            [
+              {text: "Precio Corte:", bold: true, alignment: "right"},
+              {text: data.cortePrecio, bold: true, alignment: "right"}],
             [
               {text: "Total:", bold: true, alignment: "right"}, 
               {text: data.corteTotal, bold: true, alignment: "right"}],
