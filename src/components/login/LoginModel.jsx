@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { createUser, resetUser, UserKey } from "../../redux/states/user"
 import { clearModuleNames } from "../../redux/states/modules"
+import { Spinner } from "~assets/icons"
 
 export const LoginModel = () => {
   
@@ -22,6 +23,7 @@ export const LoginModel = () => {
   const [pwd, setPwd] = useState('')
   const [changePassword, setChangePassword] = useState(false)
   const [newPassword, setNewPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   //const [errMsg, setErrMsg] = useState('')
   const [errores, setErrores] = useState({})
   useEffect(() => {
@@ -41,14 +43,17 @@ export const LoginModel = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     if(validation() && !changePassword){
       const verify = await AuthorizationVerifyPassword({userName: user, userPassword: pwd})
       if(verify) return setChangePassword(verify)
       const login = await AuthorizationLogIn({userName: user, userPassword: pwd})
       if(login.resultado) {
         dispatch(createUser({...login}))
+        setLoading(false)
         return handleGoBack()
       }
+      setLoading(false)
       return setErrores({validate : login.error})
     }
     if(validation() && changePassword){
@@ -62,6 +67,7 @@ export const LoginModel = () => {
         setPwd('')
         setChangePassword(!reset)
       }
+      setLoading(false)
       return
     }
   }
@@ -109,6 +115,9 @@ export const LoginModel = () => {
             />
             {errores.newPassword && <MessageValidationInput mensaje={errores.newPassword}/>}
           </FilterOption>)}
+          <div className='flex flex-col items-center gap-1 w-1/8'>
+            {loading && <Spinner />}
+          </div>
             {errores.validate && <MessageValidationInput mensaje={errores.validate}/>}
           <Footer>
           <FooterButton name={changePassword?'Reestablecer contraseña': 'Iniciar Sesión'} accion={handleSubmit} />
