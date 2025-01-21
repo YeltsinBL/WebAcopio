@@ -3,7 +3,7 @@ import {
   AdapterServicioGetDataExport
 } from '~/adapters/ServicioAdapter'
 import { 
-  Footer, FooterButton, TableBodyCustom, TableTd, TitleCustom 
+  Footer, FooterButton, NoRegistros, TableBodyCustom, TableTd, TitleCustom 
 } from '~components/common'
 import { 
   servicioPaleroGetServicioTransporte 
