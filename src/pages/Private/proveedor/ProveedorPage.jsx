@@ -35,7 +35,6 @@ const ProveedorPage = () => {
   // Función que se pasará al hijo
   const handleDataFromChild = (data) => {
     const {ut, nombre, estado} = data
-    console.log(ut=='' && nombre=='' && estado=='')
     if(ut=='' && nombre=='' && estado==='') return getProducts()
     getProducts(data)
   }

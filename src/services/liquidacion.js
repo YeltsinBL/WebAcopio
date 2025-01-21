@@ -66,7 +66,6 @@ export const searchProveedorALiquidar = async() => {
   }
 }
 export const liquidacionSave = async({method, liquidacion}) => {
-  console.log(method, liquidacion)
   try {
     const response = await fetch(`${appSetting.apiUrl}Liquidacion`, {
       method: method,

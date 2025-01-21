@@ -26,7 +26,6 @@ export const ServicioTransportePopup = ({onShowModel}) => {
   }
 
   const handleCheckboxChange = (row) => {
-    console.log(row)
     const isSelected = selectedRows.some((selectedRow) => selectedRow.servicioId === row.servicioId)
     if (isSelected) {
       // Si ya está seleccionado, eliminar de selectedRows

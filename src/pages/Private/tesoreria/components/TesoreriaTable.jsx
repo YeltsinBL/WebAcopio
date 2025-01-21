@@ -3,8 +3,6 @@ import { NoRegistros, Table, TableButton, TableTd } from "../../../../components
 
 export const TesoreriaTable = ({data, onRowSelect}) => {
   const headers =['Fecha', 'Sembrador', 'UT', 'Campo', 'Monto', 'Acciones']
-  
-  console.log(data)
   return (
     <Table nameTitle={'Lista de Tesoreria'} headers={headers}>
      { data.length > 0 ? (

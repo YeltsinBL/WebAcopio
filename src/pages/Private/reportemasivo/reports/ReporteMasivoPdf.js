@@ -3,7 +3,6 @@ import { FormatteDecimalMath } from "~utils/index";
 export const ReporteMasivoPdf = (data) => {
   const { totalPesoNeto, totalPesoBruto, liquidacionPagar, detalleFilas } = data.reduce(
     (acc, liquidacion) => {
-      console.log(liquidacion)
       // Sumar valores
       acc.totalPesoNeto += parseFloat(liquidacion.liquidacionPesoNeto) || 0;
       acc.totalPesoBruto += parseFloat(liquidacion.liquidacionPesoBruto) || 0;

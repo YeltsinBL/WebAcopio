@@ -3,7 +3,6 @@ import { asignaTierraSave } from "../../../../services/asignartierra"
 import { obtenerFechaLocal } from "../../../../utils"
 
 export const AsignaTierraFormDelete = ({onShowModel, data}) => {
-  console.log(data)
   const handleGuardar = async(e) => {
     e.preventDefault()
     const asigna = await asignaTierraSave('DELETE',{
