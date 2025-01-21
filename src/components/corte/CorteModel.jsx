@@ -38,8 +38,8 @@ export const CorteModel = ({ onShowModel, data }) => {
   const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
-  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Transportista', 'Camión', 
-    'Camión Peso', 'Vehículo', 'Vehículo Peso', 'Peso Bruto','Estado','Acción']
+  const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
 
   useEffect(()=> {
     getListUC()
@@ -185,15 +185,15 @@ export const CorteModel = ({ onShowModel, data }) => {
             <tr key={ticket.ticketId} >
               <TableTd hidden>{ticket.ticketId}</TableTd>
               <TableTd>{ticket.ticketIngenio}</TableTd>
-              <TableTd>{ticket.ticketCampo}</TableTd>
               <TableTd>{ticket.ticketViaje}</TableTd>
               <TableTd>{ticket.ticketFecha}</TableTd>
-              <TableTd>{ticket.ticketTransportista}</TableTd>
-              <TableTd>{ticket.ticketCamion}</TableTd>
-              <TableTd>{ticket.ticketCamionPeso}</TableTd>
               <TableTd>{ticket.ticketVehiculo}</TableTd>
+              <TableTd>{ticket.ticketCamion}</TableTd>
+              <TableTd>{ticket.ticketTransportista}</TableTd>
               <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+              <TableTd>{ticket.ticketCamionPeso}</TableTd>
               <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd>{ticket.ticketCampo}</TableTd>
               <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
               <TableTd hidden={idModel > 0}>
                 <TableButton className='text-red-400 hover:text-red-300'

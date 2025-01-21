@@ -1,5 +1,6 @@
-import React from 'react'
-import { NoRegistros, TableBodyCustom, TableTd } from '../common'
+import { 
+  NoRegistros, TableBodyCustom, TableTd 
+} from '~components/common'
 
 const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
   return (
@@ -9,15 +10,15 @@ const CorteTicketPopupTable = ({headers, ticketList, handleCheckboxChange}) => {
             <tr key={ticket.ticketId} >
               <TableTd hidden>{ticket.ticketId}</TableTd>
               <TableTd>{ticket.ticketIngenio}</TableTd>
-              <TableTd>{ticket.ticketCampo}</TableTd>
               <TableTd>{ticket.ticketViaje}</TableTd>
               <TableTd>{ticket.ticketFecha}</TableTd>
-              <TableTd>{ticket.ticketTransportista}</TableTd>
-              <TableTd>{ticket.ticketCamion}</TableTd>
-              <TableTd>{ticket.ticketCamionPeso}</TableTd>
               <TableTd>{ticket.ticketVehiculo}</TableTd>
+              <TableTd>{ticket.ticketCamion}</TableTd>
+              <TableTd>{ticket.ticketTransportista}</TableTd>
               <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
+              <TableTd>{ticket.ticketCamionPeso}</TableTd>
               <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd>{ticket.ticketCampo}</TableTd>
               <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
               <TableTd>
                 <input
