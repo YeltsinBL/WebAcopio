@@ -50,7 +50,13 @@ export const AuthorizationLogIn = async(credentials) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials)
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+    if (!response.ok) {
+      return {
+        result: false,
+        error: await response.text()
+      }
+      //throw new Error(`HTTP error! status: ${await response.text()}`)
+    }
     return await response.json()
   } catch (error) {
     console.log('userSave:', error.message)

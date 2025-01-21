@@ -17,7 +17,7 @@ export const LoginModel = () => {
   const navigate = useNavigate()
 
   const userRef = useRef()
-  const errRef = useRef()
+  //const errRef = useRef()
   const [user, setUser] = useState('')
   const [pwd, setPwd] = useState('')
   const [changePassword, setChangePassword] = useState(false)
@@ -49,6 +49,7 @@ export const LoginModel = () => {
         dispatch(createUser({...login}))
         return handleGoBack()
       }
+      return setErrores({validate : login.error})
     }
     if(validation() && changePassword){
       const reset = await AuthorizationResetPassword({
@@ -108,6 +109,7 @@ export const LoginModel = () => {
             />
             {errores.newPassword && <MessageValidationInput mensaje={errores.newPassword}/>}
           </FilterOption>)}
+            {errores.validate && <MessageValidationInput mensaje={errores.validate}/>}
           <Footer>
           <FooterButton name={changePassword?'Reestablecer contraseña': 'Iniciar Sesión'} accion={handleSubmit} />
           </Footer>
