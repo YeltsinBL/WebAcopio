@@ -5,12 +5,12 @@ import {
   InputTextCustom, 
   MessageValidationInput, 
   SectionModel 
-} from '../../../../components/common'
-import { ticketSave } from '../../../../services/ticket'
-import { getCarguilloPlacasList, searchCarguilloList } from '../../../../services/carguillo'
+} from '~components/common'
 import { 
   convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
-} from '../../../../utils'
+} from '~utils/index'
+import { getCarguilloPlacasList, searchCarguilloList } from '~services/carguillo'
+import { ticketSave } from '~services/ticket'
 
 export const TicketForm = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState(0)
@@ -185,6 +185,15 @@ export const TicketForm = ({ onShowModel, data }) => {
             onChange={setViajeModel} valueError={errores.viaje} />
           {errores.viaje && <MessageValidationInput mensaje={errores.viaje}/>}
         </FilterOption>
+        <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
+          <InputDateCustom fechaValue={fechaModel} setFechaValue={setFechaModel}
+            valueError={errores.fecha} />
+          {errores.fecha && <MessageValidationInput mensaje={errores.fecha}/>}
+        </FilterOption>
+        <FilterOption htmlFor={'ChoferModel'} name={'Chofer'}>
+          <InputTextCustom textValue={choferModel} placeholder='Ingrese el nombre (opcional)'          
+            onChange={setChoferModel} />
+        </FilterOption>
         <FilterOption htmlFor={'CarguilloModel'} name={'Transportista'}>
           <ComboBoxCustom initialOptions={carguilloList} selectedOption={seleccionCarguillo}
             onSelectionChange={handleSelectionChange}
@@ -194,30 +203,6 @@ export const TicketForm = ({ onShowModel, data }) => {
             colorOptions={"text-black"}
           />
           {errores.transportista && <MessageValidationInput mensaje={errores.transportista}/>}
-        </FilterOption>
-        <FilterOption htmlFor={'ChoferModel'} name={'Chofer'}>
-          <InputTextCustom textValue={choferModel} placeholder='Ingrese el nombre (opcional)'          
-            onChange={setChoferModel} />
-        </FilterOption>
-        <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
-          <InputDateCustom fechaValue={fechaModel} setFechaValue={setFechaModel}
-            valueError={errores.fecha} />
-          {errores.fecha && <MessageValidationInput mensaje={errores.fecha}/>}
-        </FilterOption>
-        <FilterOption htmlFor={'CamionModel'} name={'Camión'}>
-          <ComboBoxCustom initialOptions={placaCamionList} selectedOption={seleccionPlacaCamion}
-            onSelectionChange={handleSelectionCamionChange}
-            className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-              errores.camion ? "border-red-500" : ""
-            }`}
-            colorOptions={"text-black"}
-          />
-          {errores.camion && <MessageValidationInput mensaje={errores.camion}/>}
-        </FilterOption>
-        <FilterOption htmlFor={'CamionPesoModel'} name={'Camión Peso'}>
-          <InputTextCustom textValue={camionPesoModel} placeholder={'Ejm: 19.590'}
-            onChange={setCamionPesoModel} valueError={errores.camionPeso} />
-          {errores.camionPeso && <MessageValidationInput mensaje={errores.camionPeso}/>}
         </FilterOption>
         <FilterOption htmlFor={'VehiculoModel'} name={'Vehículo'}>
           <ComboBoxCustom initialOptions={placaVehiculoList} selectedOption={seleccionPlacaVehiculo}
@@ -233,6 +218,21 @@ export const TicketForm = ({ onShowModel, data }) => {
           <InputTextCustom textValue={vehiculoPesoModel} placeholder={'Ejm: 31.860'}
             onChange={setVehiculoPesoModel} valueError={errores.vehiculoPeso} />
           {errores.vehiculoPeso && <MessageValidationInput mensaje={errores.vehiculoPeso}/>}
+        </FilterOption>
+        <FilterOption htmlFor={'CamionModel'} name={'Camión'}>
+          <ComboBoxCustom initialOptions={placaCamionList} selectedOption={seleccionPlacaCamion}
+            onSelectionChange={handleSelectionCamionChange}
+            className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+              errores.camion ? "border-red-500" : ""
+            }`}
+            colorOptions={"text-black"}
+          />
+          {errores.camion && <MessageValidationInput mensaje={errores.camion}/>}
+        </FilterOption>
+        <FilterOption htmlFor={'CamionPesoModel'} name={'Camión Peso'}>
+          <InputTextCustom textValue={camionPesoModel} placeholder={'Ejm: 19.590'}
+            onChange={setCamionPesoModel} valueError={errores.camionPeso} />
+          {errores.camionPeso && <MessageValidationInput mensaje={errores.camionPeso}/>}
         </FilterOption>
         <FilterOption htmlFor={'UnidadPesoModel'} name={'Unidad Peso'}>
           <InputTextCustom textValue={unidadPesoModel} placeholder={'Ejm: Kg'}
