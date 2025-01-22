@@ -1,5 +1,4 @@
 import { appSetting } from "../settings/appsetting";
-import { LogOutSession } from "~hooks/common";
 
 export const searchUser = async(search) => {
   let url = `${appSetting.apiUrl}User`
@@ -65,7 +64,7 @@ export const searchUserModules = async(token) => {
     })
     if (!response.ok){ 
       if(response.status==401){
-        LogOutSession()
+        return { error: 'SESSION_EXPIRED' }
       }
       throw new Error(`HTTP error! status: ${response.status}`)
     }

@@ -2,14 +2,16 @@ import { Menu } from "lucide-react";
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import * as Icons from "lucide-react"
-import { useFetchModule } from "../hooks/common";
+import { useLogOutSession, useFetchModule } from "~hooks/common"
 
 const Sidebar = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-    // Estado para manejar qué grupo está expandido
+  const LogOut= useLogOutSession()
+  const {modulesList, moduleError} = useFetchModule()
+  if(modulesList.length == 0 && moduleError.error) LogOut()
+    
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  // Estado para manejar qué grupo está expandido
   const [expandedGroups, setExpandedGroups] = useState({});
-  const {modulesList} = useFetchModule()
-
   // Alternar el estado expandido de un grupo
   const toggleGroup = (groupName) => {
     setExpandedGroups((prevState) => ({

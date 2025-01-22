@@ -6,11 +6,14 @@ import { setModuleNames } from "../../redux/states/modules";
 export const useFetchModule = () => {
   const dispatch = useDispatch()
   const [modulesList, setModulesList] = useState([])
+  const [moduleError, setModuleError] = useState({})
   const userState = useSelector((store) => store.user)
 
   useEffect(() => {
     const getModules = async() =>{
       const modules = await searchUserModules(userState.token)
+      if (modules.error === 'SESSION_EXPIRED')
+        return setModuleError(modules)      
       setModulesList(modules)
       const moduleNames = modules.flatMap(module => {
         if (module.subModules.length === 0) {
@@ -25,5 +28,5 @@ export const useFetchModule = () => {
     }
     getModules()
   }, []);
-  return {modulesList}
+  return {modulesList, moduleError}
 }
