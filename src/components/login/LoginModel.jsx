@@ -46,14 +46,16 @@ export const LoginModel = () => {
     setLoading(true)
     if(validation() && !changePassword){
       const verify = await AuthorizationVerifyPassword({userName: user, userPassword: pwd})
-      if(verify) return setChangePassword(verify)
+      if(verify) {        
+        setLoading(false)
+        return setChangePassword(verify)
+      }
       const login = await AuthorizationLogIn({userName: user, userPassword: pwd})
+      setLoading(false)
       if(login.resultado) {
         dispatch(createUser({...login}))
-        setLoading(false)
         return handleGoBack()
       }
-      setLoading(false)
       return setErrores({validate : login.error})
     }
     if(validation() && changePassword){
