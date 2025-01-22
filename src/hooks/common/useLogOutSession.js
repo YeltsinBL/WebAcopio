@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { resetUser, UserKey } from '~redux/states/user'
 import { clearLocalStorage } from '~utils/localStorage'
 
-export const LogOutSession = () => {
+export const useLogOutSession = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   return () => {

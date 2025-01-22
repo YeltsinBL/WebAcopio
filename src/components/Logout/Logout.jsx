@@ -1,8 +1,8 @@
 import { ButtonCustom } from "~components/common"
-import { LogOutSession } from "~hooks/common"
+import { useLogOutSession } from "~hooks/common"
 
 export const Logout = () => {
-  const logOut = LogOutSession()
+  const logOut = useLogOutSession()
   return (
     <ButtonCustom
       extraClassName={' '}
