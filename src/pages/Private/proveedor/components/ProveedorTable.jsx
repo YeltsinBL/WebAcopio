@@ -37,7 +37,7 @@ const TableSection = ({ personDetails, onRowSelect, eliminarProducto}) => {
 		    { personDetails.proveedorStatus &&
 		    (
 		  	<TableButton className={'text-red-400 hover:text-red-300 '} 
-		  	  onRowSelect={()=>eliminarProducto(personDetails.proveedorId)}>
+		  	  onRowSelect={()=>eliminarProducto(personDetails)}>
 		  	  <Trash2 size={18} />
 		  	</TableButton>
 		    )}

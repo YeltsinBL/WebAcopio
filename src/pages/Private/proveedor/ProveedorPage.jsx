@@ -17,7 +17,7 @@ const ProveedorPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [showModalDelete, setShowModalDelete] = useState(false)
-  const [idModalDelete, setIdModalDelete] = useState(0)
+  const [dataModalDelete, setDataModalDelete] = useState(0)
 
   useEffect(()=> {
     getProducts()
@@ -63,8 +63,8 @@ const ProveedorPage = () => {
     setShowModal(true)
   }
   // Función para eliminar un producto
-  const eliminarProducto = (id) => {
-    setIdModalDelete(id)
+  const eliminarProducto = (data) => {
+    setDataModalDelete(data)
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
@@ -87,7 +87,7 @@ const ProveedorPage = () => {
             <FooterButton name={'Salir'} accion={handleGoBack} />
           </Footer>
           </>:<ProveedorModel onShowModel={handleShowModel} data={selectedRowData} /> }
-          {showModalDelete ? ( <ProveedorModelDelete onShowModel={handleShowModelDelete} data={idModalDelete}/>): null}
+          {showModalDelete ? ( <ProveedorModelDelete onShowModel={handleShowModelDelete} data={dataModalDelete}/>): null}
           <Toaster />
         </Main>
     </ContainerPageCustom>
