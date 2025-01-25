@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react"
-import { proveedorSave } from "../../../../services/proveedor"
-import { obtenerFechaLocal } from "../../../../utils"
-import { ButtonCustom, FilterOption, Footer, FooterButton, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, TableBodyCustom, TableButton, TableContainerCustom, TableHeaderCustom, TableTd, TitleCustom } from "../../../../components/common"
 import { Edit, Power, Trash2 } from "lucide-react"
+import { toast } from "sonner"
+import { proveedorSave } from "~services/proveedor"
+import { obtenerFechaLocal } from "~utils/index" 
+import { 
+  ButtonCustom, FilterOption, Footer, FooterButton, InputTextCustom, 
+  MessageValidationInput, NoRegistros, SectionModel, TableBodyCustom, 
+  TableButton, TableContainerCustom, TableHeaderCustom, TableTd, TitleCustom 
+} from "~components/common"
 
 export const ProveedorModel = ({ onShowModel, data }) => {
   const [id, setId] = useState('')
@@ -74,7 +79,7 @@ export const ProveedorModel = ({ onShowModel, data }) => {
   const onRowDelete = (proveedor) => {
     if (typeof proveedor.proveedorPersonId === "string" && proveedor.proveedorPersonId.startsWith("temp")) {
         // Eliminar si es un ID temporal
-        setProveedoresList(proveedoresList.filter((item) => item.proveedorPersonId !== proveedor.proveedorPersonId));
+        setProveedoresList(proveedoresList.filter((item) => item.proveedorPersonId !== proveedor.proveedorPersonId))
       } else {
         // Cambiar estado si tiene un ID del backend
         setProveedoresList(
@@ -95,7 +100,12 @@ export const ProveedorModel = ({ onShowModel, data }) => {
       if (!apePat) nuevosErrores.apePat = "El campo Apellido Paterno es obligatorio."
       if (!apeMat) nuevosErrores.apeMat = "El campo Apellido Materno es obligatorio."
     }else {
-      if(proveedoresList.length === 0) nuevosErrores.proveedoresList = "Debe agregar al menos un proveedor."
+      if(proveedoresList.length === 0) {
+        toast.warning('Debe agregar al menos un proveedor.', {style: { 
+          background: 'black',
+          color:' yellow' }} )
+        nuevosErrores.proveedoresList = "Debe agregar al menos un proveedor."
+      }
     }
   
     setErrores(nuevosErrores)
@@ -104,23 +114,36 @@ export const ProveedorModel = ({ onShowModel, data }) => {
   }
   const handleGuardar = async(e) => {
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...')
     if (validarCampos(false)) {
-      const save ={
+      let save ={
         proveedorUT: ut,
         proveedorPersons: reemplazarIdTemporal(proveedoresList)
       }
       if(id > 0) {
-        save.proveedorId = id
-        save.userModifiedName ="ADMIN"
-        save.userModifiedAt = obtenerFechaLocal({date: new Date()})
-        const proveedor = await proveedorSave('PUT',save)
-        return onShowModel(proveedor)
+        save = { ...save,
+          proveedorId: id,
+          userModifiedName:"ADMIN",
+          userModifiedAt: obtenerFechaLocal({date: new Date()})
+        }
+      }else{
+        save = { ...save,
+          userCreatedAt: obtenerFechaLocal({date: new Date()}),
+          userCreatedName: "ADMIN"
+        }
       }
-      save.userCreatedAt= obtenerFechaLocal({date: new Date()})
-      save.userCreatedName= "ADMIN"
-      const proveedor = await proveedorSave('POST',save)
-      return onShowModel(proveedor)
-    }
+      const proveedor = await proveedorSave(id > 0 ? 'PUT':'POST',save)
+      console.log(proveedor)
+      if(!proveedor.result) 
+        return toast.error(proveedor.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+      setTimeout(() => {
+        toast.dismiss(toastLoadingCustom)
+      })
+      return onShowModel(proveedor.data)
+    } 
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
@@ -144,7 +167,7 @@ export const ProveedorModel = ({ onShowModel, data }) => {
               placeholder={'Ingrese el código UT'} onChange={setUt}/>
             {errores.ut && <MessageValidationInput mensaje={errores.ut}/>}
           </FilterOption>
-          <FilterOption htmlFor={'ProveedorEstadoModal'} name={'UT'}>
+          <FilterOption htmlFor={'ProveedorEstadoModal'} name={'Estado'}>
             <InputTextCustom textValue={activo} />
           </FilterOption>
         </div>

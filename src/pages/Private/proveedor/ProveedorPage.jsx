@@ -1,22 +1,16 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from 'react-router-dom'
-import { Header, Main } from "../../../components/common"
-import { proveedorGetById, searchProveedor } from "../../../services/proveedor"
-
-// import { ProveedorFilter } from "./components/ProveedorFilter"
-// import { ProveedorTable } from "./components/ProveedorTable"
-// import { ProveedorModelDelete } from "./components/ProveedorModelDelete"
-// import { ProveedorModel } from "./components/ProveedorModel"
 import { 
   ProveedorFilter, ProveedorModel, ProveedorModelDelete, ProveedorTable 
 } from "./components"
+import {  
+  Header, Main, Footer, FooterButton, ContainerPageCustom 
+} from "~components/common"
+import { proveedorGetById, searchProveedor } from "~services/proveedor"
+import { useClosePage } from "~hooks/common"
+import { toast, Toaster } from "sonner"
 
 const ProveedorPage = () => {
-  const navigate = useNavigate()  // Usamos el hook useNavigate para redirigir
-
-  const handleGoBack = () => {
-    navigate('/') // Redirige a la vista principal (por lo general es la ruta '/')
-  }
+  const handleGoBack = useClosePage()
   /* FILTRO */
 	const [filteredProducts, setFilteredProducts] = useState([])
   /*Model */
@@ -29,7 +23,16 @@ const ProveedorPage = () => {
     getProducts()
   }, [])
   const getProducts = async (search=null) => {
+    const toastLoadingCustom = toast.loading('Cargando...');
     const searchProveedores = await searchProveedor(search)
+    if(searchProveedores.result === false)
+      return toast.error(
+        searchProveedores.errorMessage, 
+        { id: toastLoadingCustom, style: { color:'red' } }
+      )
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
     setFilteredProducts(searchProveedores || [])
   }
   // Función que se pasará al hijo
@@ -39,17 +42,24 @@ const ProveedorPage = () => {
     getProducts(data)
   }
   const handleShowModel = (data) => {
-    if(data.proveedorId > 0) getProducts()    
+    if(data.proveedorId > 0) {
+      toast.success("Guardado")
+      getProducts()
+    }
     setShowModal(false)
   }
   // Función para manejar la selección de una fila desde la tabla
   const handleRowSelect = async(rowData) => {
+    const toastLoadingCustom = toast.loading('Cargando...');
     if(rowData.proveedorId != null){
       const proveedorById = await proveedorGetById({id:rowData.proveedorId})
-      setSelectedRowData(proveedorById)
-    }else {
-      setSelectedRowData(rowData)
-    }
+      if(proveedorById.result === false)
+        return toast.error(proveedorById.errorMessage, {id: toastLoadingCustom, style: { color:'red' }})
+      setSelectedRowData(proveedorById.data)
+    }else setSelectedRowData(rowData)    
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
     setShowModal(true)
   }
   // Función para eliminar un producto
@@ -58,32 +68,29 @@ const ProveedorPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.id > 0)
+    if(data.id > 0){
+      toast.success("Eliminado")
       getProducts()
+    }
     setShowModalDelete(false)
   }
   return (
-    <div className='flex-1 overflow-auto relative z-10'>
+    <ContainerPageCustom>
         <Header title='Proveedor'/>
         <Main>
           {!showModal ? 
           <>
           <ProveedorFilter onUTValue={handleDataFromChild} />
           <ProveedorTable PROVEEDOR_DATA={filteredProducts} onRowSelect={handleRowSelect} eliminarProducto={eliminarProducto}/>
-          <div className="flex justify-end gap-2">
-            <button className="bg-[#313395] text-white py-2 px-4 rounded hover:bg-gray-700"
-            onClick={handleRowSelect}>
-              Nuevo
-            </button>
-            <button className="bg-[#313395] text-white py-2 px-4 rounded hover:bg-gray-700"
-            onClick={handleGoBack} >
-              Salir
-            </button>
-          </div>
+          <Footer>
+            <FooterButton name={'Nuevo'} accion={handleRowSelect} />
+            <FooterButton name={'Salir'} accion={handleGoBack} />
+          </Footer>
           </>:<ProveedorModel onShowModel={handleShowModel} data={selectedRowData} /> }
           {showModalDelete ? ( <ProveedorModelDelete onShowModel={handleShowModelDelete} data={idModalDelete}/>): null}
+          <Toaster />
         </Main>
-    </div>
+    </ContainerPageCustom>
   )
 }
 export default ProveedorPage

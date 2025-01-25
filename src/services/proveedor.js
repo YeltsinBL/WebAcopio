@@ -17,7 +17,7 @@ export const searchProveedor = async(search) => {
     return await response.json()
   } catch (error) {
     console.log('searchProveedor:', error.message)
-    throw new Error('Error al buscar proveedores')
+    return ResponseErrorServidor
   }
 }
 export const searchProveedorAvailable = async() => {
@@ -58,7 +58,7 @@ export const proveedorGetById = async({id}) => {
     return await response.json()
   } catch (error) {
     console.log('proveedorGetById:', error.message)
-    throw new Error('Error al obtener el proveedor')
+    return ResponseErrorServidor
   }
 }
 
@@ -71,10 +71,15 @@ export const proveedorSave = async(method, proveedor) => {
       },
       body: JSON.stringify(proveedor)
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
     console.log('proveedorSave:', error.message)
-    throw new Error('Error al guardar el proveedor')
+    return ResponseErrorServidor
   }
+}
+
+
+const ResponseErrorServidor = {
+  result: false,
+  errorMessage: 'No se pudo conectar al servidor'
 }

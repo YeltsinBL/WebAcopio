@@ -1,15 +1,20 @@
-import { proveedorSave } from "../../../../services/proveedor"
-import { obtenerFechaLocal } from "../../../../utils"
+import { toast } from "sonner"
+import { proveedorSave } from "~services/proveedor"
+import { obtenerFechaLocal } from "~utils/index"
 
 export const ProveedorModelDelete = ({onShowModel, data}) => {
     const handleGuardar = async (e) => {
         e.preventDefault()
+        const toastLoadingCustom = toast.loading('Cargando...')
         const proveedor = await proveedorSave('DELETE', {
           proveedorId:data,
           userModifiedName: "ADMIN",
           userModifiedAt: obtenerFechaLocal({date: new Date()})
         })
-        if (proveedor) sendDataDismissModel(data)
+        setTimeout(() => {
+          toast.dismiss(toastLoadingCustom)
+        })
+        if (proveedor.result) sendDataDismissModel(proveedor.data)
         else sendDataDismissModel(0)
       }
       const handleCancelar = (e) => {
