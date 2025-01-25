@@ -1,5 +1,5 @@
 import { Menu } from "lucide-react";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import * as Icons from "lucide-react"
 import { useLogOutSession, useFetchModule } from "~hooks/common"
@@ -7,8 +7,11 @@ import { useLogOutSession, useFetchModule } from "~hooks/common"
 const Sidebar = () => {
   const LogOut= useLogOutSession()
   const {modulesList, moduleError} = useFetchModule()
-  if(modulesList.length == 0 && moduleError.error) LogOut()
-    
+  useEffect(() => {
+    if (modulesList.length === 0 && moduleError.error) {
+      LogOut()
+    }
+  }, [modulesList, moduleError, LogOut])
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   // Estado para manejar qué grupo está expandido
   const [expandedGroups, setExpandedGroups] = useState({});
