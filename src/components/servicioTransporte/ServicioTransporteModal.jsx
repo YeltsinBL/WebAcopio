@@ -122,6 +122,9 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
       })
       return onShowModel(servicioSave)
     }
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
   }
   const onRowDelete= (data)=>{
     setTicketSelected(ticketSelected.filter(ticket => ticket.ticketId !== data.ticketId))
