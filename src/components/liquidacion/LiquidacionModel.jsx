@@ -286,6 +286,9 @@ export function LiquidacionModel({onShowModel, data}) {
       setTimeout(() => { toast.dismiss(toastLoadingCustom) })
       return onShowModel(save)
     }
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
