@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom,
   InputDecimalCustom, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, 
@@ -12,7 +13,7 @@ import {
 import { servicioPaleroSave } from "~services/servicio"
 import { ServicioTransportePopup } from "./ServicioPaleroPopup"
 import { 
-  AdapterServicioPaleroSave, AdapterServicioResponseSave 
+  AdapterServicioPaleroSave 
 } from "~/adapters/ServicioAdapter"
 
 export const ServicioPaleroForm = ({onShowModel, data}) => {
@@ -106,6 +107,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   }
   const handleGuardar = async(e)=>{
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...')
     if(validarCampos()){
       let servicioModel = {
         fechaModel, carguilloIdModel,
@@ -116,12 +118,17 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
         method:'POST',
         servicioPalero: AdapterServicioPaleroSave(servicioModel)
       })
-      return onShowModel(AdapterServicioResponseSave(servicioSave))
+      if(!servicioSave.result) 
+        return toast.error(servicioSave.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+      setTimeout(() => {
+        toast.dismiss(toastLoadingCustom)
+      })
+      return onShowModel(servicioSave)
     }
   }
   const handleCancelar = (e)=>{
     e.preventDefault()
-    onShowModel({servicioId:0})
+    onShowModel({result:false})
   }
   return (
     <>

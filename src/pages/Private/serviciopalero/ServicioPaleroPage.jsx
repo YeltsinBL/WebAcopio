@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast, Toaster } from "sonner"
 import { useClosePage } from "~hooks/common"
 import { 
   ContainerPageCustom, Footer, FooterButton, Header, Main 
@@ -47,13 +48,9 @@ const handleGoBack = useClosePage()
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.servicioId>0){
-      const existingIndex = servicioList.findIndex((item) => item.servicioId === data.servicioId)
-      if (existingIndex >= 0) {
-        const updatedList = [...servicioList]
-        updatedList[existingIndex] = data
-        setServicioList(updatedList)
-      } else setServicioList([...servicioList, data])
+    if(data.result){
+      toast.success(data.errorMessage)
+      getServicios()
     }
     setShowModal(false)
   }
@@ -61,8 +58,11 @@ const handleGoBack = useClosePage()
     setModelDelete(data)
     setShowModelDelete(true)
   }
-  const handleShowModelDelete = (servicioId) =>{
-    if(servicioId > 0) getServicios()
+  const handleShowModelDelete = (data) =>{
+    if(data.result) {
+      toast.success(data.errorMessage)
+      getServicios()
+    }
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(servicioId) =>{
@@ -95,6 +95,7 @@ const handleGoBack = useClosePage()
         </>:        
          <ServicioPaleroForm onShowModel={handleSaveModel} data={selectedRowData}/>}
         {showModelDelete && <ServicioPaleroFormDelete data={modelDelete} onShowModel={handleShowModelDelete}/>}
+        <Toaster />
       </Main>
     </ContainerPageCustom>
   )
