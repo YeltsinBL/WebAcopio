@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { ContainerPageCustom, Footer, FooterButton, Header, Main } from "../../../components/common";
-import { useClosePage } from "../../../hooks/common";
-import { searchTesoreria, tesoreriaGetById } from "../../../services/tesoreria";
-import { convertirFechaDDMMYYYY } from "../../../utils";
-import { TesoreriaFilter } from "./components/TesoreriaFilter";
-import { TesoreriaTable } from "./components/TesoreriaTable";
-import { TesoreriaForm } from "./components/TesoreriaForm";
+import { useEffect, useState } from "react"
+import { toast, Toaster } from "sonner"
+import { 
+  ContainerPageCustom, Footer, FooterButton, Header, Main 
+} from "~components/common"
+import { useClosePage } from "~hooks/common"
+import { searchTesoreria, tesoreriaGetById } from "~services/tesoreria"
+import { TesoreriaFilter } from "./components/TesoreriaFilter"
+import { TesoreriaTable } from "./components/TesoreriaTable"
+import { TesoreriaForm } from "./components/TesoreriaForm"
+import { TesoreriaAdapterGetData, TesoreriaAdapterList } from "./adapters/TesoreriaAdapter"
 
 function TesoreriaPage() {
   const handleGoBack = useClosePage()
@@ -18,11 +21,7 @@ function TesoreriaPage() {
   },[])
   const getTesorerias = async(filters) =>{
     const tesorerias = await searchTesoreria(filters)
-    const formattetesorerias = tesorerias.map(tesoreria =>{
-      return {...tesoreria, 
-        tesoreriaFecha: convertirFechaDDMMYYYY(tesoreria.tesoreriaFecha)}
-    })
-    setTesoreriaList(formattetesorerias)
+    setTesoreriaList(TesoreriaAdapterList(tesorerias))
   }
   const handleDataFromChild = (data)=>{
     const {
@@ -35,18 +34,22 @@ function TesoreriaPage() {
   const handleRowSelect = async(rowData) =>{
     if(rowData.tesoreriaId){
       const servicio = await tesoreriaGetById({id:rowData.tesoreriaId})
-      setSelectedRowData(servicio)
+      setSelectedRowData(TesoreriaAdapterGetData(servicio))
     }else setSelectedRowData(null)
     setShowModal(true)
   }
   const handleSaveModel = (data) =>{
-    if(data.tesoreriaId>0) getTesorerias()     
+    if(data.result) {
+      toast.success(data.errorMessage)
+      getTesorerias()
+    }
     setShowModal(false)
   }
   return (
     <ContainerPageCustom>
-      <Header title={'Tesorería'}/>
-      <Main>        
+      <Header title={'Tesoreria'}/>
+      <Main>
+        { !showModal ?
         <>
           <TesoreriaFilter onFiltersValue={handleDataFromChild} />
           <TesoreriaTable data={tesoreriaList} onRowSelect={handleRowSelect} />
@@ -54,8 +57,8 @@ function TesoreriaPage() {
             <FooterButton name={'Nuevo'} accion={handleRowSelect} />
             <FooterButton name={'Salir'} accion={handleGoBack} />
           </Footer>
-        </>
-        { showModal && <TesoreriaForm data={selectedRowData} onShowModel={handleSaveModel} />}
+        </>:<TesoreriaForm data={selectedRowData} onShowModel={handleSaveModel} />}
+        <Toaster />
       </Main>
     </ContainerPageCustom>
   )

@@ -1,8 +1,10 @@
 import { Edit } from "lucide-react"
-import { NoRegistros, Table, TableButton, TableTd } from "../../../../components/common"
+import { 
+  NoRegistros, Table, TableButton, TableTd 
+} from "~components/common"
 
 export const TesoreriaTable = ({data, onRowSelect}) => {
-  const headers =['Fecha', 'Sembrador', 'UT', 'Campo', 'Monto', 'Acciones']
+  const headers =['Fecha', 'Sembrador', 'UT', 'Campo', 'Monto','Pagado','Pendiente', 'Acciones']
   return (
     <Table nameTitle={'Lista de Tesoreria'} headers={headers}>
      { data.length > 0 ? (
@@ -14,6 +16,8 @@ export const TesoreriaTable = ({data, onRowSelect}) => {
             <TableTd>{ tesoreria.proveedorUT }</TableTd>
             <TableTd>{ tesoreria.tierraCampo }</TableTd>
             <TableTd>{ tesoreria.tesoreriaMonto }</TableTd>
+            <TableTd>{ tesoreria.tesoreriaPagado }</TableTd>
+            <TableTd>{ tesoreria.tesoreriaPendientePagar }</TableTd>
             <TableTd>
               <TableButton className={'text-blue-500 hover:text-blue-700 px-3'} 
                 onRowSelect={()=>onRowSelect(tesoreria)}>

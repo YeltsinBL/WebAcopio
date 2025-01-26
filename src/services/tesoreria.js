@@ -1,4 +1,5 @@
-import { appSetting } from "../settings/appsetting";
+import { appSetting } from "~settings/appsetting"
+import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
 export const searchTesoreria = async(search) => {
   let url = `${appSetting.apiUrl}Tesoreria`
@@ -45,10 +46,9 @@ export const tesoreriaSave = async(method, tesoreria) => {
       },
       body: JSON.stringify(tesoreria)
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
     console.log('tesoreriaSave:', error.message)
-    throw new Error('Error al guardar la tesoreria')
+    return ResponseErrorServidor
   }
 }
