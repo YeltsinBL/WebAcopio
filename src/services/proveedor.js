@@ -1,4 +1,5 @@
-import { appSetting } from "../settings/appsetting"
+import { appSetting } from "~settings/appsetting"
+import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
 export const searchProveedor = async(search) => {
   let url = `${appSetting.apiUrl}Proveedor`
@@ -76,10 +77,4 @@ export const proveedorSave = async(method, proveedor) => {
     console.log('proveedorSave:', error.message)
     return ResponseErrorServidor
   }
-}
-
-
-const ResponseErrorServidor = {
-  result: false,
-  errorMessage: 'No se pudo conectar al servidor'
 }

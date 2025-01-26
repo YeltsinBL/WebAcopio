@@ -133,7 +133,6 @@ export const ProveedorModel = ({ onShowModel, data }) => {
         }
       }
       const proveedor = await proveedorSave(id > 0 ? 'PUT':'POST',save)
-      console.log(proveedor)
       if(!proveedor.result) 
         return toast.error(proveedor.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
       setTimeout(() => {
