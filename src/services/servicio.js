@@ -1,4 +1,5 @@
-import { appSetting } from "../settings/appsetting"
+import { appSetting } from "~settings/appsetting"
+import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
 export const servicioTransporteEstadosList = async() => {
   try {
@@ -53,11 +54,10 @@ export const servicioTransporteSave = async({method, servicioTransporte}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(servicioTransporte)
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
     console.log('servicioTransporteSave:', error.message)
-    throw new Error('Error al guardar el Servicio Transporte')
+    return ResponseErrorServidor
   }
 }
 
@@ -101,11 +101,10 @@ export const servicioPaleroSave = async({method, servicioPalero}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(servicioPalero)
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
     console.log('servicioPaleroSave:', error.message)
-    throw new Error('Error al guardar el Servicio Palero')
+    return ResponseErrorServidor
   }
 }
 export const servicioPaleroGetServicioTransporte = async() =>{

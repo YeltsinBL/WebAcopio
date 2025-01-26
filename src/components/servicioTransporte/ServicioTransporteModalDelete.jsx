@@ -1,3 +1,4 @@
+import { toast } from "sonner"
 import { servicioTransporteSave } from "~services/servicio"
 import { Footer, FooterButton, ModalDelete } from "~components/common"
 import { obtenerFechaLocal } from "~utils/index"
@@ -5,18 +6,23 @@ import { obtenerFechaLocal } from "~utils/index"
 export const ServicioTransporteModalDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e)=>{
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...')
     const servicioDto={
       servicioId: data.servicioId,
       userModifiedAt : obtenerFechaLocal({date: new Date()}),
       userModifiedName: "ADMIN"
     }
     const servicio = await servicioTransporteSave({ method:'DELETE', servicioTransporte: servicioDto })
-    if (servicio) return sendDataDismissModel(data.servicioId)
-    return sendDataDismissModel(0)
+    if (!servicio.result) 
+      return toast.error(servicio.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
+    return sendDataDismissModel(servicio)
   }
   const handleCancelar =(e)=>{
     e.preventDefault()
-    sendDataDismissModel(0)
+    sendDataDismissModel({result:false})
   }
   const sendDataDismissModel = (valor) => {
     onShowModel(valor)

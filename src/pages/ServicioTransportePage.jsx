@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast, Toaster } from 'sonner'
 import { 
   ContainerPageCustom, Footer, FooterButton, Header, Main 
 } from '~components/common'
@@ -48,13 +49,9 @@ const ServicioTransportePage = () => {
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.servicioId>0){
-      const existingIndex = servicioList.findIndex((item) => item.servicioId === data.servicioId)
-      if (existingIndex >= 0) {
-        const updatedList = [...servicioList]
-        updatedList[existingIndex] = data
-        setServicioList(updatedList)
-      } else setServicioList([...servicioList, data])
+    if(data.result){
+      toast.success(data.errorMessage)
+      getServicios()
     }
     setShowModal(false)
   }
@@ -62,8 +59,11 @@ const ServicioTransportePage = () => {
     setModelDelete(data)
     setShowModelDelete(true)
   }
-  const handleShowModelDelete = (servicioId) =>{
-    if(servicioId > 0) getServicios()
+  const handleShowModelDelete = (data) =>{
+    if(data.result){
+      toast.success(data.errorMessage)
+      getServicios()
+    }
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(servicioId) =>{
@@ -96,6 +96,7 @@ const ServicioTransportePage = () => {
         </>:        
          <ServicioTransporteModal onShowModel={handleSaveModel} data={selectedRowData}/>}
         {showModelDelete && <ServicioTransporteModalDelete data={modelDelete} onShowModel={handleShowModelDelete}/>}
+        <Toaster />
       </Main>
     </ContainerPageCustom>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Trash2 } from "lucide-react"
+import { toast } from "sonner"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom,
   InputDecimalCustom, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, 
@@ -14,9 +15,8 @@ import {
 import { servicioTransporteSave } from "~services/servicio"
 import { ServicioTransportePopup } from "./ServicioTransportePopup"
 import { 
-  AdapterServicioResponseSave, AdapterServicioTransporteSave 
+  AdapterServicioTransporteSave 
 } from "~/adapters/ServicioAdapter"
-
 
 export const ServicioTransporteModal = ({onShowModel, data}) => {
   const [carguilloList, setCarguilloList] = useState([])
@@ -105,6 +105,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
   }
   const handleGuardar = async(e)=>{
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...');
     if(validarCampos()){
       let servicioModel = {
         fechaModel, carguilloIdModel,
@@ -114,7 +115,12 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
       const servicioSave = await servicioTransporteSave({
         method:'POST', servicioTransporte: AdapterServicioTransporteSave(servicioModel)
       })
-      return onShowModel(AdapterServicioResponseSave(servicioSave))
+      if(!servicioSave.result) 
+        return toast.error(servicioSave.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+      setTimeout(() => {
+        toast.dismiss(toastLoadingCustom)
+      })
+      return onShowModel(servicioSave)
     }
   }
   const onRowDelete= (data)=>{
