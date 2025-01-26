@@ -134,6 +134,9 @@ export const CorteModel = ({ onShowModel, data }) => {
       })
       onShowModel(corte)
     }
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
