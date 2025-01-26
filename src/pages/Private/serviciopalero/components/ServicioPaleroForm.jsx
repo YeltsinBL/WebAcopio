@@ -21,7 +21,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   const [servicioIdModel, setServicioIdModel] = useState(0)
   const [fechaModel, setFechaModel] = useState('')
   const [carguilloIdModel, setCarguilloIdModel] = useState(0)
-  const [servicioPrecioModel, setServicioPrecioModel] = useState('')
+  const [servicioPrecioModel, setServicioPrecioModel] = useState(0)
   const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
   const [totalModel, setTotalModel] = useState('')
   const [servicioTransporteSelected, setServicioTransporteSelected] = useState([])
@@ -41,7 +41,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
     return setSumaPesoBrutoModel('')
   }, [ticketSelected])
   useEffect(()=>{
-    if(servicioPrecioModel> 0 && sumaPesoBrutoModel > 0) 
+    if(servicioPrecioModel>= 0 && sumaPesoBrutoModel > 0) 
       return setTotalModel(FormatteDecimalMath(servicioPrecioModel * sumaPesoBrutoModel,2))
     return setTotalModel('')
   },[servicioPrecioModel, sumaPesoBrutoModel])
@@ -55,7 +55,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
       setFechaModel(
         data.servicioFecha || obtenerFechaLocal({ date: new Date() }).split("T")[0])
       setCarguilloIdModel(data.carguilloId || 0)
-      setServicioPrecioModel(data.servicioPrecio || '')
+      setServicioPrecioModel(data.servicioPrecio || 0)
       setServicioDescripcion(data.servicioEstadoDescripcion || 'Activo')
       setTicketSelected(data.servicioDetails || [])
     }
@@ -125,6 +125,9 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
       })
       return onShowModel(servicioSave)
     }
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
   }
   const handleCancelar = (e)=>{
     e.preventDefault()
