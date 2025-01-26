@@ -1,7 +1,8 @@
-import { appSetting } from "../settings/appsetting";
+import { appSetting } from "~settings/appsetting"
 import { 
-  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath 
-} from "../utils";
+  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, 
+  ResponseErrorServidor
+} from "~utils/index"
 
 export const searchCorteEstados = async() => {
   try {
@@ -56,20 +57,19 @@ export const corteGetById = async({id})=>{
     throw new Error('Error al obtener un corte')
   }
 }
-export const corteSave = async(corte) => {
+export const corteSave = async(method, corte) => {
   try {
     const response = await fetch(`${appSetting.apiUrl}Corte`, {
-      method: 'POST',
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(corte)
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    })  
     return await response.json()
   } catch (error) {
     console.log('corteSave:', error.message)
-    throw new Error('Error al obtener un corte')
+    return ResponseErrorServidor
   }
 }
 

@@ -1,10 +1,10 @@
-import { Edit } from 'lucide-react'
+import { Edit, Trash2 } from 'lucide-react'
 import { 
   NoRegistros, Table, TableButton, TableTd
 } from '../common'
 import { ExcelIcon, PDFIcon } from '../../assets/icons'
 
-export const CorteTable = ({CORTE_DATA, onRowSelect, exportExcel, exporPdf}) => {
+export const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete, exportExcel, exporPdf}) => {
   const headers = ['Fecha', 'UC', 'Campo','Precio', 
     'Cant. Ticket ', 'Peso Bruto', 'total ', 'Estado', 'Acciones']
   return (
@@ -40,11 +40,16 @@ export const CorteTable = ({CORTE_DATA, onRowSelect, exportExcel, exporPdf}) => 
                 >
                   <PDFIcon />
                 </TableButton>
-                {/* <button className='text-red-400 hover:text-red-300'
-                  onClick={() => onRowDelete(corte.id)}
-                >
-                  <Trash2 size={18} />
-                </button> */}
+                { corte.corteEstadoDescripcion.toLowerCase() === 'activo' && 
+                (
+                  <TableButton 
+                    className='text-red-400 hover:text-red-300'
+                    onRowSelect={() => onRowDelete(corte)}
+                  >
+                    <Trash2 size={18} />
+                  </TableButton>
+                )}
+               
               </TableTd>
             </tr>
           ))

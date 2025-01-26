@@ -1,16 +1,32 @@
-import { Footer, FooterButton, ModalDelete } from '../common'
+import { toast } from "sonner"
+import { 
+  Footer, FooterButton, ModalDelete 
+} from "~components/common"
+import { corteSave } from "~services/corte"
+import { obtenerFechaLocal } from "~utils/index"
 
 export const CorteModelDelete = ({onShowModel, data}) => {
-  const handleGuardar =(e)=>{
+  const handleGuardar =async(e)=>{
     e.preventDefault()
-    sendDataDismissModel(data)
+    const toastLoadingCustom = toast.loading('Cargando...')
+    const corte = await corteSave('DELETE', {
+      corteId: data.corteId,
+      userModifiedName: "ADMIN",
+      userModifiedAt: obtenerFechaLocal({date: new Date()})
+    })
+    if(!corte.result) 
+      return toast.error(corte.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+    setTimeout(() => {
+      toast.dismiss(toastLoadingCustom)
+    })
+    sendDataDismissModel(corte)
   }
   const handleCancelar =(e)=>{
     e.preventDefault()
-    sendDataDismissModel(0)
+    sendDataDismissModel({result: false})
   }
   const sendDataDismissModel = (valor) => {
-    onShowModel({id:valor})
+    onShowModel(valor)
   }
   return (
     <ModalDelete title={"Eliminar Ticker"} message={"¿Estás seguro(a) que deseas eliminar el ticket?"}>

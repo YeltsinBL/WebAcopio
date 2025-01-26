@@ -1,25 +1,23 @@
 import { useEffect, useState } from 'react'
+import { useClosePage } from '~hooks/common'
 import { 
   ContainerPageCustom, Footer, FooterButton, Header, Main 
-} from '../components/common'
-import { useNavigate } from 'react-router-dom'
-import { corteGetById, searchCortes } from '../services/corte'
+} from '~components/common'
 import { 
-  CorteFilter, CorteModel, CorteTable ,
+  CorteFilter, CorteModel, CorteTable ,CorteModelDelete,
   CorteExcelFile, CortePdfFile
-} from '../components/corte'
-import { ExportToExcel, ExportToPdf } from '../components/download'
+} from '~components/corte'
+import { ExportToExcel, ExportToPdf } from '~components/download'
+import { corteGetById, searchCortes } from '~services/corte'
+import { toast, Toaster } from 'sonner'
 
 const CortePage = () => {
-  const navigate = useNavigate()
+  const handleGoBack = useClosePage()
   const [corteList, setCorteList] = useState([])
   const [showModel, setShowModel] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
-  // const [showModelDelete, setShowModelDelete] = useState(false)
-  // const [idModelDelete, setIdModelDelete] = useState(false)
-  const handleGoBack = () => {
-    navigate('/')
-  }
+  const [showModelDelete, setShowModelDelete] = useState(false)
+  const [modelDataDelete, setModelDataDelete] = useState(false)
   useEffect(() => {
     getCortes()
   },[])
@@ -44,7 +42,10 @@ const CortePage = () => {
     setShowModel(true)
   }
   const handleShowModel = (data) => {
-    if(data.corteId > 0) getCortes()
+    if(data.result) {
+      toast.success(data.errorMessage)
+      getCortes()
+    }
     setShowModel(false)
   }
   const handleRowExportExcel = async(corteId) =>{
@@ -55,14 +56,17 @@ const CortePage = () => {
     const corte = await corteGetById({id: corteId})
     ExportToPdf(CortePdfFile(corte), 'CortePdf')
   }
-  // const handleRowDelete = (id) =>{
-  //   setIdModelDelete(id)
-  //   setShowModelDelete(true)
-  // }
-  // const handleShowModelDelete = (data) =>{
-  //   if(data.id > 0) getCortes()
-  //   setShowModelDelete(false)
-  // }
+  const handleRowDelete = (data) =>{
+    setModelDataDelete(data)
+    setShowModelDelete(true)
+  }
+  const handleShowModelDelete = (data) =>{
+    if(data.result){
+      toast.success(data.errorMessage)
+      getCortes()
+    }
+    setShowModelDelete(false)
+  }
   return (
     <ContainerPageCustom>
       <Header title={'Corte'} />
@@ -70,7 +74,7 @@ const CortePage = () => {
         {!showModel ?
           <>
             <CorteFilter onFiltersValue={handleDataFromChild}/>
-            <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} exportExcel={handleRowExportExcel} exporPdf={handleRowExportPdf} />
+            <CorteTable CORTE_DATA={corteList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete} exportExcel={handleRowExportExcel} exporPdf={handleRowExportPdf} />
             <Footer>
               <FooterButton name={'Nuevo'} accion={handleRowSelect} /> 
               <FooterButton name={'Salir'} accion={handleGoBack} /> 
@@ -78,7 +82,8 @@ const CortePage = () => {
           </>:
           <CorteModel onShowModel={handleShowModel} data={selectedRowData}/>
         }
-        {/* {showModelDelete ? <CorteModelDelete onShowModel={handleShowModelDelete} data={idModelDelete} /> :'' } */}
+        {showModelDelete ? <CorteModelDelete onShowModel={handleShowModelDelete} data={modelDataDelete} /> :'' }
+        <Toaster />
       </Main>
     </ContainerPageCustom>
   )

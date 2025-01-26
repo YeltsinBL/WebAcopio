@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import CorteTicketPopup from './CorteTicketPopup'
 import { Trash2 } from 'lucide-react'
-import { corteSave } from '../../services/corte'
-import { searchAsignaTierra } from '../../services/asignartierra'
+import { toast } from 'sonner'
+import { corteSave } from '~services/corte'
+import { searchAsignaTierra } from '~services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
   InputDateCustom, 
@@ -16,10 +17,10 @@ import {
   TableHeaderCustom,
   TableTd,
   TitleCustom
-} from '../common'
+} from '~components/common'
 import { 
-  convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
-} from '../../utils'
+  convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal 
+} from '~utils/index'
 
 export const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState(0)
@@ -63,12 +64,12 @@ export const CorteModel = ({ onShowModel, data }) => {
   }, [data])
   useEffect(() => {
     const total = ticketSelected.reduce(getSum, 0)
-    if(total>0) return setSumaPesoBrutoModel(FormatteDecimal(total,3))
+    if(total>0) return setSumaPesoBrutoModel(FormatteDecimalMath(total,3))
     return setSumaPesoBrutoModel('')
   }, [ticketSelected])
   useEffect(()=>{
     if(precioModel > 0 && sumaPesoBrutoModel > 0) 
-      return setTotalModel(FormatteDecimal(precioModel * sumaPesoBrutoModel,2))
+      return setTotalModel(FormatteDecimalMath(precioModel * sumaPesoBrutoModel,2))
     return setTotalModel('')
   },[precioModel, sumaPesoBrutoModel])
   const getSum=(total, num) =>{
@@ -114,8 +115,9 @@ export const CorteModel = ({ onShowModel, data }) => {
   }
   const handleGuardar = async(e) => {
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...')
     if (validarCampos()) {
-      const corte = await corteSave({
+      const corte = await corteSave('POST', {
         corteFecha: fechaModel,
         tierraId: ucModel,
         cortePrecio: precioModel,
@@ -124,6 +126,11 @@ export const CorteModel = ({ onShowModel, data }) => {
         userCreatedName: 'ADMIN',
         userCreatedAt: obtenerFechaLocal({date: new Date()}),
         corteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.ticketId}))
+      })
+      if(!corte.result) 
+        return toast.error(corte.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+      setTimeout(() => {
+        toast.dismiss(toastLoadingCustom)
       })
       onShowModel(corte)
     }
