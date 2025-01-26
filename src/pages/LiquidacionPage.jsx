@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
-import { ContainerPageCustom, Footer, FooterButton, Header, Main } from "../components/common";
-import { useClosePage } from "../hooks/common";
-import { convertirFechaDDMMYYYY } from "../utils";
-import { liquidacionGetById, liquidacionSearch } from "../services/liquidacion";
-import { ExportToExcel, ExportToPdf } from "../components/download";
+import { toast, Toaster } from "sonner"
+import { 
+  ContainerPageCustom, Footer, FooterButton, Header, Main 
+} from "~components/common"
+import { useClosePage } from "~hooks/common"
+import { convertirFechaDDMMYYYY } from "~utils/index"
+import { liquidacionGetById, liquidacionSearch } from "~services/liquidacion"
+import { ExportToExcel, ExportToPdf } from "~components/download"
 import { 
   LiquidacionFilter, LiquidacionTable, LiquidacionModel,
   LiquidacionExcelFile, LiquidacionPdfFile,
- } from "../components/liquidacion";
+  LiquidacionModelDelete,
+ } from "~components/liquidacion"
 
 function LiquidacionPage() {
   const handleGoBack = useClosePage()
@@ -15,7 +19,7 @@ function LiquidacionPage() {
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [showModelDelete, setShowModelDelete] = useState(false)
-  const [idModelDelete, setIdModelDelete] = useState(false)
+  const [modelDataDelete, setModelDataDelete] = useState(false)
 
   useEffect(()=>{
     getLiquidacion()
@@ -45,22 +49,21 @@ function LiquidacionPage() {
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.liquidacionId>0){
-      const existingIndex = liquidacionList.findIndex((item) => item.liquidacionId === data.liquidacionId)
-      if (existingIndex >= 0) {
-        const updatedList = [...liquidacionList]
-        updatedList[existingIndex] = data
-        setLiquidacionList(updatedList)
-      } else setLiquidacionList([...liquidacionList, data])
+    if(data.result){
+      toast.success(data.errorMessage)
+      getLiquidacion()
     }
     setShowModal(false)
   }
-  const handleRowDelete = (id) =>{
-    setIdModelDelete(id)
+  const handleRowDelete = (data) =>{
+    setModelDataDelete(data)
     setShowModelDelete(true)
   }
-  const handleShowModelDelete = (liquidacionId) =>{
-    if(liquidacionId > 0) getLiquidacion()
+  const handleShowModelDelete = (data) =>{
+    if(data.result){
+      toast.success(data.errorMessage)
+      getLiquidacion()
+    }
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(liquidacionId) =>{
@@ -78,7 +81,7 @@ function LiquidacionPage() {
         {!showModal ?
         <>
           <LiquidacionFilter onFiltersValue={handleDataFromChild} />
-          <LiquidacionTable data={liquidacionList} onRowSelect={handleRowSelect}
+          <LiquidacionTable data={liquidacionList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete}
             exportExcel={handleRowExportExcel} exportPdf={handleRowExportPdf} />
           <Footer>
             <FooterButton name={'Nuevo'} accion={handleRowSelect}/>
@@ -86,6 +89,8 @@ function LiquidacionPage() {
           </Footer>
         </>:
         <LiquidacionModel onShowModel={handleSaveModel} data={selectedRowData} />}
+        {showModelDelete ? ( <LiquidacionModelDelete onShowModel={handleShowModelDelete} data={modelDataDelete}/>): null }
+        <Toaster />
       </Main>
     </ContainerPageCustom>
   )

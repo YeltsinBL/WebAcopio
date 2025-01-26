@@ -1,7 +1,8 @@
-import { appSetting } from "../settings/appsetting"
+import { appSetting } from "~settings/appsetting"
 import { 
-  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath
-} from "../utils"
+  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, 
+  ResponseErrorServidor
+} from "~utils/index"
 
 export const liquidacionEstadosList = async() => {
   try {
@@ -72,11 +73,10 @@ export const liquidacionSave = async({method, liquidacion}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(liquidacion)
     })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
     console.log('liquidacionSave:', error.message)
-    throw new Error('Error al guardar la Liquidación')
+    return ResponseErrorServidor
   }
 }
 

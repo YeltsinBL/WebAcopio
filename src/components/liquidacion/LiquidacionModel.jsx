@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import { Trash2 } from "lucide-react"
+import { toast } from "sonner"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom, 
   InputDecimalCustom, InputNumberCustom, InputTextCustom, MessageValidationInput, NoRegistros, 
   SectionModel, TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom, 
   TableHeaderCustom, TableTd, TitleCustom 
-} from "../common";
-import { Trash2 } from "lucide-react";
+} from "~components/common"
 import { 
   convertirFechaToISO,
   convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal 
-} from "../../utils";
-import { liquidacionSave, searchProveedorALiquidar } from "../../services/liquidacion";
-import CorteTicketPopup from "../corte/CorteTicketPopup";
+} from "~utils/index"
+import { liquidacionSave, searchProveedorALiquidar } from "~services/liquidacion"
+import CorteTicketPopup from "~components/corte/CorteTicketPopup"
 
 export function LiquidacionModel({onShowModel, data}) {
   const [proveedoresALiquidarList, setProveedorALiquidarList] = useState([])
@@ -252,6 +253,7 @@ export function LiquidacionModel({onShowModel, data}) {
   }
   const handleGuardar = async(e) => {
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...')    
     if (validarCampos({tickets:true})) {
       let liquidacion = {        
         personaId:personaIdModel,
@@ -279,12 +281,15 @@ export function LiquidacionModel({onShowModel, data}) {
         userCreatedAt: obtenerFechaLocal({date: new Date()})
       }
       const save = await liquidacionSave({method: 'POST', liquidacion})
+      if(!save.result) 
+        return toast.error(save.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+      setTimeout(() => { toast.dismiss(toastLoadingCustom) })
       return onShowModel(save)
     }
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({liquidacionToneladasId:0})
+    onShowModel({result:false})
   }
 
   return (

@@ -1,6 +1,8 @@
 import { Edit, Trash2 } from "lucide-react"
-import { NoRegistros, Table, TableButton, TableTd } from "../common"
-import { ExcelIcon, PDFIcon } from "../../assets/icons"
+import { 
+  NoRegistros, Table, TableButton, TableTd 
+} from "~components/common"
+import { ExcelIcon, PDFIcon } from "~assets/icons"
 
 export function LiquidacionTable({data, onRowSelect, onRowDelete, exportExcel, exportPdf}) {
   const headers = ['Sembrador','Campo','UT','Fecha Inicio', 'Fecha Final','Peso Neto', 
@@ -29,15 +31,6 @@ export function LiquidacionTable({data, onRowSelect, onRowDelete, exportExcel, e
                 onRowSelect={()=>onRowSelect(liquidacion)}>
                 <Edit size={18} />
               </TableButton>
-              {/* {
-                liquidacion.liquidacionEstadoDescripcion.toLowerCase() =='anulado' ? '':
-                (
-                  <TableButton className={'text-red-400 hover:text-red-300 '} 
-                    onRowSelect={()=>onRowDelete(liquidacion.liquidacionId)}>
-                    <Trash2 size={18} />
-                  </TableButton>
-                )
-              } */}
               <TableButton className="text-blue-500 hover:text-blue-700 px-3"
                 onRowSelect={()=>exportExcel(liquidacion.liquidacionId)} >
                 <ExcelIcon />
@@ -46,6 +39,15 @@ export function LiquidacionTable({data, onRowSelect, onRowDelete, exportExcel, e
                 onRowSelect={()=>exportPdf(liquidacion.liquidacionId)} >
                 <PDFIcon />
               </TableButton>
+              {
+                liquidacion.liquidacionEstadoDescripcion.toLowerCase() =='activo' &&
+                (
+                  <TableButton className={'text-red-400 hover:text-red-300 '} 
+                    onRowSelect={()=>onRowDelete(liquidacion)}>
+                    <Trash2 size={18} />
+                  </TableButton>
+                )
+              }
             </TableTd>
           </tr>
         ))
