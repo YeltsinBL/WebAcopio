@@ -70,7 +70,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
     const nuevosErrores = {}
     if(!viewPopUp){
       if (!fechaModel) nuevosErrores.fechaModel = "El campo FECHA es obligatorio."
-      if (!servicioPrecioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
+      //if (!servicioPrecioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
       if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA PESO BRUTO es obligatorio."
       if (!totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
     }
