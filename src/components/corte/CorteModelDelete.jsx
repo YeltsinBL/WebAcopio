@@ -29,7 +29,7 @@ export const CorteModelDelete = ({onShowModel, data}) => {
     onShowModel(valor)
   }
   return (
-    <ModalDelete title={"Eliminar Ticker"} message={"¿Estás seguro(a) que deseas eliminar el ticket?"}>
+    <ModalDelete title={"Eliminar Corte"} message={"¿Estás seguro(a) que deseas eliminar el corte?"}>
       <Footer>
         <FooterButton accion={handleGuardar} name={"Eliminar"}/>
         <FooterButton accion={handleCancelar} name={"Cancelar"}/>
