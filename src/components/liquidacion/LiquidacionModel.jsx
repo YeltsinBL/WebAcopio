@@ -37,6 +37,7 @@ export function LiquidacionModel({onShowModel, data}) {
   const [toneladasTotalModel, setToneladasTotalModel] = useState("")
 
   const [financiamientoFechaModel, setFinanciamientoFechaModel] = useState("")
+  const [financiamientoFechaFinModel, setFinanciamientoFechaFinModel] = useState("")
   const [financiamientoACuentaModel, setFinanciamientoACuentaModel] = useState("0")
   const [financiamientoTiempoModel, setFinanciamientoTiempoModel] = useState("0")
   const [financiamientoInteresMesModel, setFinanciamientoInteresMesModel] = useState("0")
@@ -81,7 +82,8 @@ export function LiquidacionModel({onShowModel, data}) {
 
       setFinanciamientoACuentaTotal(data.liquidacionFinanciamientoACuenta || '0')
       setLiquidacionPorPagar(data.liquidacionPagar || '0')
-      setFinanciamientoFechaModel(data.financiamientoFecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
+      setFinanciamientoFechaModel(data.financiamientoFecha || obtenerFechaLocal({date: new Date()}).split('T')[0])      
+      setFinanciamientoFechaFinModel(obtenerFechaLocal({date: new Date()}).split('T')[0])
       setTicketsSeleccionadosList(data.liquidacionTickets || [])
       setFinanciamientoList(data.liquidacionFinanciamiento || [])
       setAdicionalesList(data.liquidacionAdicionals || [])
@@ -127,6 +129,15 @@ export function LiquidacionModel({onShowModel, data}) {
       setLiquidacionPorPagar(FormatteDecimalMath(total,2))
     }else setLiquidacionPorPagar('0')
   },[toneladasTotalModel, financiamientoACuentaTotal, adicionalesTotal])
+  useEffect(()=>{
+    if(financiamientoFechaModel && financiamientoFechaFinModel){
+      const fechaInicio = new Date(financiamientoFechaModel)
+      const fechaFin = new Date(financiamientoFechaFinModel)
+      const diferenciaTiempo = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24)
+      const financiamientoTiempoModel = Math.round(diferenciaTiempo)
+      setFinanciamientoTiempoModel(financiamientoTiempoModel)
+    }
+  },[financiamientoFechaModel, financiamientoFechaFinModel])
   const getSum=(total, num) =>{
     return total + parseFloat(num.ticketPesoBruto)
   }
@@ -238,9 +249,10 @@ export function LiquidacionModel({onShowModel, data}) {
       if (!utModel) nuevosErrores.ut = "La información de UT es obligatorio."
     }
     if(financiamiento){
-      if(!financiamientoFechaModel) nuevosErrores.financiamientoFecha = "La información de FECHA es obligatoria"
+      if(!financiamientoFechaModel) nuevosErrores.financiamientoFecha = "La información de FECHA INICIO es obligatoria"
+      if(!financiamientoFechaFinModel) nuevosErrores.financiamientoFechaFin = "La información de FECHA FIN es obligatoria"
       if(!financiamientoACuentaModel) nuevosErrores.financiamientoACuenta = "La información de A CUENTA es obligatoria"
-      if(!financiamientoTiempoModel) nuevosErrores.financiamientoTiempo = "La información de TIEMPO es obligatoria"
+      //if(!financiamientoTiempoModel) nuevosErrores.financiamientoTiempo = "La información de TIEMPO/DÍAS es obligatoria"
       if(!financiamientoInteresMesModel) nuevosErrores.financiamientoInteresMes = "La información de INTERES MES es obligatoria"
     }
     if(adicional){
@@ -404,11 +416,17 @@ export function LiquidacionModel({onShowModel, data}) {
         <TableHeaderCustom grid>
           <TitleCustom titulo={'Financiamiento'}  />
           <TableFooterCustom>
-            <FilterOption htmlFor={'FinanciamientoFechaModel'} name={'Fecha'}>
+            <FilterOption htmlFor={'FinanciamientoFechaInicioModel'} name={'Fecha Inicio'}>
               <InputDateCustom fechaValue={financiamientoFechaModel}
                 valueError={errores.financiamientoFecha}
                 setFechaValue={setFinanciamientoFechaModel} readOnly={liquidacionIdModel > 0} />
               {errores.financiamientoFecha && <MessageValidationInput mensaje={errores.financiamientoFecha}/>}
+            </FilterOption>
+            <FilterOption htmlFor={'FinanciamientoFechaFinModel'} name={'Fecha Fin'}>
+              <InputDateCustom fechaValue={financiamientoFechaFinModel}
+                valueError={errores.financiamientoFechaFin}
+                setFechaValue={setFinanciamientoFechaFinModel} readOnly={liquidacionIdModel > 0} />
+              {errores.financiamientoFechaFin && <MessageValidationInput mensaje={errores.financiamientoFechaFin}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoACuenta'} name={'A Cuenta'}>
               <InputDecimalCustom onChange={setFinanciamientoACuentaModel} decimales={2}
@@ -421,7 +439,7 @@ export function LiquidacionModel({onShowModel, data}) {
               <InputNumberCustom onChange={setFinanciamientoTiempoModel}
                 textValue={financiamientoTiempoModel} 
                 valueError={errores.financiamientoTiempo} 
-                placeholder="Ejm: 12" readOnly={liquidacionIdModel > 0} />
+                placeholder="Ejm: 12" readOnly />
               {errores.financiamientoTiempo && <MessageValidationInput mensaje={errores.financiamientoTiempo}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoInteresMes'} name={'Interes Mes %'}>
