@@ -1,5 +1,7 @@
-import { appSetting } from "../settings/appsetting";
-import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath } from "../utils";
+import { appSetting } from "~settings/appsetting"
+import { 
+  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath
+} from "~utils/index"
 
 export const searchTickets = async(search) => {
   let url=`${appSetting.apiUrl}Ticket`
@@ -121,7 +123,7 @@ const formatteTickets =(tickets) =>{
 }
 
 const newFormatterTicket = (data) => {
-  return {...data, ticketFecha: new Date(data.ticketFecha ),
+  return {...data, //ticketFecha: obtenerFechaLocal(data.ticketFecha ),
     ticketCamionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
     ticketVehiculoPeso : FormatteDecimalMath(data.ticketVehiculoPeso, 3),
     ticketPesoBruto : FormatteDecimalMath(data.ticketPesoBruto, 3)

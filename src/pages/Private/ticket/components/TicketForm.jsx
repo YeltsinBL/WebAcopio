@@ -7,7 +7,7 @@ import {
   SectionModel 
 } from '~components/common'
 import { 
-  convertirFechaToYMD, FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
+  FormatteDecimal, formatterDataCombo, obtenerFechaLocal 
 } from '~utils/index'
 import { getCarguilloPlacasList, searchCarguilloList } from '~services/carguillo'
 import { ticketSave } from '~services/ticket'
@@ -21,11 +21,11 @@ export const TicketForm = ({ onShowModel, data }) => {
   const [choferModel, setChoferModel] = useState('')
   const [fechaModel, setFechaModel] = useState(obtenerFechaLocal({date: new Date()}).split('T')[0])
   const [camionModel, setCamionModel] = useState('')
-  const [camionPesoModel, setCamionPesoModel] = useState('')
+  const [camionPesoModel, setCamionPesoModel] = useState(0)
   const [vehiculoModel, setVehiculoModel] = useState('')
-  const [vehiculoPesoModel, setVehiculoPesoModel] = useState('')
+  const [vehiculoPesoModel, setVehiculoPesoModel] = useState(0)
   const [unidadPesoModel, setUnidadPesoModel] = useState('TN')
-  const [pesoBrutoModel, setPesoBrutoModel] = useState('')
+  const [pesoBrutoModel, setPesoBrutoModel] = useState(0)
   const [estadoModel, setEstadoModel] = useState('Activo')
 
   const [carguilloList, setCarguilloList] = useState([])
@@ -52,14 +52,14 @@ export const TicketForm = ({ onShowModel, data }) => {
       setCarguilloId(data.carguilloId || '')
       setChoferModel(data.ticketChofer || '')
       setFechaModel(
-        data.ticketFecha? convertirFechaToYMD(data.ticketFecha) :
+        data.ticketFecha ||
         obtenerFechaLocal({date: new Date()}).split('T')[0])
       setCamionModel(data.carguilloDetalleCamionId || "")
-      setCamionPesoModel(data.ticketCamionPeso || "")
+      setCamionPesoModel(data.ticketCamionPeso || 0)
       setVehiculoModel(data.carguilloDetalleVehiculoId || "")
-      setVehiculoPesoModel(data.ticketVehiculoPeso || "")
+      setVehiculoPesoModel(data.ticketVehiculoPeso || 0)
       setUnidadPesoModel(data.ticketUnidadPeso || 'TN')
-      setPesoBrutoModel(data.ticketPesoBruto || '')
+      setPesoBrutoModel(data.ticketPesoBruto || 0)
       setEstadoModel(data.ticketEstadoDescripcion || 'Activo')      
     }
   }, [data])
@@ -117,12 +117,12 @@ export const TicketForm = ({ onShowModel, data }) => {
     if (!carguilloId) nuevosErrores.transportista = "El campo TRANSPORTISTA es obligatorio."
     //if (!choferModel) nuevosErrores.chofer = "El campo CHOFER es obligatorio."
     if (!fechaModel) nuevosErrores.fecha = "El campo FECHA es obligatorio."
-    if (!camionModel) nuevosErrores.camion = "El campo CAMIÓN es obligatorio."
-    if (!camionPesoModel) nuevosErrores.camionPeso = "El campo CAMIÓN PESO es obligatorio."
-    if (!vehiculoModel) nuevosErrores.vehiculo = "El campo VEHÍCULO es obligatorio."
-    if (!vehiculoPesoModel) nuevosErrores.vehiculoPeso = "El campo VEHÍCULO PESO es obligatorio."
+    // if (!camionModel) nuevosErrores.camion = "El campo CAMIÓN es obligatorio."
+    // if (!camionPesoModel) nuevosErrores.camionPeso = "El campo CAMIÓN PESO es obligatorio."
+    // if (!vehiculoModel) nuevosErrores.vehiculo = "El campo VEHÍCULO es obligatorio."
+    // if (!vehiculoPesoModel) nuevosErrores.vehiculoPeso = "El campo VEHÍCULO PESO es obligatorio."
     if (!unidadPesoModel) nuevosErrores.unidadPeso = "El campo UNIDAD PESO es obligatorio."
-    if (!pesoBrutoModel) nuevosErrores.pesoBruto = "El campo PESO BRUTO es obligatorio."
+    //if (!pesoBrutoModel) nuevosErrores.pesoBruto = "El campo PESO BRUTO es obligatorio."
   
     setErrores(nuevosErrores)
   
@@ -138,9 +138,9 @@ export const TicketForm = ({ onShowModel, data }) => {
         ticketViaje: viajeModel,
         carguilloId:carguilloId, 
         ticketChofer: choferModel || null,
-        carguilloDetalleCamionId: camionModel,
+        carguilloDetalleCamionId: camionModel || null,
         ticketCamionPeso: camionPesoModel,
-        carguilloDetalleVehiculoId: vehiculoModel,
+        carguilloDetalleVehiculoId: vehiculoModel || null,
         ticketVehiculoPeso: vehiculoPesoModel,
         ticketUnidadPeso:unidadPesoModel,
         ticketPesoBruto: pesoBrutoModel,
