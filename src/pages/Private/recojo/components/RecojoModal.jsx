@@ -96,24 +96,15 @@ export const RecojoModal = ({onShowModel, data}) => {
               placeholder='Ingrese el nombre del campo (opcional)' onChange={setCampoModel}/>
           </FilterOption>
           <FilterOption htmlFor={'CantidadCamionModel'} name={'Cantidad Camión'}>
-            <>
-              <input type='text' className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
-                  errores.cantidadCamion ? "border-red-500" : ""
-                }`}
-                name='query' placeholder='Ejm: 1'
-                value={cantidadCamionModel}
-                onChange={(e) => setCantidadCamionModel(parseInt(e.target.value) || '')}
-              />
-              {errores.cantidadCamion && <p className="text-red-500 text-sm">{errores.cantidadCamion}</p>}
-            </>
+            <InputDecimalCustom textValue={cantidadCamionModel} placeholder='Ejm: 1'
+              onChange={setCantidadCamionModel} valueError={errores.cantidadCamion} decimales={1} /> 
+            {errores.cantidadCamion && <p className="text-red-500 text-sm">{errores.cantidadCamion}</p>}
           </FilterOption>
           <FilterOption htmlFor={'PrecioCamionModel'} name={'Precio Camión'}>
-            <>
-              <InputDecimalCustom onChange={setPrecioCamionModel}
-                valueError={errores.precioCamion}
-                placeholder={'Ejm: 10.55'} textValue={precioCamionModel} />
-              {errores.precioCamion && <p className="text-red-500 text-sm">{errores.precioCamion}</p>}
-            </>
+            <InputDecimalCustom onChange={setPrecioCamionModel}
+              valueError={errores.precioCamion} decimales={2}
+              placeholder={'Ejm: 10.55'} textValue={precioCamionModel} />
+            {errores.precioCamion && <p className="text-red-500 text-sm">{errores.precioCamion}</p>}
           </FilterOption>
           <FilterOption htmlFor={'CantidadDiasModel'} name={'Cantidad Días'}>
             <>
@@ -128,12 +119,10 @@ export const RecojoModal = ({onShowModel, data}) => {
             </>
           </FilterOption>
           <FilterOption htmlFor={'PrecioDiasModel'} name={'Precio Días'}>
-            <>
-              <InputDecimalCustom onChange={setPrecioDiasModel}
-                valueError={errores.precioDias}
-                placeholder={'Ejm: 10.55'} textValue={precioDiasModel} />
-              {errores.precioDias && <p className="text-red-500 text-sm">{errores.precioDias}</p>}
-            </>
+            <InputDecimalCustom onChange={setPrecioDiasModel}
+              valueError={errores.precioDias} decimales={2}
+              placeholder={'Ejm: 10.55'} textValue={precioDiasModel} />
+            {errores.precioDias && <p className="text-red-500 text-sm">{errores.precioDias}</p>}
           </FilterOption>
           <FilterOption htmlFor={'TotalModel'} name={'Total'}>
             <>
