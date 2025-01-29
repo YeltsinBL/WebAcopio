@@ -1,6 +1,3 @@
-import React from 'react'
-import { FormatteDecimal } from '../../utils'
-
 export const InputTextCustom = ({textValue, valueError='', placeholder='', readOnly=false,  onChange}) => {
   return (
     <input type='text' 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { FormatteDecimal } from "../../../../utils"
+import { FormatteDecimal } from "~utils/index"
 
 export const useCalcularRecojoTotal = (cantidadCamion, precioCamion, cantidadDias, precioDias) => {
   const [recojoTotal, setRecojoTotal] = useState("")
