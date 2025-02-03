@@ -26,4 +26,10 @@ export const obtenerFechaLocal = ({date}) => {
     fecha.getTime() - fecha.getTimezoneOffset() * 60000
   ).toISOString()
 }
+export const obtenerSoloFechaLocal = ({date}) => {
+  const fecha = new Date(date)
+  return new Date(
+    fecha.getTime() - fecha.getTimezoneOffset() * 60000
+  ).toISOString().split("T")[0]
+}
 export const formatterDataCombo = (id, value) => ({id: id, nombre: value})
