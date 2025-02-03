@@ -1,11 +1,11 @@
 import { obtenerFechaLocal } from "~utils/index"
 
 export const productoAdapterSave = (data) => {
-  let save = { productoNombre: data.productoNombre }
+  let save = { productoNombre: data.productoNombre,
+    productoPrecioVenta:data.productoPrecio,}
   if(data.productoId>0){
     return {...save, 
       productoId: data.productoId,
-      productoStatus: data.productoStatus,
       userModifiedAt: obtenerFechaLocal({date: new Date()}),
       userModifiedName: 'ADMIN'
     }
