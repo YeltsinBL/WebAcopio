@@ -1,0 +1,5 @@
+export * from './CompraFilter'
+export * from './CompraForm'
+export * from './CompraFormDelete'
+export * from './CompraTable'
+export * from './CompraProductoPopup'
