@@ -11,7 +11,7 @@ import { useInitialProducto, useValidationProducto } from "../hooks"
 import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 
 export const ProductoTable = ({data, onSave, onDelete}) => {
-  const header = ['Producto', 'Precio Venta', 'Activo', 'Acciones']
+  const header = ['Producto', 'Stock', 'Precio Venta', 'Activo', 'Acciones']
   const {
     productoId, setProductoId, 
     productoNombre, setProductoNombre, 
@@ -97,6 +97,7 @@ export const ProductoTable = ({data, onSave, onDelete}) => {
           <tr key={user.productoId}>
           <TableTd hidden>{user.productoId}</TableTd>
           <TableTd>{user.productoNombre}</TableTd>
+          <TableTd>{user.productoCantidad}</TableTd>
           <TableTd>{user.productoPrecioVenta}</TableTd>
           <TableTd>{user.productoStatus ? 'Activo':'Inactivo'}</TableTd>
           <TableTd>
