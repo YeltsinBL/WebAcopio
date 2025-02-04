@@ -38,7 +38,7 @@ export const CompraProductoPopup = ({onShowModel}) => {
   return (
     <ContainerPopupTableCustom>
       <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-        <TitleCustom titulo={'Lista de Servicio Transporte'} />
+        <TitleCustom titulo={'Lista de Productos'} />
       </div>
       <TableBodyCustom headers={headers}>
         {productoList ? (

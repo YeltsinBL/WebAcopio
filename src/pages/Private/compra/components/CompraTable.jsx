@@ -5,7 +5,7 @@ export const CompraTable = ({data, onRowSelect, onDeleteSelect}) => {
   const headers = ['Fecha', 'Tipo Comprobante', 'N° Comprobante', 
         'Total', 'Estado', 'Acciones']
   return (
-    <Table nameTitle={"Lista de Tickets"} headers={headers} >
+    <Table nameTitle={"Lista de Compra"} headers={headers} >
       {data.length > 0 ? (
         data.map((compra) => (
           <tr key={compra.compraId} >
