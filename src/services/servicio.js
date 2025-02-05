@@ -1,3 +1,4 @@
+import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -54,7 +55,7 @@ export const servicioTransporteSave = async({method, servicioTransporte}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(servicioTransporte)
     })
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioTransporteSave:', error.message)
     return ResponseErrorServidor

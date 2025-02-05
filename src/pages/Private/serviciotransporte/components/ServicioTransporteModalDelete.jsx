@@ -14,10 +14,8 @@ export const ServicioTransporteModalDelete = ({onShowModel, data}) => {
     }
     const servicio = await servicioTransporteSave({ method:'DELETE', servicioTransporte: servicioDto })
     if (!servicio.result) 
-      return toast.error(servicio.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-    setTimeout(() => {
-      toast.dismiss(toastLoadingCustom)
-    })
+      return toast.error(servicio.message, { id: toastLoadingCustom, style: { color:'red' }})
+    toast.success(servicio.message, {id: toastLoadingCustom})
     return sendDataDismissModel(servicio)
   }
   const handleCancelar =(e)=>{

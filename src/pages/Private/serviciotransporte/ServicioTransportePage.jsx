@@ -8,15 +8,14 @@ import {
   servicioTransporteGetById, servicioTransporteSearch 
 } from '~services/servicio'
 import { 
-  ServicioTransporteExcelFile, ServicioTransporteFilter, ServicioTransporteModal, 
-  ServicioTransporteModalDelete, ServicioTransportePdfFile, ServicioTransporteTable
-} from '~components/servicioTransporte'
+  ServicioTransporteFilter, ServicioTransporteModal, 
+  ServicioTransporteModalDelete, ServicioTransporteTable
+} from './components'
 import { ExportToExcel, ExportToPdf } from '~components/download'
 import {
-  AdapterListadoServicio,
-  AdapterServicioGetData,
-  AdapterServicioGetDataExport
+  AdapterListadoServicio, AdapterServicioGetData, AdapterServicioGetDataExport
 } from '~/adapters/ServicioAdapter'
+import { ServicioTransporteExcelFile, ServicioTransportePdfFile } from './reports'
 
 const ServicioTransportePage = () => {
   const handleGoBack = useClosePage()
@@ -50,7 +49,6 @@ const ServicioTransportePage = () => {
   }  
   const handleSaveModel = (data) =>{
     if(data.result){
-      toast.success(data.errorMessage)
       getServicios()
     }
     setShowModal(false)
@@ -61,7 +59,6 @@ const ServicioTransportePage = () => {
   }
   const handleShowModelDelete = (data) =>{
     if(data.result){
-      toast.success(data.errorMessage)
       getServicios()
     }
     setShowModelDelete(false)

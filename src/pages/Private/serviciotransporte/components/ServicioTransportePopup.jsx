@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import CorteTicketPopupTable from '../corte/CorteTicketPopupTable'
-import { Footer, FooterButton } from '../common'
-import { searchTicketsByCarguillo } from '../../services/ticket'
+import CorteTicketPopupTable from '~components/corte/CorteTicketPopupTable'
+import { Footer, FooterButton } from '~components/common'
+import { searchTicketsByCarguillo } from '~services/ticket'
 
 
 export const ServicioTransportePopup = ({onShowModel, headers, carguilloId}) => {

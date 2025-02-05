@@ -116,10 +116,8 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
         method:'POST', servicioTransporte: AdapterServicioTransporteSave(servicioModel)
       })
       if(!servicioSave.result) 
-        return toast.error(servicioSave.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-      setTimeout(() => {
-        toast.dismiss(toastLoadingCustom)
-      })
+        return toast.error(servicioSave.message, { id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(servicioSave.message,{id: toastLoadingCustom})
       return onShowModel(servicioSave)
     }
     setTimeout(() => {
