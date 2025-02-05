@@ -65,12 +65,10 @@ export const TicketForm = ({ onShowModel, data }) => {
   }, [data])
 
   useEffect(()=> {
-    if (!parseFloat(camionPesoModel)) return
-    if (!parseFloat(vehiculoPesoModel)) return
     const camionPeso = parseFloat(camionPesoModel) > 0 ? parseFloat(camionPesoModel) : 0
     const vehiculoPeso = parseFloat(vehiculoPesoModel) > 0 ? parseFloat(vehiculoPesoModel) : 0
     const calculate = camionPeso + vehiculoPeso
-    setPesoBrutoModel( calculate > 0 ? FormatteDecimal(calculate,3) : '' )
+    setPesoBrutoModel( FormatteDecimal(calculate,3) )
   }, [camionPesoModel, vehiculoPesoModel])
 
   useEffect(()=>{
