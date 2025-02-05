@@ -32,18 +32,6 @@ export const AdapterServicioGetDataExport = (servicio) => {
     servicioDetails : formatter
   }
 }
-export const AdapterServicioPaleroSave = (data) => {
-  return {
-    servicioFecha: data.fechaModel,
-    carguilloId: data.carguilloIdModel,
-    servicioPrecio: data.servicioPrecioModel,
-    servicioPesoBruto: data.sumaPesoBrutoModel,
-    servicioTotal: data.totalModel,
-    servicioDetail: data.servicioTransporteSelected?.map(servicioTransporte => ({servicioTransporteId :servicioTransporte.servicioId})),
-    userCreatedAt: obtenerFechaLocal({date: new Date()}),
-    userCreatedName: "ADMIN"
-  }
-}
 const formatterticket = (data) => {
   return {...data,
     ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(data.ticketFecha)),
