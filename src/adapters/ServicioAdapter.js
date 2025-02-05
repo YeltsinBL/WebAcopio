@@ -5,7 +5,12 @@ import {
 
 export const AdapterListadoServicio = (servicios=[]) => {
   return servicios.map(servicio =>{
-      return AdapterServicioResponseSave(servicio)
+      return {...servicio,
+        servicioFecha: convertirFechaDDMMYYYY(servicio.servicioFecha),
+        servicioPrecio: FormatteDecimalMath(servicio.servicioPrecio,2),
+        servicioPesoBruto : FormatteDecimalMath(servicio.servicioPesoBruto,3),
+        servicioTotal : FormatteDecimalMath(servicio.servicioTotal,2)
+      }
     })
 }
 export const AdapterServicioGetData = (servicio) => {
@@ -27,14 +32,6 @@ export const AdapterServicioGetDataExport = (servicio) => {
     servicioDetails : formatter
   }
 }
-export const AdapterServicioResponseSave = (servicio) => {
-  return {...servicio,
-    servicioFecha: convertirFechaDDMMYYYY(servicio.servicioFecha),
-    servicioPrecio: FormatteDecimalMath(servicio.servicioPrecio,2),
-    servicioPesoBruto : FormatteDecimalMath(servicio.servicioPesoBruto,3),
-    servicioTotal : FormatteDecimalMath(servicio.servicioTotal,2)
-  }
-}
 export const AdapterServicioPaleroSave = (data) => {
   return {
     servicioFecha: data.fechaModel,
@@ -43,18 +40,6 @@ export const AdapterServicioPaleroSave = (data) => {
     servicioPesoBruto: data.sumaPesoBrutoModel,
     servicioTotal: data.totalModel,
     servicioDetail: data.servicioTransporteSelected?.map(servicioTransporte => ({servicioTransporteId :servicioTransporte.servicioId})),
-    userCreatedAt: obtenerFechaLocal({date: new Date()}),
-    userCreatedName: "ADMIN"
-  }
-}
-export const AdapterServicioTransporteSave = (data) => {
-  return {
-    servicioFecha: data.fechaModel,
-    carguilloId: data.carguilloIdModel,
-    servicioPrecio: data.servicioPrecioModel,
-    servicioPesoBruto: data.sumaPesoBrutoModel,
-    servicioTotal: data.totalModel,
-    servicioDetail: data.ticketSelected?.map(ticket => ({ticketId :ticket.ticketId})),
     userCreatedAt: obtenerFechaLocal({date: new Date()}),
     userCreatedName: "ADMIN"
   }

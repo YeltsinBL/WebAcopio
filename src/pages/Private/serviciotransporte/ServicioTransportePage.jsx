@@ -44,7 +44,7 @@ const ServicioTransportePage = () => {
     if(rowData.servicioId){
       const servicio = await servicioTransporteGetById({id:rowData.servicioId})
       setSelectedRowData(AdapterServicioGetData(servicio))
-    }else setSelectedRowData(rowData)
+    }else setSelectedRowData(null)
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{

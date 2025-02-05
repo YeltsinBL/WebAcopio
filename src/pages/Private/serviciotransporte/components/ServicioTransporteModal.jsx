@@ -10,28 +10,29 @@ import {
 import { getCarguilloInTickets } from "~services/carguillo"
 import { 
   FormatteDecimalMath, 
-  formatterDataCombo, obtenerFechaLocal 
+  formatterDataCombo, obtenerFechaLocal, 
+  obtenerSoloFechaLocal
 } from "~utils/index"
 import { servicioTransporteSave } from "~services/servicio"
 import { ServicioTransportePopup } from "./ServicioTransportePopup"
 import { 
-  AdapterServicioTransporteSave 
-} from "~/adapters/ServicioAdapter"
+  ServicioTransporteAdapterSave 
+} from "../adapter/ServicioTransporteAdapter"
 
 export const ServicioTransporteModal = ({onShowModel, data}) => {
   const [carguilloList, setCarguilloList] = useState([])
   const [servicioIdModel, setServicioIdModel] = useState(0)
-  const [fechaModel, setFechaModel] = useState('')
+  const [fechaModel, setFechaModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
   const [carguilloIdModel, setCarguilloIdModel] = useState(0)
   const [servicioPrecioModel, setServicioPrecioModel] = useState('')
   const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
   const [totalModel, setTotalModel] = useState('')
   const [ticketSelected, setTicketSelected] = useState([])
-  const [servicioDescripcion, setServicioDescripcion] = useState('')
+  const [servicioDescripcion, setServicioDescripcion] = useState('Activo')
   const [showPopup, setShowPopup] = useState(false)
   const [errores, setErrores] = useState({})
 
-  const seleccionCarguillo = data.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
+  const seleccionCarguillo = data?.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
 
   const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
     'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
@@ -107,13 +108,14 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...');
     if(validarCampos()){
-      let servicioModel = {
-        fechaModel, carguilloIdModel,
-        servicioPrecioModel, sumaPesoBrutoModel,
-        totalModel, ticketSelected
-      }
       const servicioSave = await servicioTransporteSave({
-        method:'POST', servicioTransporte: AdapterServicioTransporteSave(servicioModel)
+        method:servicioIdModel >0 ?'PUT':'POST', 
+        servicioTransporte: ServicioTransporteAdapterSave({
+          servicioIdModel, servicioDescripcion,
+          fechaModel, carguilloIdModel,
+          servicioPrecioModel, sumaPesoBrutoModel,
+          totalModel, ticketSelected
+        })
       })
       if(!servicioSave.result) 
         return toast.error(servicioSave.message, { id: toastLoadingCustom, style: { color:'red' }})
@@ -154,7 +156,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
           </FilterOption>
           <FilterOption htmlFor={'TransportePrecioModel'} name={'Precio'}>
             <InputDecimalCustom onChange={setServicioPrecioModel}
-              valueError={errores.precio} readOnly={servicioIdModel > 0}
+              valueError={errores.precio} readOnly={servicioDescripcion !='Activo'}
               placeholder={'Ejm: 10.55'} textValue={servicioPrecioModel} />
             {errores.precio && <MessageValidationInput mensaje={errores.precio}/>}
           </FilterOption>
@@ -209,7 +211,7 @@ export const ServicioTransporteModal = ({onShowModel, data}) => {
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
-        {servicioIdModel > 0 ?(''): (
+        {servicioDescripcion =='Activo' && (
           <FooterButton accion={handleGuardar} name={'Guardar'} />
         )}
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
