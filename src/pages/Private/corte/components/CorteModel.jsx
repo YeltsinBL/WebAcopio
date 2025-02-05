@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import CorteTicketPopup from './CorteTicketPopup'
+import { useEffect, useState } from 'react'
 import { Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { corteSave } from '~services/corte'
 import { searchAsignaTierra } from '~services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
-  InputDateCustom, 
-  InputTextCustom, 
-  MessageValidationInput, 
-  NoRegistros, SectionModel, 
-  TableBodyCustom, 
-  TableButton, 
-  TableContainerCustom,
-  TableFooterCustom,
-  TableHeaderCustom,
-  TableTd,
-  TitleCustom
+  InputDateCustom, InputTextCustom, MessageValidationInput, 
+  NoRegistros, SectionModel, TableBodyCustom, TableButton, 
+  TableContainerCustom, TableFooterCustom, TableHeaderCustom,
+  TableTd, TitleCustom
 } from '~components/common'
 import { 
   convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal 
 } from '~utils/index'
+import CorteTicketPopup from '~components/corte/CorteTicketPopup'
+import { corteAdpterSave } from '../adapter/CorteAdapter'
 
 export const CorteModel = ({ onShowModel, data }) => {
   const [idModel, setIdModel] = useState(0)
@@ -117,22 +111,14 @@ export const CorteModel = ({ onShowModel, data }) => {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
     if (validarCampos()) {
-      const corte = await corteSave('POST', {
-        corteFecha: fechaModel,
-        tierraId: ucModel,
-        cortePrecio: precioModel,
-        cortePesoBrutoTotal: sumaPesoBrutoModel,
-        corteTotal: totalModel,
-        userCreatedName: 'ADMIN',
-        userCreatedAt: obtenerFechaLocal({date: new Date()}),
-        corteDetail: ticketSelected?.map(ticket => ({ticketId :ticket.ticketId}))
-      })
+      const corte = await corteSave(idModel>0? 'PUT':'POST', corteAdpterSave({
+        idModel, fechaModel, ucModel, precioModel, sumaPesoBrutoModel, 
+        totalModel, ticketSelected, estadoModel
+      }))
       if(!corte.result) 
-        return toast.error(corte.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-      setTimeout(() => {
-        toast.dismiss(toastLoadingCustom)
-      })
-      onShowModel(corte)
+        return toast.error(corte.message, { id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(corte.message,{id:toastLoadingCustom})
+      return onShowModel(corte)
     }
     setTimeout(() => {
       toast.dismiss(toastLoadingCustom)
@@ -171,7 +157,7 @@ export const CorteModel = ({ onShowModel, data }) => {
         <FilterOption htmlFor={'PrecioModel'} name={'Precio Corte'}>
           <InputTextCustom textValue={precioModel} placeholder='Ejm: 85.60'
             onChange={setPrecioModel} valueError={errores.precio}
-            readOnly={idModel > 0} />
+            readOnly={estadoModel != 'Activo'} />
           {errores.precio && <MessageValidationInput mensaje={errores.precio} />}
         </FilterOption>
         <FilterOption htmlFor={'EstadoModel'} name={'Estado'}>
@@ -230,7 +216,7 @@ export const CorteModel = ({ onShowModel, data }) => {
 	  </TableContainerCustom>
 
     <Footer>
-      { idModel > 0  || (<FooterButton accion={handleGuardar} name={"Guardar"}/>) }
+      { estadoModel == 'Activo'  && (<FooterButton accion={handleGuardar} name={"Guardar"}/>) }
       <FooterButton accion={handleCancelar} name={"Cancelar"}/>
     </Footer>
     {showPopup ? <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers}/>    : ''}

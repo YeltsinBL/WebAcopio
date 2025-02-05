@@ -1,8 +1,8 @@
 import { Edit, Trash2 } from 'lucide-react'
 import { 
   NoRegistros, Table, TableButton, TableTd
-} from '../common'
-import { ExcelIcon, PDFIcon } from '../../assets/icons'
+} from '../../../../components/common'
+import { ExcelIcon, PDFIcon } from '../../../../assets/icons'
 
 export const CorteTable = ({CORTE_DATA, onRowSelect, onRowDelete, exportExcel, exporPdf}) => {
   const headers = ['Fecha', 'UC', 'Campo','Precio', 

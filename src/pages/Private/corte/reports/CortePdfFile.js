@@ -1,4 +1,4 @@
-import { convertirFechaDDMMYYYY, convertirFechaToYMD } from "../../utils"
+import { convertirFechaDDMMYYYY, convertirFechaToYMD } from "~utils/index"
 
 export const CortePdfFile = (data) => {
   // Configurar el contenido del PDF

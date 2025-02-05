@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { searchCorteEstados } from '../../services/corte'
-import { searchAsignaTierra } from '../../services/asignartierra'
+import { searchCorteEstados } from '../../../../services/corte'
+import { searchAsignaTierra } from '../../../../services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, SectionFilter
-} from '../common'
-import { formatterDataCombo } from '../../utils'
+} from '../../../../components/common'
+import { formatterDataCombo } from '../../../../utils'
 
 export const CorteFilter = ({onFiltersValue}) => {
   const [ucFilter, setUcFilter] = useState('')

@@ -15,10 +15,8 @@ export const CorteModelDelete = ({onShowModel, data}) => {
       userModifiedAt: obtenerFechaLocal({date: new Date()})
     })
     if(!corte.result) 
-      return toast.error(corte.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-    setTimeout(() => {
-      toast.dismiss(toastLoadingCustom)
-    })
+      return toast.error(corte.message, { id: toastLoadingCustom, style: { color:'red' }})
+    toast.success(corte.message, {id: toastLoadingCustom})
     sendDataDismissModel(corte)
   }
   const handleCancelar =(e)=>{

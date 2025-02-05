@@ -4,12 +4,16 @@ import {
   ContainerPageCustom, Footer, FooterButton, Header, Main 
 } from '~components/common'
 import { 
-  CorteFilter, CorteModel, CorteTable ,CorteModelDelete,
-  CorteExcelFile, CortePdfFile
-} from '~components/corte'
+  CorteFilter, CorteModel, CorteTable ,CorteModelDelete
+} from './components'
 import { ExportToExcel, ExportToPdf } from '~components/download'
 import { corteGetById, searchCortes } from '~services/corte'
-import { toast, Toaster } from 'sonner'
+import { Toaster } from 'sonner'
+import { CorteExcelFile, CortePdfFile } from './reports'
+import { 
+  corteAdapterGetData, corteAdapterList 
+} from './adapter/CorteAdapter'
+
 
 const CortePage = () => {
   const handleGoBack = useClosePage()
@@ -23,7 +27,7 @@ const CortePage = () => {
   },[])
   const getCortes = async(filter=null) =>{
     const tickets = await searchCortes(filter)
-    setCorteList(tickets || [])
+    setCorteList(corteAdapterList(tickets) || [])
   }
   const handleDataFromChild = (data) => {
     const {
@@ -37,13 +41,12 @@ const CortePage = () => {
   const handleRowSelect = async(rowData) => {
     if(rowData.corteId != null){
       const resp = await corteGetById({id: rowData.corteId})
-      setSelectedRowData(resp)
+      setSelectedRowData(corteAdapterGetData(resp))
     }else setSelectedRowData(rowData)  
     setShowModel(true)
   }
   const handleShowModel = (data) => {
     if(data.result) {
-      toast.success(data.errorMessage)
       getCortes()
     }
     setShowModel(false)
@@ -62,7 +65,6 @@ const CortePage = () => {
   }
   const handleShowModelDelete = (data) =>{
     if(data.result){
-      toast.success(data.errorMessage)
       getCortes()
     }
     setShowModelDelete(false)

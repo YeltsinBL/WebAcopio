@@ -1,6 +1,6 @@
+import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter";
 import { appSetting } from "~settings/appsetting"
 import { 
-  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, 
   ResponseErrorServidor
 } from "~utils/index"
 
@@ -13,8 +13,7 @@ export const searchCorteEstados = async() => {
       },
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    const corteEstados = await response.json()
-    return corteEstados
+    return await response.json()
   } catch (error) {
     console.log('searchCorteEstados:', error.message)
     throw new Error('Error al buscar los Estados de Corte')
@@ -33,9 +32,7 @@ export const searchCortes = async(search) => {
       },
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    const cortes = await response.json()
-    const formatter= cortes?.map(corte => (formattercorte(corte))) 
-    return formatter
+    return await response.json()
   } catch (error) {
     console.log('searchCortes:', error.message)
     throw new Error('Error al buscar Cortes')
@@ -50,8 +47,7 @@ export const corteGetById = async({id})=>{
       },
     });
     if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    const data = await response.json()
-    return formatterCorteById(data)
+    return await response.json()
   } catch (error) {
     console.log('corteGetById:', error.message)
     throw new Error('Error al obtener un corte')
@@ -66,38 +62,9 @@ export const corteSave = async(method, corte) => {
       },
       body: JSON.stringify(corte)
     })  
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('corteSave:', error.message)
     return ResponseErrorServidor
-  }
-}
-
-const formattercorte = (corte) => {
-  return {...corte,
-    corteFecha : convertirFechaDDMMYYYY(corte.corteFecha),
-    cortePrecio : FormatteDecimalMath(corte.cortePrecio,2),
-    cortePesoBrutoTotal : FormatteDecimalMath(corte.cortePesoBrutoTotal,3),
-    corteTotal : FormatteDecimalMath(corte.corteTotal,2),
-  }
-}
-
-const formatterCorteById = (corte) => {
-  const formatter= corte.corteDetail?.map(ticket => (formatterticket(ticket)))
-  return {...corte,
-    corteFecha          : new Date(corte.corteFecha),
-    cortePrecio         : FormatteDecimalMath(corte.cortePrecio,2),
-    cortePesoBrutoTotal : FormatteDecimalMath(corte.cortePesoBrutoTotal,3),
-    corteTotal          : FormatteDecimalMath(corte.corteTotal,2),
-    carguilloPrecio     : FormatteDecimalMath(corte.carguilloPrecio, 2),
-    corteDetail : formatter
-  }
-}
-const formatterticket = (ticket) => {
-  return {...ticket, 
-    ticketFecha: convertirFechaDDMMYYYY(convertirFechaToYMD(ticket.ticketFecha)),
-    ticketCamionPeso : FormatteDecimalMath(ticket.ticketCamionPeso, 3),
-    ticketVehiculoPeso : FormatteDecimalMath(ticket.ticketVehiculoPeso, 3),
-    ticketPesoBruto : FormatteDecimalMath(ticket.ticketPesoBruto, 3)
   }
 }
