@@ -36,6 +36,7 @@ export const corteAdpterSave =(data) =>{
   console.log(data)
   let save ={
     cortePrecio: data.precioModel,
+    corteTotal: data.totalModel,
   }
   if(data.idModel){
     save = {...save,
@@ -50,7 +51,6 @@ export const corteAdpterSave =(data) =>{
       tierraId: data.ucModel,
       cortePrecio: data.precioModel,
       cortePesoBrutoTotal: data.sumaPesoBrutoModel,
-      corteTotal: data.totalModel,
       userCreatedName: 'ADMIN',
       userCreatedAt: obtenerFechaLocal({date: new Date()}),
       corteDetail: data.ticketSelected?.map(ticket => ({ticketId :ticket.ticketId}))
