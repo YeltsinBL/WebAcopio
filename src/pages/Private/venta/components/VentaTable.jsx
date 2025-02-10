@@ -2,7 +2,7 @@ import { Edit, Trash2 } from "lucide-react"
 import { NoRegistros, Table, TableButton, TableTd } from "~components/common"
 
 export const VentaTable = ({data, onRowSelect, onDeleteSelect}) => {
-  const headers = ['Fecha', 'Tipo Comprobante', 'N° Comprobante', 'Cliente',
+  const headers = ['Fecha', 'Tipo Venta', 'N° Comprobante', 'Cliente',
     'Total', 'Estado', 'Acciones']
   return (
     <Table nameTitle={"Lista de Venta"} headers={headers} >
@@ -11,7 +11,7 @@ export const VentaTable = ({data, onRowSelect, onDeleteSelect}) => {
           <tr key={venta.ventaId} >
             <TableTd hidden>{venta.ventaId}</TableTd>
             <TableTd>{venta.ventaFecha}</TableTd>
-            <TableTd>{venta.tipoComprobanteDescripcion}</TableTd>
+            <TableTd>{venta.ventaTipoNombre}</TableTd>
             <TableTd>{venta.ventaNumeroDocumento}</TableTd>
             <TableTd>{venta.personaNombre}</TableTd>
             <TableTd>{venta.ventaTotal}</TableTd>

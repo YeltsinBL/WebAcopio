@@ -2,20 +2,19 @@ import {
   ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, 
   InputTextCustom, SectionFilter 
 } from "~components/common"
-import { ESTADO_BASIC } from "~components/mocks/DataList"
 import { useVentaInitialFilter } from "../hooks/useVentaInitialFilter"
   
 export const VentaFilter = ({onFiltersValue}) => {
   const {
     fechaDesdeFilter, setFechaDesdeFilter,
     fechaHastaFilter, setFechaHastaFilter,
-    comprobanteFilter, setComprobanteFilter,
+    tipoFilter, setTipoFilter,
     numeroFilter, setNumeroFilter,
     estadoFilter, setEstadoFilter,
-    comprobantesList, ventaEstadoList
+    ventaTipoList, ventaEstadoList
   } = useVentaInitialFilter()
-  const handleComprobanteChange = (option) =>
-    setComprobanteFilter((option==''|| isNaN(option))?'':option)
+  const handleTipoChange = (option) =>
+    setTipoFilter((option==''|| isNaN(option))?'':option)
   const handleEstadoChange= (option) => {
     setEstadoFilter((option==''|| isNaN(option))?'':option)
   }
@@ -23,7 +22,7 @@ export const VentaFilter = ({onFiltersValue}) => {
     e.preventDefault()
     onFiltersValue({
       fechaDesde: fechaDesdeFilter, fechaHasta: fechaHastaFilter, 
-      tipoComprobanteId: comprobanteFilter, numeroComprobante: numeroFilter,
+      tipoVentaId: tipoFilter, numeroComprobante: numeroFilter,
       estadoId: estadoFilter
     })
   }
@@ -37,9 +36,9 @@ export const VentaFilter = ({onFiltersValue}) => {
         <InputDateCustom fechaValue={fechaHastaFilter}
           setFechaValue={setFechaHastaFilter} />
       </FilterOption>
-      <FilterOption htmlFor={'TipoComprobanteFilter'} name={'Comprobante'}>
-        <ComboBoxCustom initialOptions={comprobantesList} disabled={false}
-          onSelectionChange={handleComprobanteChange}
+      <FilterOption htmlFor={'TipoVentaFilter'} name={'Tipo'}>
+        <ComboBoxCustom initialOptions={ventaTipoList} disabled={false}
+          onSelectionChange={handleTipoChange}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}
           colorOptions={"text-black"}
         />
@@ -48,7 +47,7 @@ export const VentaFilter = ({onFiltersValue}) => {
         <InputTextCustom textValue={numeroFilter} 
           placeholder={'Ejm: N° del Factura'} onChange={setNumeroFilter}/>
       </FilterOption>
-      <FilterOption htmlFor={'TipoEstadoFilter'} name={'Estado Tipo'}>
+      <FilterOption htmlFor={'TipoEstadoFilter'} name={'Estado'}>
         <ComboBoxCustom initialOptions={ventaEstadoList} disabled={false}
           onSelectionChange={handleEstadoChange}
           className={'bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 '}

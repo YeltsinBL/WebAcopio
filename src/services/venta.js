@@ -44,7 +44,7 @@ export const searchVentaCliente = async() => {
 
 export const searchVenta = async(search) => {
   let url = `${appSetting.apiUrl}Venta`
-  if(search != null) url += `?fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}&tipoComprobanteId=${search.tipoComprobanteId}&numeroComprobante=${search.numeroComprobante}&estadoId=${search.estadoId}`
+  if(search != null) url += `?fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}&tipoVentaId=${search.tipoVentaId}&numeroComprobante=${search.numeroComprobante}&estadoId=${search.estadoId}`
   
   try {
     const response = await fetch(url, {

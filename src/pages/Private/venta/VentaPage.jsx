@@ -30,12 +30,12 @@ const VentaPage = () => {
   }
   const handleDataFromChild = (data) => {
     const { 
-      fechaDesde, fechaHasta, tipoComprobanteId, numeroComprobante, estadoId 
+      fechaDesde, fechaHasta, tipoVentaId, numeroComprobante, estadoId 
     } = data
-    if(fechaDesde=='' && fechaHasta=='' && tipoComprobanteId=='' && numeroComprobante=='' && estadoId=='' ){
+    if(fechaDesde=='' && fechaHasta=='' && tipoVentaId=='' && numeroComprobante=='' && estadoId=='' ){
       return getventa()
     }
-    return getventa({fechaDesde, fechaHasta, tipoComprobanteId, numeroComprobante, estadoId})
+    return getventa({fechaDesde, fechaHasta, tipoVentaId, numeroComprobante, estadoId})
   }
   // Obtener
   const handleRowSelect = async(rowData) => {
