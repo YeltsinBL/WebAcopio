@@ -8,6 +8,7 @@ import {
   TableHeaderCustom, TableTd, TitleCustom 
 } from "~components/common"
 import { 
+  convertirFechaDDMMYYYY,
   convertirFechaToISO,
   convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal 
 } from "~utils/index"
@@ -45,6 +46,7 @@ export function LiquidacionModel({onShowModel, data}) {
   const [financiamientoTotalModel, setFinanciamientoTotalModel] = useState("0")
   const [financiamientoACuentaTotal, setFinanciamientoACuentaTotal] = useState('0')
   const [liquidacionPorPagar, setLiquidacionPorPagar] = useState('')
+  const [liquidacionEstado, setLiquidacionEstado] = useState('Activo')
 
   const [adicionalesMotivoModel, setAdicionalesMotivoModel] = useState('')
   const [adicionalesTotalModel, setAdicionalesTotalModel] = useState('')
@@ -56,7 +58,7 @@ export function LiquidacionModel({onShowModel, data}) {
   const seleccionPersona = data.personaId ? {id: data.personaId, nombre: data.personaNombre } : null
   const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
     'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
-  const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo','Interes Dia %','Interes S/', 'Total','Acciones']
+  const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo/Días','Interes Mes %','Interes S/', 'Total','Acciones']
   const headersAdicionales= ['Motivo', 'Monto','Acciones']
   
   useEffect(()=>{
@@ -88,6 +90,7 @@ export function LiquidacionModel({onShowModel, data}) {
       setFinanciamientoList(data.liquidacionFinanciamiento || [])
       setAdicionalesList(data.liquidacionAdicionals || [])
       setAdicionalesTotal(data.adicionalTotal || 0)
+      setLiquidacionEstado(data.liquidacionEstadoDescripcion || 'Activo')
     }
   }, [])
   useEffect(() => {
@@ -99,26 +102,26 @@ export function LiquidacionModel({onShowModel, data}) {
     if(!parseFloat(pCompraModel)) return setToneladasTotalModel('')
     const total = toneladasPesosNetosModel * pCompraModel
     setToneladasTotalModel(FormatteDecimalMath(total,2))
-  }, [pCompraModel])
+  }, [pCompraModel, toneladasPesosNetosModel])
   useEffect(()=>{
     let interes = null
     if(parseFloat(financiamientoACuentaModel) && parseFloat(financiamientoTiempoModel)
       && parseFloat(financiamientoInteresMesModel)){
       //interes = financiamientoACuentaModel * parseInt(financiamientoTiempoModel) * parseFloat(financiamientoInteresMesModel) / 100
       interes = financiamientoACuentaModel * parseInt(financiamientoTiempoModel) * (parseFloat(financiamientoInteresMesModel) / 30) / 100
-      setFinanciamientoInteresModel(interes)
+      setFinanciamientoInteresModel(FormatteDecimalMath(interes,2))
     }else setFinanciamientoInteresModel(0)
     const total = parseFloat(financiamientoACuentaModel) + interes
     setFinanciamientoTotalModel(FormatteDecimalMath(total,2))
   },[financiamientoACuentaModel, financiamientoTiempoModel,
     financiamientoInteresMesModel])
   useEffect(() => {
-    const total = financiamientoList.reduce(getSumFina, 0)
+    const total = financiamientoList.filter((item) => item.liquidacionFinanciamientoStatus === true).reduce(getSumFina, 0)
     if(total>0) return setFinanciamientoACuentaTotal(FormatteDecimalMath(total,2))
     return setFinanciamientoACuentaTotal('0')
   }, [financiamientoList])
   useEffect(() => {
-    const total = adicionalesList.reduce(getSumAdi, 0)
+    const total = adicionalesList.filter((item) => item.liquidacionAdicionalStatus === true).reduce(getSumAdi, 0)
     if(total>0) return setAdicionalesTotal(FormatteDecimalMath(total,2))
     return setAdicionalesTotal('0')
   }, [adicionalesList])
@@ -209,12 +212,13 @@ export function LiquidacionModel({onShowModel, data}) {
     if (validarCampos({financiamiento:true})) {
       const updateFinanciamientoList = [...financiamientoList, {
         liquidacionFinanciamientoId: `temp-${Date.now()}`,
-        liquidacionFinanciamientoFecha: financiamientoFechaModel,
+        liquidacionFinanciamientoFecha: convertirFechaDDMMYYYY(financiamientoFechaModel),
         liquidacionFinanciamientoACuenta: financiamientoACuentaModel,
         liquidacionFinanciamientoTiempo: financiamientoTiempoModel,
         liquidacionFinanciamientoInteresMes: financiamientoInteresMesModel,
         liquidacionFinanciamientoInteres: financiamientoInteresModel,
-        liquidacionFinanciamientoTotal: financiamientoTotalModel
+        liquidacionFinanciamientoTotal: financiamientoTotalModel,
+        liquidacionFinanciamientoStatus: true
       }]
       setFinanciamientoList(updateFinanciamientoList)
     }
@@ -222,7 +226,12 @@ export function LiquidacionModel({onShowModel, data}) {
   const onRowDeleteFinanciamiento = (financiamiento) => {
     if (typeof financiamiento.liquidacionFinanciamientoId === "string" && financiamiento.liquidacionFinanciamientoId.startsWith("temp")) {
       setFinanciamientoList(financiamientoList.filter((item) => item.liquidacionFinanciamientoId !== financiamiento.liquidacionFinanciamientoId));
-    } 
+    }else{
+      setFinanciamientoList(
+        financiamientoList.map((item) => item.liquidacionFinanciamientoId == financiamiento.liquidacionFinanciamientoId 
+        ? {...item, liquidacionFinanciamientoStatus: !item.liquidacionFinanciamientoStatus}: item)
+      )
+    }
   }
   const handleAgregarAdicionales = (e) => {
     e.preventDefault()
@@ -230,7 +239,8 @@ export function LiquidacionModel({onShowModel, data}) {
       const updateAdicionalesList = [...adicionalesList, {
         liquidacionAdicionalId: `temp-${Date.now()}`,
         liquidacionAdicionalMotivo: adicionalesMotivoModel,
-        liquidacionAdicionalTotal: adicionalesTotalModel
+        liquidacionAdicionalTotal: adicionalesTotalModel,
+        liquidacionAdicionalStatus: true
       }]
       setAdicionalesList(updateAdicionalesList)
     }
@@ -238,7 +248,13 @@ export function LiquidacionModel({onShowModel, data}) {
   const onRowDeleteAdicionales = (adicionales) => {
     if (typeof adicionales.liquidacionAdicionalId === "string" && adicionales.liquidacionAdicionalId.startsWith("temp")) {
       setAdicionalesList(adicionalesList.filter((item) => item.liquidacionAdicionalId !== adicionales.liquidacionAdicionalId));
-    } 
+    } else{
+      setAdicionalesList(
+        adicionalesList.map(item => item.liquidacionAdicionalId == adicionales.liquidacionAdicionalId ?{
+          ...item, liquidacionAdicionalStatus: !item.liquidacionAdicionalStatus
+        }: item)
+      )
+    }
   }
 
   const validarCampos = ({tickets=false, financiamiento = false, adicional = false}) => {
@@ -267,32 +283,50 @@ export function LiquidacionModel({onShowModel, data}) {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')    
     if (validarCampos({tickets:true})) {
-      let liquidacion = {        
-        personaId:personaIdModel,
-        tierraId: tierraIdModel,
-        proveedorId: proveedorIdModel,
-
-        liquidacionTickets: ticketsSeleccionadosList?.map(ticket => ({ticketId :ticket.ticketId})),
+      let liquidacion = {
         liquidacionFechaInicio: fechaInicioModel,
         liquidacionFechaFin: fechaFinModel,
-        liquidacionPesoBruto: sumaPesoBrutoModel,
         liquidacionPesoNeto: toneladasPesosNetosModel,
 
         liquidacionToneladaPrecioCompra: pCompraModel,
         liquidacionToneladaTotal: toneladasTotalModel,
 
         liquidacionFinanciamientoACuenta: financiamientoACuentaTotal,
-        liquidacionFinanciamientos: financiamientoList,
+        liquidacionFinanciamientos: financiamientoList?.map(item => ({...item,
+          liquidacionFinanciamientoFecha: convertirFechaToYMD(item.liquidacionFinanciamientoFecha),
+          liquidacionFinanciamientoId: 
+            (typeof item.liquidacionFinanciamientoId === "string" && item.liquidacionFinanciamientoId.startsWith("temp")) ?
+            0: item.liquidacionFinanciamientoId
+        })),
 
-        liquidacionAdicionales: adicionalesList,
+        liquidacionAdicionales: adicionalesList?.map(item =>({...item,
+          liquidacionAdicionalId: (typeof item.liquidacionAdicionalId === "string" && item.liquidacionAdicionalId.startsWith("temp")) ?
+          0: item.liquidacionAdicionalId
+        })),
         liquidacionAdicionalTotal: adicionalesTotal,
 
         liquidacionPagar:liquidacionPorPagar,
 
-        userCreatedName: "ADMIN",
-        userCreatedAt: obtenerFechaLocal({date: new Date()})
       }
-      const save = await liquidacionSave({method: 'POST', liquidacion})
+      if(liquidacionIdModel > 0){
+        liquidacion = {...liquidacion,
+          liquidacionId:liquidacionIdModel,
+          userModifiedName:"ADMIN",
+          userModifiedAt: obtenerFechaLocal({date: new Date()})
+        }
+      }else{
+        liquidacion = {...liquidacion,
+          personaId:personaIdModel,
+          tierraId: tierraIdModel,
+          proveedorId: proveedorIdModel,
+
+          liquidacionTickets: ticketsSeleccionadosList?.map(ticket => ({ticketId :ticket.ticketId})),
+          liquidacionPesoBruto: sumaPesoBrutoModel,
+          userCreatedName: "ADMIN",
+          userCreatedAt: obtenerFechaLocal({date: new Date()})
+        }
+      }
+      const save = await liquidacionSave({method: liquidacionIdModel>0?'PUT':'POST', liquidacion})
       if(!save.result) 
         return toast.error(save.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
       setTimeout(() => { toast.dismiss(toastLoadingCustom) })
@@ -369,13 +403,13 @@ export function LiquidacionModel({onShowModel, data}) {
           <FilterOption htmlFor={'FechaInicioModel'} name={'Fecha Inicio'}>
             <InputDateCustom fechaValue={fechaInicioModel}
               valueError={errores.fechaInicio ? true: false}
-              setFechaValue={setFechaInicioModel} readOnly={liquidacionIdModel > 0} />
+              setFechaValue={setFechaInicioModel} readOnly={liquidacionEstado != 'Activo'} />
             {errores.fechaInicio && <p className="text-red-500 text-sm">{errores.fechaInicio}</p>}
           </FilterOption>
           <FilterOption htmlFor={'FechaFinalModel'} name={'Fecha Final'}>
             <InputDateCustom fechaValue={fechaFinModel}
               valueError={errores.fechaFin ? true: false}
-              setFechaValue={setFechaFinModel} readOnly={liquidacionIdModel > 0} />
+              setFechaValue={setFechaFinModel} readOnly={liquidacionEstado != 'Activo'} />
             {errores.fechaFin && <p className="text-red-500 text-sm">{errores.fechaFin}</p>}
           </FilterOption>
           <FilterOption html={'PesoBrutoModel'} name={'Peso Bruto'}>
@@ -384,7 +418,7 @@ export function LiquidacionModel({onShowModel, data}) {
           <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Peso Neto'}>
             <InputDecimalCustom  textValue={toneladasPesosNetosModel}onChange={setToneladasPesosNetosModel}
               valueError={errores.toneladasPesosNetos}
-              placeholder={'Ejm: 10.55'} readOnly={liquidacionIdModel > 0} />
+              placeholder={'Ejm: 10.55'} readOnly={liquidacionEstado != 'Activo'} />
             {errores.toneladasPesosNetos && <p className="text-red-500 text-sm">{errores.toneladasPesosNetos}</p>}
           </FilterOption>
         </TableFooterCustom>
@@ -402,7 +436,7 @@ export function LiquidacionModel({onShowModel, data}) {
           <FilterOption htmlFor={'ToneladasPCompraModel'} name={'P. Compra'}>
             <InputDecimalCustom onChange={setpComprasModel} decimales={2}
               textValue={pCompraModel} valueError={errores.pCompra} 
-              placeholder="Ejm: 115.00" readOnly={liquidacionIdModel > 0} />
+              placeholder="Ejm: 115.00" readOnly={liquidacionEstado != 'Activo'} />
             {errores.pCompra && <MessageValidationInput mensaje={errores.pCompra}/>}
           </FilterOption>
           <FilterOption htmlFor={'ToneladasTotalModel'} name={'Total'}>
@@ -419,20 +453,20 @@ export function LiquidacionModel({onShowModel, data}) {
             <FilterOption htmlFor={'FinanciamientoFechaInicioModel'} name={'Fecha Inicio'}>
               <InputDateCustom fechaValue={financiamientoFechaModel}
                 valueError={errores.financiamientoFecha}
-                setFechaValue={setFinanciamientoFechaModel} readOnly={liquidacionIdModel > 0} />
+                setFechaValue={setFinanciamientoFechaModel} readOnly={liquidacionEstado != 'Activo'} />
               {errores.financiamientoFecha && <MessageValidationInput mensaje={errores.financiamientoFecha}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoFechaFinModel'} name={'Fecha Fin'}>
               <InputDateCustom fechaValue={financiamientoFechaFinModel}
                 valueError={errores.financiamientoFechaFin}
-                setFechaValue={setFinanciamientoFechaFinModel} readOnly={liquidacionIdModel > 0} />
+                setFechaValue={setFinanciamientoFechaFinModel} readOnly={liquidacionEstado != 'Activo'} />
               {errores.financiamientoFechaFin && <MessageValidationInput mensaje={errores.financiamientoFechaFin}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoACuenta'} name={'A Cuenta'}>
               <InputDecimalCustom onChange={setFinanciamientoACuentaModel} decimales={2}
                 textValue={financiamientoACuentaModel} 
                 valueError={errores.financiamientoACuenta} 
-                placeholder="Ejm: 115.00" readOnly={liquidacionIdModel > 0} />
+                placeholder="Ejm: 115.00" readOnly={liquidacionEstado != 'Activo'} />
               {errores.financiamientoACuenta && <MessageValidationInput mensaje={errores.financiamientoACuenta}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoTiempo'} name={'Tiempo/Días'}>
@@ -446,7 +480,7 @@ export function LiquidacionModel({onShowModel, data}) {
               <InputDecimalCustom onChange={setFinanciamientoInteresMesModel} decimales={2}
                 textValue={financiamientoInteresMesModel} 
                 valueError={errores.financiamientoInteresMes} 
-                placeholder="Ejm: 115.00" readOnly={liquidacionIdModel > 0} />
+                placeholder="Ejm: 115.00" readOnly={liquidacionEstado != 'Activo'} />
               {errores.financiamientoInteresMes && <MessageValidationInput mensaje={errores.financiamientoInteresMes}/>}
             </FilterOption>
             <FilterOption htmlFor={'FinanciamientoInteres'} name={'Interes S/.'}>
@@ -462,14 +496,15 @@ export function LiquidacionModel({onShowModel, data}) {
                 valueError={errores.financiamientoTotal} readOnly
                 placeholder="Automático"/>
             </FilterOption>
-            { liquidacionIdModel > 0 || (
+            { liquidacionEstado == 'Activo' && (
             <ButtonCustom extraClassName={'max-h-9 mt-6 md:w-28 '} name={'Agregar'} onClick={handleAgregarFinanciamiento} />
             )}
           </TableFooterCustom>
         </TableHeaderCustom>
         <TableBodyCustom headers={headersFinanciamiento}>
         {financiamientoList.length > 0 ? (
-            financiamientoList.map((item) => (
+            financiamientoList.filter((item) => item.liquidacionFinanciamientoStatus === true)
+            .map((item) => (
               <tr key={item.liquidacionFinanciamientoId}>
                 <TableTd>{item.liquidacionFinanciamientoFecha}</TableTd>
                 <TableTd>{item.liquidacionFinanciamientoACuenta}</TableTd>
@@ -478,7 +513,7 @@ export function LiquidacionModel({onShowModel, data}) {
                 <TableTd>{item.liquidacionFinanciamientoInteres}</TableTd>
                 <TableTd>{item.liquidacionFinanciamientoTotal}</TableTd>
                 <TableTd>
-                { liquidacionIdModel > 0 || (
+                { liquidacionEstado == 'Activo' && (
                   <TableButton className={'text-red-400 hover:text-red-300'}
                   onRowSelect={()=>onRowDeleteFinanciamiento(item)}>
                     <Trash2 size={18} />
@@ -505,29 +540,30 @@ export function LiquidacionModel({onShowModel, data}) {
             <FilterOption htmlFor={'AdicionalMotivoModel'} name={'Motivo'}>
               <InputTextCustom textValue={adicionalesMotivoModel} placeholder="Ingresa un motivo"
                 valueError={errores.adicionalesMotivo}
-                onChange={setAdicionalesMotivoModel} readOnly={liquidacionIdModel > 0} />
+                onChange={setAdicionalesMotivoModel} readOnly={liquidacionEstado != 'Activo'} />
               {errores.adicionalesMotivo && <MessageValidationInput mensaje={errores.adicionalesMotivo}/>}
             </FilterOption>
             <FilterOption htmlFor={'AdicionalTotalModel'} name={'Monto'}>
               <InputDecimalCustom onChange={setAdicionalesTotalModel} decimales={2}
                 textValue={adicionalesTotalModel} 
                 valueError={errores.adicionalTotalModel} 
-                placeholder="Ejm:490.00" readOnly={liquidacionIdModel > 0} />
+                placeholder="Ejm:490.00" readOnly={liquidacionEstado != 'Activo'} />
               {errores.adicionalTotalModel && <MessageValidationInput mensaje={errores.adicionalTotalModel}/>}
             </FilterOption>
-            { liquidacionIdModel > 0 || (
+            { liquidacionEstado == 'Activo' && (
             <ButtonCustom extraClassName={'max-h-9 mt-6 md:w-28 '} name={'Agregar'} onClick={handleAgregarAdicionales} />
             )}
           </TableFooterCustom>
         </TableHeaderCustom>
         <TableBodyCustom headers={headersAdicionales}>
         {adicionalesList.length > 0 ? (
-            adicionalesList.map((item) => (
+            adicionalesList.filter((item) => item.liquidacionAdicionalStatus === true)
+            .map((item) => (
               <tr key={item.liquidacionAdicionalId}>
                 <TableTd>{item.liquidacionAdicionalMotivo}</TableTd>
                 <TableTd>{item.liquidacionAdicionalTotal}</TableTd>
                 <TableTd>
-                { liquidacionIdModel >0 || (
+                { liquidacionEstado == 'Activo' && (
                   <TableButton className={'text-red-400 hover:text-red-300'}
                   onRowSelect={()=>onRowDeleteAdicionales(item)}>
                     <Trash2 size={18} />
@@ -551,7 +587,7 @@ export function LiquidacionModel({onShowModel, data}) {
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
-        { liquidacionIdModel > 0 || ( <FooterButton accion={handleGuardar} name={'Guardar'} /> ) }
+        { liquidacionEstado == 'Activo' && ( <FooterButton accion={handleGuardar} name={'Guardar'} /> ) }
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
       </Footer>
       {showPopup ? <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers} proveedorId={proveedorIdModel}/>    : ''}
