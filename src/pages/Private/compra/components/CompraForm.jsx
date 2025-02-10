@@ -161,14 +161,12 @@ export const CompraForm = ({onShowModel, data}) => {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
     if(validarCampos(true,false)){
-      const save = compraAdapterSave({fechaModel,
-        comprobanteModel,
-        numeroModel,
-        distribuidorModel,
-        totalModel,
+      const save = compraAdapterSave({
+        compraId, fechaModel, comprobanteModel,
+        numeroModel, distribuidorModel, totalModel,
         detalleCompra})
     
-      const response = await compraSave('POST', save)
+      const response = await compraSave(compraId > 0? 'PUT':'POST', save)
       if(!response.result)
         return toast.error(response.message, { id: toastLoadingCustom, style: { color:'red' }})
       setTimeout(() => {
@@ -186,12 +184,12 @@ export const CompraForm = ({onShowModel, data}) => {
   }
   return (
     <>
-      <SectionModel title={(compraId > 0 ? 'Información':'Registrar') + ' Compra'}>
+      <SectionModel title={(compraId > 0 ? (servicioEstado != 'Activo' ?'Información':'Modificar'):'Registrar') + ' Compra'}>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 pt-3'>
           <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
             <InputDateCustom fechaValue={fechaModel}
               valueError={errores.fechaModel ? true: false}
-              setFechaValue={setFechaModel} readOnly={compraId > 0} />
+              setFechaValue={setFechaModel} readOnly={servicioEstado != 'Activo'} />
             {errores.fechaModel && <MessageValidationInput mensaje={errores.fechaModel}/>}
           </FilterOption>
           <FilterOption htmlFor={'TipoComprobanteModel'} name={'Comprobante'}>
@@ -200,12 +198,12 @@ export const CompraForm = ({onShowModel, data}) => {
               className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
                 errores.comprobante ? "border-red-500" : ""
               }`}
-              colorOptions={"text-black"} allDisabled={compraId > 0}
+              colorOptions={"text-black"} allDisabled={servicioEstado != 'Activo'}
             />
             {errores.comprobante && <MessageValidationInput mensaje={errores.comprobante}/>}
           </FilterOption>
           <FilterOption htmlFor={'ComprobanteNumeroModel'} name={'N° Comprobante'}>
-            <InputTextCustom textValue={numeroModel} readOnly={compraId > 0}
+            <InputTextCustom textValue={numeroModel} readOnly={servicioEstado != 'Activo'}
               placeholder={'Ejm: N° del Factura'} onChange={setNumeroModel}
               valueError={errores.numero} />
             {errores.numero && <MessageValidationInput mensaje={errores.numero}/>}
@@ -217,7 +215,7 @@ export const CompraForm = ({onShowModel, data}) => {
                 errores.distribuidor ? "border-red-500" : ""
               }`}
               colorOptions={"text-black"}
-              allDisabled={compraId > 0}
+              allDisabled={servicioEstado != 'Activo'}
               />
             {errores.distribuidor && <MessageValidationInput mensaje={errores.distribuidor}/>}
           </FilterOption>
@@ -295,7 +293,7 @@ export const CompraForm = ({onShowModel, data}) => {
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
-        {compraId > 0 || ( <FooterButton accion={handleGuardar} name={'Guardar'} /> )}
+        {servicioEstado != 'Activo' || ( <FooterButton accion={handleGuardar} name={'Guardar'} /> )}
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
       </Footer>
       {showPopup ? <CompraProductoPopup onShowModel={resspuestaShowModel} />    : ''}

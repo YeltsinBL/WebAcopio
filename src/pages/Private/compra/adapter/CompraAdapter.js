@@ -11,13 +11,22 @@ export const compraAdapterList = (data) => {
 }
 export const compraAdapterSave = (data) => {
   const detalles= data.detalleCompra?.map(detalle => (formatterDetalle(detalle)))
-  return {
-    userCreatedAt: obtenerFechaLocal({date: new Date()}),
-    userCreatedName: 'ADMIN',
+  let save = {
     compraFecha: data.fechaModel,
     tipoComprobanteId: data.comprobanteModel,
     compraNumeroComprobante: data.numeroModel,
     distribuidorId: data.distribuidorModel,
+  }
+  if(data.compraId >0){
+    return {...save,
+      compraId: data.compraId,
+      userModifiedName:"ADMIN",
+      userModifiedAt: obtenerFechaLocal({date: new Date()})
+    }
+  }
+  return {...save,
+    userCreatedAt: obtenerFechaLocal({date: new Date()}),
+    userCreatedName: 'ADMIN',
     compraTotal: data.totalModel,
     compraDetalles: detalles
   }
