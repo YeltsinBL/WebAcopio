@@ -35,18 +35,28 @@ export const ventaAdapterDelete = (data) => {
 }
 
 export const ventaAdapterSave = (data) => {
-  const detalles= data.detalleVenta?.map(detalle => (formatterDetalle(detalle)))
-  return {
-    userCreatedAt: obtenerFechaLocal({date: new Date()}),
-    userCreatedName: 'ADMIN',
+  let save = {
     ventaFecha: data.fechaModel,
-    tipoComprobanteId: data.comprobanteModel,
+    tipoComprobanteId: data.comprobanteModel.id,
     ventaTipoId: data.ventaTipoModel,
     personaId: data.personaModel,
     ventaDia: data.ventaDiaModel,
     ventaEstadoId: data.ventaEstadoModel,
-    ventaTotal: data.totalModel,
-    ventaDetalles: detalles
+  }
+  if(data.ventaId>0){
+    return {...save,
+      ventaId: data.ventaId,
+      userModifiedAt: obtenerFechaLocal({date: new Date()}),
+      userModifiedName: 'ADMIN'
+    }
+  }else{
+    const detalles= data.detalleVenta?.map(detalle => (formatterDetalle(detalle)))
+    return {...save,
+      userCreatedAt: obtenerFechaLocal({date: new Date()}),
+      userCreatedName: 'ADMIN',      
+      ventaTotal: data.totalModel,
+      ventaDetalles: detalles
+    }
   }
 }
 const formatterDetalle = (data) => {

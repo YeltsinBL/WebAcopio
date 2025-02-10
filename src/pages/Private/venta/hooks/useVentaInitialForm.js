@@ -28,7 +28,8 @@ export const useVentaInitialForm = (data) => {
   const [ventaTipoList, setventaTipoList] = useState([])
   const [ventaEstadoList, setventaEstadoList] = useState([])
 
-  const seleccionTipoComprobante = data?.tipoComprobanteId ? {id: data.tipoComprobanteId, nombre: data.tipoComprobanteNombre } : null
+  const [seleccionTipoComprobante, setSeleccionTipoComprobante]= useState({id: 0, nombre: 'Orden de Entrega' })
+  //const seleccionTipoComprobante = data?.tipoComprobanteId ? {id: data.tipoComprobanteId, nombre: data.tipoComprobanteNombre } : null
   const seleccionPersona = data?.tipoComprobanteId ? {id: data.personaId, nombre: data.personaNombre } : null
   const seleccionVentaTipo = data?.ventaTipoId ? {id: data.ventaTipoId, nombre: data.ventaTipoNombre } : null
   
@@ -58,6 +59,8 @@ export const useVentaInitialForm = (data) => {
       formatterDataCombo(tipo.tipoComprobanteId, tipo.tipoComprobanteNombre)
     ))
     setComprobantesList(formatter)
+    const filtro = formatter.filter(estado => estado.nombre =='Orden de Entrega')
+    setSeleccionTipoComprobante(filtro[0])
   }
 
   const getPersona = async() => setPersonaList(await searchVentaCliente())  

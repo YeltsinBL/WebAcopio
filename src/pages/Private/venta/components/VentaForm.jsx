@@ -89,16 +89,16 @@ export const VentaForm = ({onShowModel, data}) => {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
     const { isValid } = validate(true,false,{
-        fechaModel, comprobanteModel, ventaDiaModel,
+        fechaModel, comprobanteModel:seleccionTipoComprobante , ventaDiaModel,
         personaModel, detalleVenta, totalModel,
         ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id
       })
     if(isValid){
       const save = ventaAdapterSave({
-        fechaModel, comprobanteModel, ventaDiaModel, personaModel,
+        ventaId, fechaModel, comprobanteModel:seleccionTipoComprobante , ventaDiaModel, personaModel,
         totalModel, ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id, detalleVenta
       })
-      const response = await ventaSave('POST', save)
+      const response = await ventaSave(ventaId > 0 ? 'PUT' : 'POST', save)
       if(!response.result)
         return toast.error(response.message, { id: toastLoadingCustom, style: { color:'red' }})
       setTimeout(() => {
@@ -116,21 +116,24 @@ export const VentaForm = ({onShowModel, data}) => {
   }
   return (
     <>
-      <SectionModel title={(ventaId > 0 ? 'Información':'Registrar') + ' Venta'}>
+      <SectionModel title={(ventaId > 0 ? (ventaEstadoModel.nombre != 'Activo'?'Información':'Modificar'):'Registrar') + ' Venta'}>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4 pt-3'>
           <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
             <InputDateCustom fechaValue={fechaModel}
               valueError={errores.fechaModel ? true: false}
-              setFechaValue={setFechaModel} readOnly={ventaId > 0} />
+              setFechaValue={setFechaModel} readOnly={ventaId > 0 && ventaEstadoModel.nombre != 'Activo'} />
             {errores.fechaModel && <MessageValidationInput mensaje={errores.fechaModel}/>}
           </FilterOption>
-          <FilterOption htmlFor={'TipoComprobanteModel'} name={'Comprobante'}>
+          {/* <FilterOption htmlFor={'TipoComprobanteModel'} name={'Comprobante'}>
             <ComboBoxCustom initialOptions={comprobantesList} selectedOption={seleccionTipoComprobante}
               onSelectionChange={handleComprobanteChange}
               className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.comprobante ? "border-red-500" : ""
               }`}
-              colorOptions={"text-black"} allDisabled={ventaId > 0} />
+              colorOptions={"text-black"}  /> 
+          </FilterOption>*/}              
+          <FilterOption htmlFor={'TipoComprobanteModel'} name={'Comprobante'}>
+            <InputTextCustom textValue={seleccionTipoComprobante?.nombre} readOnly={true} />
             {errores.comprobante && <MessageValidationInput mensaje={errores.comprobante}/>}
           </FilterOption>
           <FilterOption htmlFor={'ComprobanteNumeroModel'} name={'N° Comprobante'}>
@@ -143,7 +146,7 @@ export const VentaForm = ({onShowModel, data}) => {
               errores.persona ? "border-red-500" : ""
               }`}
               colorOptions={"text-black"}
-              allDisabled={ventaId > 0} />
+              allDisabled={ventaId > 0 && ventaEstadoModel.nombre != 'Activo'} />
             {errores.persona && <MessageValidationInput mensaje={errores.persona}/>}
           </FilterOption>
           <FilterOption htmlFor={'VentaTipoModel'} name={'Tipo'}>
@@ -153,12 +156,12 @@ export const VentaForm = ({onShowModel, data}) => {
               errores.ventaTipo ? "border-red-500" : ""
               }`}
               colorOptions={"text-black"}
-              allDisabled={ventaId > 0} />
+              allDisabled={ventaId > 0 && ventaEstadoModel.nombre != 'Activo'} />
             {errores.ventaTipo && <MessageValidationInput mensaje={errores.ventaTipo}/>}
           </FilterOption>
           { ventaTipoModel ==3 && (
             <FilterOption htmlFor={'ventaDiaModel'} name={'Días'}>
-            <InputTextCustom textValue={ventaDiaModel} readOnly={ventaId > 0}
+            <InputTextCustom textValue={ventaDiaModel} readOnly={ventaId > 0 && ventaEstadoModel.nombre != 'Activo'}
               placeholder={'Ejm: 5'} onChange={setVentaDiaModel}
               valueError={errores.numero} />
             {errores.numero && <MessageValidationInput mensaje={errores.numero}/>}
@@ -236,7 +239,7 @@ export const VentaForm = ({onShowModel, data}) => {
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
-        {ventaId > 0 || ( <FooterButton accion={handleGuardar} name={'Guardar'} /> )}
+        {ventaId > 0 && ventaEstadoModel.nombre != 'Activo' || ( <FooterButton accion={handleGuardar} name={'Guardar'} /> )}
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
       </Footer>
       {showPopup && <VentaProductoPopup onShowModel={resspuestaShowModel} /> }
