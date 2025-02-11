@@ -7,30 +7,36 @@ import {
 import { VentaProductoPopup } from "./VentaProductoPopup"
 import { useVentaValidation } from "../hooks/useVentaValidation"
 import { useVentaInitialForm } from "../hooks/useVentaInitialForm"
-import { FormatteDecimalMath } from "~utils/index"
+import { convertirFechaDDMMYYYY, FormatteDecimalMath } from "~utils/index"
 import { toast } from "sonner"
 import { ventaAdapterSave } from "../adapter/VentaAdapter"
 import { ventaSave } from "~services/venta"
 
 export const VentaForm = ({onShowModel, data}) => {
   const headers = ['Stock', 'Producto', 'Precio', 'Cantidad', 'SubImporte', 'Acciones']
+  const headersPagos= ['Fecha', 'Pagado','Efectivo','Banco','Cta.Cte.', 'Acción']
   
   const {ventaId, fechaModel, setFechaModel, 
-    comprobanteModel, setComprobanteModel,
+    //comprobanteModel, setComprobanteModel,
     numeroModel, personaModel, setPersonaModel,
     totalModel, detalleVenta, setDetalleVenta, productoId, setProductoId,
     productoModal, setProductoModal, cantidadModal, setCantidadModal,
     precioModal, setPrecioModal, subImporteModal,
-    showPopup, setShowPopup, comprobantesList, personaList, 
+    showPopup, setShowPopup, personaList, 
     seleccionTipoComprobante, seleccionPersona,
     stockModal, setStockModal, ventaTipoList, seleccionVentaTipo,
     ventaEstadoList, ventaTipoModel, setVentaTipoModel,
     ventaEstadoModel, setVentaEstadoModel, ventaDiaModel, setVentaDiaModel
+    ,fechaPagadoModel, setFechaPagadoModel, pagando, 
+    pagadoModel, setPagadoModel, bancoModel, setBancoModel,
+    cteModel, setCteModel,totalPagadoModel,
+    efectivo, setEfectivo, detallePagado, setDetallePagado,
+    pendientePagarModel
   } = useVentaInitialForm(data)
   const {validate, errores} = useVentaValidation()
 
-  const handleComprobanteChange = (option) =>
-    setComprobanteModel((option==''|| isNaN(option))?'':option)
+  // const handleComprobanteChange = (option) =>
+  //   setComprobanteModel((option==''|| isNaN(option))?'':option)
   const handleSelectionPersonaChange = (option) =>
     setPersonaModel((option==''|| isNaN(option))?'':option)
   const handleVentaTipoChange = (option) =>
@@ -68,7 +74,7 @@ export const VentaForm = ({onShowModel, data}) => {
   }
   const handleUpdateProduct = (e) => {
     e.preventDefault()
-    const { isValid } = validate(false,true, {
+    const { isValid } = validate(false,true,false, {
       cantidadModal, precioModal, stockModal
     })
     if(isValid){
@@ -85,10 +91,36 @@ export const VentaForm = ({onShowModel, data}) => {
       setPrecioModal(0)
     }
   }
+  const handleAgregarProveedor = (e) => {
+    e.preventDefault()
+    const { isValid } = validate(false,false,true,{
+      fechaPagadoModel, pagadoModel, cteModel, efectivo,pendientePagarModel
+    })
+    if (isValid) {
+      const updatePlacaList = [...detallePagado, 
+        { detallePagoId: `temp-${Date.now()}`,
+        detallePagoFecha: fechaPagadoModel,
+        detallePagoPagado: pagadoModel,
+        detallePagoEfectivo: efectivo,
+        detallePagoBanco: bancoModel,
+        detallePagoCtaCte: cteModel,
+      }]
+      setDetallePagado(updatePlacaList)
+    }
+    setPagadoModel(0)
+    setBancoModel('')
+    setCteModel('')
+    setEfectivo(false)
+  }
+  const onRowDelete = (proveedor) => {
+    if (typeof proveedor.detallePagoId === "string" && proveedor.detallePagoId.startsWith("temp")) {
+      setDetallePagado(detallePagado.filter((item) => item.detallePagoId !== proveedor.detallePagoId))
+    }
+  }
   const handleGuardar = async(e) => {    
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
-    const { isValid } = validate(true,false,{
+    const { isValid } = validate(true,false,false,{
         fechaModel, comprobanteModel:seleccionTipoComprobante , ventaDiaModel,
         personaModel, detalleVenta, totalModel,
         ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id
@@ -96,7 +128,8 @@ export const VentaForm = ({onShowModel, data}) => {
     if(isValid){
       const save = ventaAdapterSave({
         ventaId, fechaModel, comprobanteModel:seleccionTipoComprobante , ventaDiaModel, personaModel,
-        totalModel, ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id, detalleVenta
+        totalModel, ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id, detalleVenta,
+        detallePagado,totalPagadoModel, pendientePagarModel
       })
       const response = await ventaSave(ventaId > 0 ? 'PUT' : 'POST', save)
       if(!response.result)
@@ -236,6 +269,78 @@ export const VentaForm = ({onShowModel, data}) => {
                 valueError={errores.total} readOnly />
             {errores.total && <MessageValidationInput mensaje={errores.total}/>}
             </FilterOption>
+        </TableFooterCustom>
+      </TableContainerCustom>
+      <TableContainerCustom>
+      <TableHeaderCustom grid>
+        <TitleCustom titulo={'Lista de Pagos'}  />
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
+            <FilterOption htmlFor={'FechaPagadoModel'} name={'Fecha Pagado'}>
+              <InputDateCustom fechaValue={fechaPagadoModel}
+                valueError={errores.fechaModel ? true: false}
+                setFechaValue={setFechaPagadoModel} readOnly={!pagando} />
+              {errores.fechaPagadoModel && <MessageValidationInput mensaje={errores.fechaPagadoModel}/>}
+            </FilterOption>
+            <FilterOption htmlFor={'utPagado'} name={'Pagado'}>
+              <InputDecimalCustom onChange={setPagadoModel} placeholder={'Ingrese el monto que va ha pagar'} 
+                textValue={pagadoModel} readOnly={!pagando}
+                decimales={2}/>
+              {errores.pagado && <MessageValidationInput mensaje={errores.pagado}/>}
+            </FilterOption>
+            <FilterOption htmlFor={'BancoModel'} name={'Banco'}>
+              <InputTextCustom onChange={setBancoModel} placeholder='Ejm: Interbank'
+                textValue={bancoModel} readOnly={!pagando} />
+            </FilterOption>
+            <FilterOption htmlFor={'CtaCteModel'} name={'Cta. Cte'}>
+              <InputTextCustom onChange={setCteModel} placeholder='Ingrese el Cte del Sembrador'
+                valueError={errores.ctacte} readOnly={!pagando}
+                textValue={cteModel} />
+              {errores.ctacte && <MessageValidationInput mensaje={errores.ctacte}/>}
+            </FilterOption>
+            <div className='pr-6'>
+              <label htmlFor="EfectivoModel" className="text-white pr-3 ">Efectivo</label>
+              <input type="checkbox" id="efectivo" 
+                checked={efectivo} readOnly={!pagando}
+                onChange={(e) => setEfectivo(e.target.checked)}/>
+            </div>
+            <ButtonCustom extraClassName={`${!pagando ? 'hidden' : ''} max-h-9 mt-6 md:w-28 `} name={'Agregar'} 
+              onClick={handleAgregarProveedor}  />
+          </div>
+        </TableHeaderCustom>
+        <TableBodyCustom headers={headersPagos}>
+          {detallePagado.length > 0 ?(
+            detallePagado.map((item)=>(
+              <tr key={item.detallePagoId} >
+                <TableTd hidden>{item.detallePagoId}</TableTd>
+                <TableTd>{convertirFechaDDMMYYYY(item.detallePagoFecha)}</TableTd>
+                <TableTd>{item.detallePagoPagado}</TableTd>
+                <TableTd>{item.detallePagoEfectivo ? 'Si':'No'}</TableTd>
+                <TableTd>{item.detallePagoBanco}</TableTd>
+                <TableTd>{item.detallePagoCtaCte}</TableTd>
+                <TableTd>
+                  {
+                    typeof item.detallePagoId === "string" && 
+                    item.detallePagoId?.startsWith('temp') &&
+                  <TableButton className={'text-red-400 hover:text-red-300'}
+                    onRowSelect={()=>onRowDelete(item)}>
+                    <Trash2 size={18} />
+                  </TableButton>
+                  }
+                  
+                </TableTd>
+              </tr>
+            ))
+          ):(<NoRegistros colSpan={headers.length}/>)}
+        </TableBodyCustom>
+        <TableFooterCustom>
+          <FilterOption htmlFor={'utPagado'} name={'Pagado'}>
+            <InputDecimalCustom placeholder={'Automático'} textValue={totalPagadoModel}
+              readOnly decimales={2}/>
+          </FilterOption>
+          <FilterOption htmlFor={'utPendientePagar'} name={'Pendiente a Pagar'}>
+            <InputDecimalCustom placeholder={'Automático'} textValue={pendientePagarModel}
+              readOnly decimales={2}/>
+          </FilterOption> 
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>

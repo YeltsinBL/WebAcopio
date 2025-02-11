@@ -11,12 +11,16 @@ export const ventaAdapterList = (data) => {
 }
 export const ventaAdapterGetData = (data) => {
     const detalles= data.ventaDetalles?.map(detalle => (formatterGetDataDetalle(detalle)))
+    const pagos = data.detallePagos?.map(detalle => (formatterGetDataPagos(detalle)))
     return {...data,
       ventaFecha: data.ventaFecha.split("T")[0],
       ventaTotal: FormatteDecimalMath(data.ventaTotal, 2),
+      ventaPendientePagar: FormatteDecimalMath(data.ventaPendientePagar, 2),
+      ventaPagado:FormatteDecimalMath(data.ventaPagado, 2),
       //ventaStatus: data.ventaStatus ? 'Activo':'Inactivo',
       numeroModel: data.ventaNumeroDocumento,
-      ventaDetalles: detalles
+      ventaDetalles: detalles,
+      detallePagos: pagos
     }
   }
   const formatterGetDataDetalle = (data) => {
@@ -25,6 +29,16 @@ export const ventaAdapterGetData = (data) => {
       cantidad: data.ventaDetalleCantidad
     }
   }
+const formatterGetDataPagos= (data)=>{
+  return {
+    detallePagoId: data.ventaDetallePagoId,
+    detallePagoFecha: data.ventaDetallePagoFecha.split("T")[0],
+    detallePagoPagado: data.ventaDetallePagoPagado,
+    detallePagoEfectivo: data.ventaDetallePagoEfectivo,
+    detallePagoBanco: data.ventaDetallePagoBanco,
+    detallePagoCtaCte: data.ventaDetallePagoCtaCte
+  }
+}
   
 export const ventaAdapterDelete = (data) => {
   return {
@@ -42,6 +56,11 @@ export const ventaAdapterSave = (data) => {
     personaId: data.personaModel,
     ventaDia: data.ventaDiaModel,
     ventaEstadoId: data.ventaEstadoModel,
+    ventaPendientePagar: data.pendientePagarModel,
+    ventaPagado: data.totalPagadoModel,
+    detallePagos: data.detallePagado?.filter((item) => 
+      typeof item.detallePagoId === "string" &&
+      item.detallePagoId.startsWith('temp')),
   }
   if(data.ventaId>0){
     return {...save,

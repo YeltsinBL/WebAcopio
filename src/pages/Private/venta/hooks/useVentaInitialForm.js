@@ -6,7 +6,7 @@ import { FormatteDecimalMath, formatterDataCombo, obtenerSoloFechaLocal } from "
 export const useVentaInitialForm = (data) => {
   const [ventaId, setVentaId] = useState(0)
   const [fechaModel, setFechaModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
-  const [comprobanteModel, setComprobanteModel] = useState(0)
+  //const [comprobanteModel, setComprobanteModel] = useState(0)
   const [ventaTipoModel, setVentaTipoModel] = useState(0)
   const [ventaDiaModel, setVentaDiaModel] = useState(0)
   const [ventaEstadoModel, setVentaEstadoModel] = useState({id: 0, nombre: 'Activo' })
@@ -23,7 +23,7 @@ export const useVentaInitialForm = (data) => {
   const [subImporteModal, setSubImporteModal] = useState(0)
   const [showPopup, setShowPopup] = useState(false)
   
-  const [comprobantesList, setComprobantesList] = useState([])
+  //const [comprobantesList, setComprobantesList] = useState([])
   const [personaList, setPersonaList] = useState([])
   const [ventaTipoList, setventaTipoList] = useState([])
   const [ventaEstadoList, setventaEstadoList] = useState([])
@@ -32,6 +32,16 @@ export const useVentaInitialForm = (data) => {
   //const seleccionTipoComprobante = data?.tipoComprobanteId ? {id: data.tipoComprobanteId, nombre: data.tipoComprobanteNombre } : null
   const seleccionPersona = data?.tipoComprobanteId ? {id: data.personaId, nombre: data.personaNombre } : null
   const seleccionVentaTipo = data?.ventaTipoId ? {id: data.ventaTipoId, nombre: data.ventaTipoNombre } : null
+  
+  const [fechaPagadoModel, setFechaPagadoModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
+  const [pagando, setPagando ]= useState(true)
+  const [pagadoModel, setPagadoModel] = useState(0)
+  const [bancoModel, setBancoModel] = useState("")
+  const [cteModel, setCteModel] = useState("")
+  const [efectivo, setEfectivo] = useState(false)
+  const [pendientePagarModel, setPendientePagar] = useState(0)
+  const [detallePagado, setDetallePagado] = useState([])
+  const [totalPagadoModel, setTotalPagadoModel] = useState(0)
   
   useEffect(() => {
     getComprobantes()
@@ -43,7 +53,7 @@ export const useVentaInitialForm = (data) => {
     if(data){
       setVentaId(data.ventaId)
       setFechaModel(data.ventaFecha)
-      setComprobanteModel(data.tipoComprobanteId)
+      //setComprobanteModel(data.tipoComprobanteId)
       setNumeroModel(data.numeroModel)
       setVentaTipoModel(data.ventaTipoId)
       setVentaDiaModel(data.ventaDia)
@@ -51,6 +61,9 @@ export const useVentaInitialForm = (data) => {
       setPersonaModel(data.personaId)
       setTotalModel(data.ventaTotal)
       setDetalleVenta(data.ventaDetalles)
+      
+      setDetallePagado(data.detallePagos || [])
+      setPagando(data.ventaId >0 && data.ventaPendientePagar > 0)
     }
   }, [data])
   const getComprobantes = async() => {
@@ -58,7 +71,7 @@ export const useVentaInitialForm = (data) => {
     const formatter= estados?.map(tipo =>(
       formatterDataCombo(tipo.tipoComprobanteId, tipo.tipoComprobanteNombre)
     ))
-    setComprobantesList(formatter)
+    //setComprobantesList(formatter)
     const filtro = formatter.filter(estado => estado.nombre =='Orden de Entrega')
     setSeleccionTipoComprobante(filtro[0])
   }
@@ -80,17 +93,32 @@ export const useVentaInitialForm = (data) => {
   const getSum=(total, num) =>{
     return total + parseFloat(num.productoPrecioVenta * num.cantidad)
   }
+  useEffect(()=>{
+    if(totalPagadoModel >= 0 && totalModel > 0) 
+      return setPendientePagar(totalModel - totalPagadoModel)
+    return setPendientePagar(0)
+  }, [totalModel, totalPagadoModel])
+  useEffect(()=>{
+    const total = detallePagado
+      .reduce((total, item) => total + parseFloat(item.detallePagoPagado), 0)
+    setTotalPagadoModel(FormatteDecimalMath(total,2))
+  }, [detallePagado])
   return {
     ventaId, fechaModel, setFechaModel, 
-    comprobanteModel, setComprobanteModel,
+    //comprobanteModel, setComprobanteModel,
     numeroModel, personaModel, setPersonaModel,
     totalModel, detalleVenta, setDetalleVenta, 
     productoId, setProductoId, productoModal, setProductoModal, 
     cantidadModal, setCantidadModal, precioModal, setPrecioModal, 
-    subImporteModal, showPopup, setShowPopup, comprobantesList, 
+    subImporteModal, showPopup, setShowPopup, 
     personaList, seleccionTipoComprobante, seleccionPersona,
     stockModal, setStockModal, ventaTipoList, ventaEstadoList,
     seleccionVentaTipo, ventaTipoModel, setVentaTipoModel,
     ventaEstadoModel, setVentaEstadoModel, ventaDiaModel, setVentaDiaModel
+    ,fechaPagadoModel, setFechaPagadoModel, pagando, 
+    pagadoModel, setPagadoModel, bancoModel, setBancoModel,
+    cteModel, setCteModel, totalPagadoModel,
+    efectivo, setEfectivo, detallePagado, setDetallePagado,
+    pendientePagarModel
   }
 }
