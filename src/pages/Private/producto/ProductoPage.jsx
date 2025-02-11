@@ -23,8 +23,8 @@ const ProductoPage = () => {
     setFilteredUsers(users || [])
   }
   const handleDataFromChild = (data) => {
-    const {name, estado} = data
-    if(name=='' && estado==='') return getProductos()
+    const {name, estado, stock} = data
+    if(name=='' && estado==='' && stock ==='') return getProductos()
     getProductos(data)
   }
   const handleSaveModel = (data) => {

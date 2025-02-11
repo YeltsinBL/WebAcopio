@@ -16,7 +16,7 @@ export const searchProductoTipos = async() => {
 }
 export const searchProducto = async(search) => {
   let url = `${appSetting.apiUrl}Producto`
-  if(search != null) url += `?nombre=${search.name}&estado=${search.estado}`
+  if(search != null) url += `?nombre=${search.name}&estado=${search.estado}&stock=${search.stock}`
   
   try {
     const response = await fetch(url, {

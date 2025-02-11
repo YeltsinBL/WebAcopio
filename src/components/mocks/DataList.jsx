@@ -1,5 +1,6 @@
 import { FormatteDecimal } from "../../utils";
 export const ESTADO_BASIC = [{id:1, nombre:'Activo'}, {id:2, nombre:'Inactivo'}]
+export const STOCK_BASIC = [{id:1, nombre:'Con Stock'}, {id:2, nombre:'Sin Stock'}]
 export const PROVEEDOR_DATA = [
     { id: 1, ut: "UT123", dni: "12345678", nombre: "Juan", apellidoPaterno:'Pérez',apellidoMaterno:'Leon', activo: true },
     { id: 2, ut: "UT456", dni: "87654320", nombre: "María", apellidoPaterno:'Gómez',apellidoMaterno:'Gómez', activo: false },
