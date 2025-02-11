@@ -1,7 +1,8 @@
 import { Edit, Trash2 } from "lucide-react"
+import { ExcelIcon, PDFIcon } from "~assets/icons"
 import { NoRegistros, Table, TableButton, TableTd } from "~components/common"
 
-export const VentaTable = ({data, onRowSelect, onDeleteSelect}) => {
+export const VentaTable = ({data, onRowSelect, onDeleteSelect, exportExcel, exportPdf}) => {
   const headers = ['Fecha', 'Tipo Venta', 'N° Comprobante', 'Cliente',
     'Total', 'Estado', 'Acciones']
   return (
@@ -20,6 +21,14 @@ export const VentaTable = ({data, onRowSelect, onDeleteSelect}) => {
               <TableButton className="text-blue-500 hover:text-blue-700 px-3"
                 onRowSelect={() => onRowSelect(venta)} >
                 <Edit size={18} />
+              </TableButton>
+              <TableButton className="text-blue-500 hover:text-blue-700 px-3"
+                onRowSelect={()=>exportExcel(venta.ventaId)} >
+                <ExcelIcon />
+              </TableButton>
+              <TableButton className="text-blue-500 hover:text-blue-700 px-3"
+                onRowSelect={()=>exportPdf(venta.ventaId)} >
+                <PDFIcon />
               </TableButton>
               {venta.ventaEstadoNombre =='Activo' &&
                 <TableButton className='text-red-400 hover:text-red-300'

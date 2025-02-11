@@ -11,6 +11,8 @@ import {
   ventaAdapterGetData, ventaAdapterList 
 } from "./adapter/VentaAdapter"
 import { useClosePage } from "~hooks/common"
+import { ExportToExcel, ExportToPdf } from "~components/download"
+import { VentaExcelFile, VentaPdfFile } from "./reports"
 
 const VentaPage = () => {
   const handleGoBack = useClosePage()
@@ -67,6 +69,20 @@ const VentaPage = () => {
     }
     setShowModalDelete(false)
   }
+  const handleRowExportExcel = async(ventaId) =>{
+    const venta = await ventaGetById({id: ventaId})
+    await ExportToExcel(
+      VentaExcelFile(ventaAdapterGetData(venta.data)),
+      'VentaReporte'
+    )
+  }
+  const handleRowExportPdf = async(ventaId) =>{
+    const venta = await ventaGetById({id: ventaId})
+    ExportToPdf(
+      VentaPdfFile(ventaAdapterGetData(venta.data)), 
+      'VentaReporte'
+    )
+  }
   return (
     <ContainerPageCustom>
       <Header title='Venta'/>
@@ -74,7 +90,8 @@ const VentaPage = () => {
         {showModel ?
           <>
           <VentaFilter onFiltersValue={handleDataFromChild}/>
-          <VentaTable data={ventaList} onRowSelect={handleRowSelect} onDeleteSelect={eliminarTicket} />    
+          <VentaTable data={ventaList} onRowSelect={handleRowSelect} onDeleteSelect={eliminarTicket} 
+            exportExcel={handleRowExportExcel} exportPdf={handleRowExportPdf} />    
           <Footer>
               <FooterButton accion={handleRowSelect} name={"Nuevo"}/>
               <FooterButton accion={handleGoBack} name={"Salir"}/>
