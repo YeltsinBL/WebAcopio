@@ -8,6 +8,9 @@ import {
 import { useEffect, useState } from "react"
 import { searchProducto } from "~services/producto"
 import { toast, Toaster } from "sonner"
+import { ExportToExcel, ExportToPdf } from "~components/download"
+import { ProductoExcel } from "./reports/ProductoExcel"
+import { ProductoPdf } from "./reports/ProductoPdf"
 
 const ProductoPage = () => {
   const handleGoBack = useClosePage()
@@ -44,6 +47,12 @@ const ProductoPage = () => {
     }
     setShowModalDelete(false)
   }
+  const handleRowExportExcel = async() =>{
+    await ExportToExcel(ProductoExcel(filteredUsers), 'Producto')
+  }
+  const handleRowExportPdf = () =>{
+    ExportToPdf(ProductoPdf(filteredUsers), 'Producto')
+  }
   return (
     <ContainerPageCustom>
       <Header title={'Producto'} />
@@ -51,6 +60,8 @@ const ProductoPage = () => {
       <ProductoFilter onProductFilters={handleDataFromChild} />
       <ProductoTable data={filteredUsers} onSave={handleSaveModel} onDelete={onDelete}/>
       <Footer>
+      <FooterButton name={'Excel'} accion={handleRowExportExcel}/>
+      <FooterButton name={'PDF'} accion={handleRowExportPdf}/>
         <FooterButton name={'Salir'} accion={handleGoBack} />
       </Footer>
       {showModalDelete ? <ProductoFormDelete onShowModel={handleShowModelDelete} data={dataModalDelete} /> :'' }
