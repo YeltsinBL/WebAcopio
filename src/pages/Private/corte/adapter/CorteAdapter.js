@@ -33,7 +33,7 @@ const formatterticket = (ticket) => {
 
 
 export const corteAdpterSave =(data) =>{
-  console.log(data)
+  //console.log(data)
   let save ={
     cortePrecio: data.precioModel,
     corteTotal: data.totalModel,
@@ -46,10 +46,10 @@ export const corteAdpterSave =(data) =>{
       corteEstadoDescripcion: data.estadoModel
     }
   } else{
-    save = {
+    save = {...save,
       corteFecha: data.fechaModel,
       tierraId: data.ucModel,
-      cortePrecio: data.precioModel,
+      //cortePrecio: data.precioModel,
       cortePesoBrutoTotal: data.sumaPesoBrutoModel,
       userCreatedName: 'ADMIN',
       userCreatedAt: obtenerFechaLocal({date: new Date()}),
