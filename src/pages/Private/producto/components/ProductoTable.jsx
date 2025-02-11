@@ -1,7 +1,7 @@
 import { Edit, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { 
-  ButtonCustom, FilterOption, InputDecimalCustom, InputTextCustom, MessageValidationInput, 
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDecimalCustom, InputTextCustom, MessageValidationInput, 
   NoRegistros, TableBodyCustom, TableButton, TableContainerCustom, 
   TableFooterCustom, TableHeaderCustom, TableTd, TitleCustom 
 } from "~components/common"
@@ -11,11 +11,13 @@ import { useInitialProducto, useValidationProducto } from "../hooks"
 import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 
 export const ProductoTable = ({data, onSave, onDelete}) => {
-  const header = ['Producto', 'Stock', 'Precio Venta', 'Activo', 'Acciones']
+  const header = ['Tipo','Producto', 'Stock', 'Precio Venta', 'Activo', 'Acciones']
   const {
     productoId, setProductoId, 
     productoNombre, setProductoNombre, 
     productoPrecio,setProductoPrecio,
+    productoTipoList, productoTipoId, setProductoTipoId,
+    seleccionProductoTipo, setseleccionProductoTipo,
   } = useInitialProducto()
   const {validate, errores} = useValidationProducto()
 
@@ -29,10 +31,10 @@ export const ProductoTable = ({data, onSave, onDelete}) => {
   }
   const SaveProduct = async(id)=>{
     const toastLoadingCustom = toast.loading('Cargando...')
-    const {isValid} = validate({productoNombre})
+    const {isValid} = validate({productoNombre, productoTipoId})
     if(isValid){
       let dataAdapter = productoAdapterSave({ 
-        productoId:id, productoNombre, productoPrecio
+        productoId:id, productoNombre, productoPrecio, productoTipoId
       })
       const producto = await productoSave(id > 0 ?'PUT':'POST', dataAdapter)
       const response = ServicesResponseAdapter(producto)
@@ -41,6 +43,8 @@ export const ProductoTable = ({data, onSave, onDelete}) => {
       setProductoId(0)
       setProductoNombre('')
       setProductoPrecio(0)
+      setseleccionProductoTipo(null)
+      setProductoTipoId(0)
       setTimeout(() => {
         toast.dismiss(toastLoadingCustom)
       })
@@ -60,15 +64,36 @@ export const ProductoTable = ({data, onSave, onDelete}) => {
       setProductoId(response.data.productoId)
       setProductoNombre(response.data.productoNombre)
       setProductoPrecio(response.data.productoPrecioVenta)
+      if(response.data.productoTipoId)
+        setseleccionProductoTipo({id: response.data.productoTipoId, nombre: response.data.productoTipoDetalle })
+      else setseleccionProductoTipo(null)
+      setProductoTipoId(response.data.productoTipoId)
       toast.success(response.message, {id: toastLoadingCustom})
     }
   }
-
+  const handleProductoTipoChange = (option) =>
+    setProductoTipoId((option==''|| isNaN(option))?'':option)
   return (
     <TableContainerCustom>
       <TableHeaderCustom grid>
         <TitleCustom titulo={'Lista de Productos'} />
         <TableFooterCustom>
+          <FilterOption htmlFor={'ProductoTipoModel'} name={'Tipo'}>
+            { seleccionProductoTipo?.id > 0 ? (
+            <InputTextCustom textValue={seleccionProductoTipo.nombre} readOnly={true} />
+            ):(
+              <>
+              <ComboBoxCustom initialOptions={productoTipoList} selectedOption={seleccionProductoTipo} 
+                onSelectionChange={handleProductoTipoChange}
+                className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
+                  errores.productoTipo ? "border-red-500" : ""
+                }`}
+                colorOptions={"text-black"} />
+              {errores.productoTipo && <MessageValidationInput mensaje={errores.productoTipo}/>}
+              </>
+            )}
+            
+          </FilterOption>
           <FilterOption htmlFor={'NameModel'} name={'Nombre'}>
             <InputTextCustom placeholder="Ingrese el nombre" valueError={errores.nombre}
               textValue={productoNombre} onChange={setProductoNombre}/>
@@ -96,6 +121,7 @@ export const ProductoTable = ({data, onSave, onDelete}) => {
           data.map((user) =>(
           <tr key={user.productoId}>
           <TableTd hidden>{user.productoId}</TableTd>
+          <TableTd>{user.productoTipoDetalle}</TableTd>
           <TableTd>{user.productoNombre}</TableTd>
           <TableTd>{user.productoCantidad}</TableTd>
           <TableTd>{user.productoPrecioVenta}</TableTd>
