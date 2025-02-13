@@ -25,6 +25,7 @@ const ProdutoPage = lazy(() => import('./producto/ProductoPage'))
 const DistribuidorPage = lazy(() => import('./distribuidor/DistribuidorPage'))
 const CompraPage = lazy(() => import('./compra/CompraPage'))
 const VentaPage = lazy(() => import('./venta/VentaPage'))
+const InformeIngresoGastoPage = lazy(() => import('./informeingresogasto/InformeIngresoGastoPage'))
 const PrivateRoute = () => {
   return (
     <>
@@ -51,6 +52,7 @@ const PrivateRoute = () => {
         <Route path='/distribuidor' element={<DistribuidorPage />} />
         <Route path='/compra' element={<CompraPage />} />
         <Route path='/venta' element={<VentaPage />} />
+        <Route path='/informe' element={<InformeIngresoGastoPage />} />
         </Route>
       </RoutesWithNotFound>
     </>

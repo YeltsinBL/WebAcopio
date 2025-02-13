@@ -32,4 +32,9 @@ export const obtenerSoloFechaLocal = ({date}) => {
     fecha.getTime() - fecha.getTimezoneOffset() * 60000
   ).toISOString().split("T")[0]
 }
+export const obtenerFechaInicialMes = () =>{
+  const now = new Date()
+  const fecha = new Date(now.getFullYear(), now.getMonth(), 1)
+  return obtenerSoloFechaLocal({date: fecha})
+}
 export const formatterDataCombo = (id, value) => ({id: id, nombre: value})

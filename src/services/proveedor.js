@@ -11,9 +11,9 @@ export const searchProveedor = async(search) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
     return await response.json()
   } catch (error) {
@@ -28,9 +28,9 @@ export const searchProveedorAvailable = async() => {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
     const proveedores = await response.json()
     const formatter= proveedores?.map(proveedor => ({
@@ -46,7 +46,21 @@ export const searchProveedorAvailable = async() => {
     throw new Error('Error al buscar proveedores disponibles')
   }
 }
-
+export const searchProveedorPersona = async() => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Proveedor/Personas`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    return await response.json()
+  } catch (error) {
+    console.log('searchProveedor:', error.message)
+    return ResponseErrorServidor
+  }
+}
 export const proveedorGetById = async({id}) => {
   try {
     const response = await fetch(`${appSetting.apiUrl}Proveedor/${id}`, {
@@ -54,7 +68,7 @@ export const proveedorGetById = async({id}) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
     return await response.json()
   } catch (error) {
