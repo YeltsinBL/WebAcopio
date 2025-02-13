@@ -208,7 +208,7 @@ export const TicketForm = ({ onShowModel, data }) => {
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.vehiculo ? "border-red-500" : ""
             }`}
-            colorOptions={"text-black"}
+            colorOptions={"text-black"} disabled={false}
           />
           {errores.vehiculo && <MessageValidationInput mensaje={errores.vehiculo}/>}
         </FilterOption>
@@ -223,7 +223,7 @@ export const TicketForm = ({ onShowModel, data }) => {
             className={`bg-transparent focus:outline-none w-full text-white border border-gray-300 rounded-md px-2 py-1 focus:border-blue-500 ${
               errores.camion ? "border-red-500" : ""
             }`}
-            colorOptions={"text-black"}
+            colorOptions={"text-black"} disabled={false}
           />
           {errores.camion && <MessageValidationInput mensaje={errores.camion}/>}
         </FilterOption>
