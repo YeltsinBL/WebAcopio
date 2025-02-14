@@ -293,7 +293,7 @@ export function LiquidacionModel({onShowModel, data}) {
 
         liquidacionFinanciamientoACuenta: financiamientoACuentaTotal,
         liquidacionFinanciamientos: financiamientoList?.map(item => ({...item,
-          liquidacionFinanciamientoFecha: convertirFechaToYMD(item.liquidacionFinanciamientoFecha),
+          liquidacionFinanciamientoFecha: convertirFechaToYMD(convertirFechaToISO(item.liquidacionFinanciamientoFecha)),
           liquidacionFinanciamientoId: 
             (typeof item.liquidacionFinanciamientoId === "string" && item.liquidacionFinanciamientoId.startsWith("temp")) ?
             0: item.liquidacionFinanciamientoId
