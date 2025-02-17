@@ -13,7 +13,7 @@ export const CompraProductoPopup = ({onShowModel}) => {
     getProductos()
   }, [])
   const getProductos = async() => {
-    const productos = await searchProducto({name:'', estado:true})
+    const productos = await searchProducto({estado:true})
     setProductoList( productos ) 
   }
   const handleCheckboxChange = (row) => {
