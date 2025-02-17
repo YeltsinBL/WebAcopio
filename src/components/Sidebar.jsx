@@ -29,7 +29,7 @@ const Sidebar = () => {
   return (
     <div
       className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 
-        ${isSidebarOpen ? 'w-64' : 'w-20'}`}
+        ${isSidebarOpen ? 'w-64' : 'w-25'}`}
     >
       <div className='h-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-4 flex flex-col border-r border-gray-700'>
         <button
@@ -38,7 +38,7 @@ const Sidebar = () => {
         >
           <Menu size={24}/>
         </button>
-        <nav className='mt-1 flex-grow overflow-y-auto scrollbar-hide'>          
+        <nav className='mt-1 flex-grow overflow-y-auto '>          
           {modulesList.map((module) => (
               module.subModules.length > 0 ? (
               <div key={module.moduleId} className="mb-4">
