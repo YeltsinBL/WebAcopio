@@ -12,7 +12,7 @@ import {
 import { convertirFechaDDMMYYYY } from "~utils/index"
 import { InformeLiquidacionPopup } from "./InformeLiquidacionPopup"
 import { InformeServicioPopup } from "./InformeServicioPopup"
-import { InformeRecojoPopup } from "./InformeRecojoPopup"
+import { InformeCortePopup } from "./InformeCortePopup"
 import { InformeIngresoGastoAdapterSave } from "../adapter/InformeIngresoGastoAdapter"
 import { informeSave } from "~services/informe"
 import { toast } from "sonner"
@@ -32,30 +32,29 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
     informeEstado, facturaTotalModel,
     showPopupServicioTransporte, setShowPopupServicioTransporte,
     showPopupServicioPalero, setShowPopupServicioPalero,
-    showPopupRecojo, setShowPopupRecojo,
+    showPopupCorte, setShowPopupCorte,
     showPopupLiquidacion, setShowPopupLiquidacion,
     servicioTransporteSeleccionadosList, setServicioTransporteSeleccionadosList,
     servicioPaleroSeleccionadosList, setServicioPaleroSeleccionadosList,
-    recojoSeleccionadosList, setRecojoSeleccionadosList,
+    corteSeleccionadosList, setCorteSeleccionadosList,
     liquidacionSeleccionadosList, setLiquidacionSeleccionadosList,
     sumaPrecioTransporteModel, sumaPesoBrutoTransporteModel, sumaTotalTransporteModel,
     sumaPesoBrutoPaleroModel, sumaPrecioPaleroModel, sumaTotalPaleroModel,
-    sumaPesoBrutoRecojoModel, setSumaPesoBrutoRecojoModel, sumaPrecioRecojoModel,
-    sumaTotalRecojoModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
+    sumaPesoBrutoCorteModel, setSumaPesoBrutoCorteModel, sumaPrecioCorteModel,
+    sumaTotalCorteModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
     sumaTotalLiquidacionModel, sumaPesoNetoLiquidacionModel, sumaPesoBrutoImpuestosModel, setSumaPesoBrutoImpuestosModel,
     sumaPrecioImpuestosModel, setSumaPrecioImpuestosModel, sumaTotalImpuestosModel, 
     sumaPesoBrutoOtrosGastosModel, setSumaPesoBrutoOtrosGastosModel,
     sumaPrecioOtrosGastosModel, setSumaPrecioOtrosGastosModel,
-    sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel
+    sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel,
+    resultadoModel, setResultadoModel,
   } = useInformeIngresoGastoInitialForm(data)
   
   const { sembradorList, proveedoresALiquidarList } = useSembrador()
   const {validate, errores} = useInformeIngresoGastoValidation()
   const headersInformeFacturas= ['Fecha', 'Factura','Importe','Acciones']
   const headersServicio =['Fecha', 'Carguillo', 'Precio', 'Peso Bruto','Total', 'Acciones']
-  const headersRecojo = ['Fecha Inicio', 'Fecha Final', 'Campo', 'Precio Días', 'Precio Camión', 
-    'Total', 'Acciones'
-  ]
+  const headersCorte = ['Fecha', 'UC', 'Campo', 'Precio', 'Peso Bruto', 'Total', 'Acciones']
   const headersLiquidacion = ['Sembrador','Campo','UT','Fecha Inicio', 'Fecha Final','Peso Bruto',
     'Peso Neto', 'Tonelada Precio Compra', 'Toneladas Por Pagar Total', 'Seleccione'
   ]
@@ -111,12 +110,12 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
     }})
     if(isValid) setShowPopupServicioPalero(true)    
   }
-  const handleAddRecojos = async(e)=>{
+  const handleAddCortes = async(e)=>{
     e.preventDefault()
     const { isValid } = validate({servicio:true, values:{
       personaIdModel, campoModel, utModel
     }})
-    if(isValid) setShowPopupRecojo(true)
+    if(isValid) setShowPopupCorte(true)
     
   }
   const handleAddLiquidaciones = async(e)=>{
@@ -153,18 +152,18 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
     }
     setShowPopupServicioPalero(false)
   }
-  const respuestaShowModelRecojo = (data) => {
+  const respuestaShowModelCorte = (data) => {
     if(data.length > 0) {
       let mergedArray = []
-      if(recojoSeleccionadosList.length > 0){
+      if(corteSeleccionadosList.length > 0){
             mergedArray = [
-              ...recojoSeleccionadosList,
-              ...data.filter((item2) => !recojoSeleccionadosList.some((item1) => item1.recojoId === item2.recojoId)),
+              ...corteSeleccionadosList,
+              ...data.filter((item2) => !corteSeleccionadosList.some((item1) => item1.corteId === item2.corteId)),
             ]
       }else mergedArray = data
-      setRecojoSeleccionadosList(mergedArray)
+      setCorteSeleccionadosList(mergedArray)
     }
-    setShowPopupRecojo(false)
+    setShowPopupCorte(false)
   }
   const resspuestaShowModelLiquidacion = (data) => {
     if(data.length > 0) {
@@ -187,7 +186,7 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
     setServicioPaleroSeleccionadosList(servicioPaleroSeleccionadosList.filter(servicio => servicio.servicioId !== data.servicioId))
   }
   const onRowDeleteTecojo = (data)=>{
-    setRecojoSeleccionadosList(recojoSeleccionadosList.filter(recojo => recojo.recojoId !== data.recojoId))
+    setCorteSeleccionadosList(corteSeleccionadosList.filter(corte => corte.corteId !== data.corteId))
   }
   const onRowDeleteLiquidacion = (data)=>{
     setLiquidacionSeleccionadosList(liquidacionSeleccionadosList.filter(liquidacion => liquidacion.liquidacionId !== data.liquidacionId))
@@ -196,29 +195,21 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
-    const { isValid } = validate({servicio:true, save:true, values:{
+    const valuesData = {
       informeId, personaIdModel, proveedorIdModel, tierraIdModel, informeFecha, utModel, campoModel,
       facturaList, facturaTotalModel, servicioTransporteSeleccionadosList,
-      servicioPaleroSeleccionadosList, recojoSeleccionadosList, liquidacionSeleccionadosList,
+      servicioPaleroSeleccionadosList, corteSeleccionadosList, liquidacionSeleccionadosList,
       sumaPrecioTransporteModel, sumaPesoBrutoTransporteModel, sumaTotalTransporteModel,
-      sumaPesoBrutoPaleroModel, sumaPrecioPaleroModel, sumaTotalPaleroModel, sumaPesoBrutoRecojoModel,
-      sumaPrecioRecojoModel, sumaTotalRecojoModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
+      sumaPesoBrutoPaleroModel, sumaPrecioPaleroModel, sumaTotalPaleroModel, sumaPesoBrutoCorteModel,
+      sumaPrecioCorteModel, sumaTotalCorteModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
       sumaTotalLiquidacionModel, sumaPesoBrutoImpuestosModel, sumaPrecioImpuestosModel, 
       sumaTotalImpuestosModel, sumaPesoBrutoOtrosGastosModel, sumaPrecioOtrosGastosModel, 
-      sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel
-    }})
+      sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel, resultadoModel
+    }
+    const { isValid } = validate({servicio:true, save:true, values:valuesData})
     if(isValid){
-      const save = InformeIngresoGastoAdapterSave({
-        informeId, personaIdModel, proveedorIdModel, tierraIdModel, informeFecha,
-        facturaList, facturaTotalModel, servicioTransporteSeleccionadosList,
-        servicioPaleroSeleccionadosList, recojoSeleccionadosList, liquidacionSeleccionadosList,
-        sumaPrecioTransporteModel, sumaPesoBrutoTransporteModel, sumaTotalTransporteModel,
-        sumaPesoBrutoPaleroModel, sumaPrecioPaleroModel, sumaTotalPaleroModel, sumaPesoBrutoRecojoModel,
-        sumaPrecioRecojoModel, sumaTotalRecojoModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
-        sumaTotalLiquidacionModel, sumaPesoBrutoImpuestosModel, sumaPrecioImpuestosModel, 
-        sumaTotalImpuestosModel, sumaPesoBrutoOtrosGastosModel, sumaPrecioOtrosGastosModel, 
-        sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel
-      })
+      console.log(valuesData)
+      const save = InformeIngresoGastoAdapterSave(valuesData)
       console.log(save)
       const response = await informeSave(informeId > 0 ? 'PUT' : 'POST',save)
       if(!response.result) 
@@ -280,7 +271,7 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
               <InputTextCustom onChange={setFacturaNumeroModel}
                 textValue={facturaNumeroModel} 
                 valueError={errores.facturaNumero} 
-                placeholder="Ejm: 115.00" readOnly={informeEstado !='Activo'} />
+                placeholder="Ingrese número de factura" readOnly={informeEstado !='Activo'} />
               {errores.facturaNumero && <MessageValidationInput mensaje={errores.facturaNumero}/>}
             </FilterOption>
             <FilterOption htmlFor={'ImporteTotal'} name={'IMPORTE'}>
@@ -318,7 +309,8 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
         <TableFooterCustom>
           <FilterOption htmlFor={'facturaNumeroTotalModel'} name={'Total'}>
             <InputDecimalCustom decimales={2} readOnly textValue={facturaTotalModel}
-              placeholder="Automático"/>
+              placeholder="Automático" valueError={errores.totalImporteNetoFactura} />
+            {errores.totalImporteNetoFactura && <MessageValidationInput mensaje={errores.totalImporteNetoFactura}/> }
           </FilterOption>
         </TableFooterCustom>
       </TableContainerCustom>
@@ -373,26 +365,26 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
       </TableContainerCustom>
       <TableContainerCustom>
         <TableHeaderCustom>
-          <TitleCustom titulo={'Selecciona los Recojos'}  />
+          <TitleCustom titulo={'Selecciona los Cortes'}  />
           { informeId > 0 || (
-          <ButtonCustom extraClassName={'mt-6 md:w-28'} name={'Agregar'} onClick={handleAddRecojos} />
+          <ButtonCustom extraClassName={'mt-6 md:w-28'} name={'Agregar'} onClick={handleAddCortes} />
           )}
         </TableHeaderCustom>
-        <TableBodyCustom headers={headersRecojo}>
-          {recojoSeleccionadosList.length > 0 ? (
-            recojoSeleccionadosList.map((recojo) => (
-              <tr key={recojo.recojoId} >
-                <TableTd hidden={true}>{recojo.recojoId}</TableTd>
-                <TableTd> {recojo.recojoFechaInicio} </TableTd>
-                <TableTd> {recojo.recojoFechaFin} </TableTd>
-                <TableTd> {recojo.recojoCampo} </TableTd>
-                <TableTd> {recojo.recojoDiasPrecio} </TableTd>
-                <TableTd> {recojo.recojoCamionesPrecio} </TableTd>
-                <TableTd> {recojo.recojoTotalPrecio} </TableTd>
+        <TableBodyCustom headers={headersCorte}>
+          {corteSeleccionadosList.length > 0 ? (
+            corteSeleccionadosList.map((corte) => (
+              <tr key={corte.corteId} >
+                <TableTd hidden={true}>{corte.corteId}</TableTd>                
+                <TableTd> {corte.corteFecha} </TableTd>
+                <TableTd> {corte.tierraUC} </TableTd>
+                <TableTd> {corte.tierraCampo} </TableTd>
+                <TableTd> {corte.cortePrecio} </TableTd>
+                <TableTd> {corte.cortePesoBrutoTotal} </TableTd>
+                <TableTd> {corte.corteTotal} </TableTd>
                 <TableTd>
                 { informeId > 0 || (
                   <TableButton className={'text-red-400 hover:text-red-300'}
-                    onRowSelect={()=>onRowDeleteTecojo(recojo)}>
+                    onRowSelect={()=>onRowDeleteTecojo(corte)}>
                     <Trash2 size={18} />
                   </TableButton>
                 )}
@@ -400,21 +392,21 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
               </tr>
             )
           ))
-          :(<NoRegistros colSpan={headersRecojo.length} />)}
+          :(<NoRegistros colSpan={headersCorte.length} />)}
         </TableBodyCustom>
         <TableFooterCustom>
           <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Precios'}>
             <InputDecimalCustom placeholder="Automático"
-              textValue={sumaPrecioRecojoModel} readOnly />
+              textValue={sumaPrecioCorteModel} readOnly />
           </FilterOption>        
           <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
-            <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPesoBrutoRecojoModel}
-              decimales={3} textValue={sumaPesoBrutoRecojoModel} valueError={errores.pesoBrutoRecojo}
+            <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPesoBrutoCorteModel}
+              decimales={3} textValue={sumaPesoBrutoCorteModel} valueError={errores.pesoBrutoCorte}
               placeholder='Ejm: 100.565' />
           </FilterOption>
           <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
             <InputDecimalCustom readOnly
-              placeholder='Automático' textValue={sumaTotalRecojoModel} />
+              placeholder='Automático' textValue={sumaTotalCorteModel} />
           </FilterOption>
         </TableFooterCustom>
       </TableContainerCustom>
@@ -573,16 +565,23 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
             <InputDecimalCustom readOnly={informeId>0}
               placeholder='Automático' textValue={utilidadTotalModel} />
           </FilterOption>
+          <div className='space-y-2 md:col-span-2 lg:col-span-4 '>
+            <FilterOption htmlFor="ResultadoModel" name={'Resultado'}>
+              <InputTextCustom textValue={resultadoModel} placeholder='Ingrese el mensaje final' 
+                onChange={setResultadoModel} valueError={errores.resultado} readOnly={informeId>0} />
+            </FilterOption>
+            {errores.resultado && <MessageValidationInput mensaje={errores.resultado}/> }
+          </div>
         </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
-        <FooterButton accion={handleGuardar} name={'Guardar'} />
+        { informeId ==0 && <FooterButton accion={handleGuardar} name={'Guardar'} />}
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
       </Footer>
       {showPopupServicioTransporte ? <InformeServicioPopup headers={headersServicio} onShowModel={respuestaShowModelTransporte} titulo={'Transportes'} transporte={true} />    : ''}
       {showPopupServicioPalero ? <InformeServicioPopup headers={headersServicio}  onShowModel={respuestaShowModelPalero} titulo={'Paleros'} transporte={false} />    : ''}
-      {showPopupRecojo ? <InformeRecojoPopup onShowModel={respuestaShowModelRecojo} headers={headersRecojo} />    : ''}
-      {showPopupLiquidacion ? <InformeLiquidacionPopup onShowModel={resspuestaShowModelLiquidacion} proveedorId={proveedorIdModel} headers={headersLiquidacion}/>    : ''}
+      {showPopupCorte ? <InformeCortePopup onShowModel={respuestaShowModelCorte} headers={headersCorte} tierraId={tierraIdModel} />    : ''}
+      {showPopupLiquidacion ? <InformeLiquidacionPopup onShowModel={resspuestaShowModelLiquidacion} personaId={personaIdModel} headers={headersLiquidacion}/>    : ''}
     </>
   )
 }

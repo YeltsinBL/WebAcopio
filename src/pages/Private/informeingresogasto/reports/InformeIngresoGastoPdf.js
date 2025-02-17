@@ -158,7 +158,7 @@ export const InformeIngresoGastoPdf = (data) => {
       
       { text: "\n" },
       { text: "RESULTADO", bold: true },
-      { text: "El precio acordado con el sembrador es viable porque sí deja utilidad." },
+      { text: data.informeResultado },
 
     ],
     styles: {

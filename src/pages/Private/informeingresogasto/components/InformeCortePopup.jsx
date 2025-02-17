@@ -1,18 +1,18 @@
 import { useState } from "react"
-import { useRecojo } from "../hooks/useRecojo"
+import { useCorte } from "../hooks"
 import { ContainerPopupTableCustom, Footer, FooterButton, NoRegistros, TableBodyCustom,
   TableTd, TitleCustom 
 } from "~components/common"
 
-export const InformeRecojoPopup = ({onShowModel, headers}) => {
+export const InformeCortePopup = ({onShowModel, headers, tierraId}) => {
   const [selectedRows, setSelectedRows] = useState([])
-  const {recojoList} = useRecojo()
+  const {corteList} = useCorte(tierraId)
 
   const handleCheckboxChange = (row) => {
-    const isSelected = selectedRows.some((selectedRow) => selectedRow.recojoId === row.recojoId)
+    const isSelected = selectedRows.some((selectedRow) => selectedRow.corteId === row.corteId)
     if (isSelected) {
       // Si ya está seleccionado, eliminar de selectedRows
-      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.recojoId !== row.recojoId);
+      const updatedRows = selectedRows.filter((selectedRow) => selectedRow.corteId !== row.corteId);
       setSelectedRows(updatedRows);
     } else {
       // Si no está seleccionado, lo agregamos
@@ -30,21 +30,21 @@ export const InformeRecojoPopup = ({onShowModel, headers}) => {
   return (
     <ContainerPopupTableCustom>
       <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-        <TitleCustom titulo={'Lista de Recojos'} />
+        <TitleCustom titulo={'Lista de Cortes'} />
       </div>
       <TableBodyCustom headers={headers}>
-        {recojoList.length > 0 ? (
-          recojoList.map((recojo) =>(
-            <tr key={recojo.recojoId}>
-              <TableTd hidden={true}>{recojo.recojoId}</TableTd>
-              <TableTd> {recojo.recojoFechaInicio} </TableTd>
-              <TableTd> {recojo.recojoFechaFin} </TableTd>
-              <TableTd> {recojo.recojoCampo} </TableTd>
-              <TableTd> {recojo.recojoDiasPrecio} </TableTd>
-              <TableTd> {recojo.recojoCamionesPrecio} </TableTd>
-              <TableTd> {recojo.recojoTotalPrecio} </TableTd>
+        {corteList.length > 0 ? (
+          corteList.map((corte) =>(
+            <tr key={corte.corteId}>
+              <TableTd hidden={true}>{corte.corteId}</TableTd>
+              <TableTd> {corte.corteFecha} </TableTd>
+              <TableTd> {corte.tierraUC} </TableTd>
+              <TableTd> {corte.tierraCampo} </TableTd>
+              <TableTd> {corte.cortePrecio} </TableTd>
+              <TableTd> {corte.cortePesoBrutoTotal} </TableTd>
+              <TableTd> {corte.corteTotal} </TableTd>
               <TableTd>
-                <input type="checkbox" onChange={() => handleCheckboxChange(recojo)} />
+                <input type="checkbox" onChange={() => handleCheckboxChange(corte)} />
               </TableTd>
             </tr>
           ))

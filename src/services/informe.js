@@ -2,9 +2,9 @@ import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
-export const informeListLiquidacion = async(proveedorId) => {
+export const informeListLiquidacion = async(personaId) => {
   try {
-    const response = await fetch(`${appSetting.apiUrl}InformeIngresoGasto/Liquidaciones/${proveedorId}`,{
+    const response = await fetch(`${appSetting.apiUrl}InformeIngresoGasto/Liquidaciones/${personaId}`,{
       method:'GET',
       headers:{'Content-Type': 'application/json'}
     })
@@ -28,9 +28,9 @@ export const informeListServicio = async(path) => {
     throw new Error('Error al buscar todos los Servicios')
   }
 }
-export const informeListRecojo = async() => {
+export const informeListCorte = async(tierraId) => {
   try {
-    const response = await fetch(`${appSetting.apiUrl}InformeIngresoGasto/Recojos`,{
+    const response = await fetch(`${appSetting.apiUrl}InformeIngresoGasto/Cortes/${tierraId}`,{
       method:'GET',
       headers:{'Content-Type': 'application/json'}
     })
@@ -38,7 +38,7 @@ export const informeListRecojo = async() => {
     return await response.json()
   } catch (error) {
     console.log('informeListInformeIngresoGasto:', error.message)
-    throw new Error('Error al buscar todos los Recojos')
+    throw new Error('Error al buscar todos los Cortes')
   }
 }
 

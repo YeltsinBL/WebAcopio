@@ -3,11 +3,11 @@ import {
   ContainerPopupTableCustom, Footer, FooterButton, NoRegistros, TableBodyCustom, 
   TableTd, TitleCustom 
 } from "~components/common"
-import { useLiquidacion } from "../hooks/useLiquidacion"
+import { useLiquidacion } from "../hooks"
 
-export const InformeLiquidacionPopup = ({headers, proveedorId, onShowModel}) => {
+export const InformeLiquidacionPopup = ({headers, personaId, onShowModel}) => {
   const [selectedRows, setSelectedRows] = useState([])
-  const { liquidacionList } = useLiquidacion(proveedorId)
+  const { liquidacionList } = useLiquidacion(personaId)
   
   const handleCheckboxChange = (row) => {
       const isSelected = selectedRows.some((selectedRow) => selectedRow.liquidacionId === row.liquidacionId)

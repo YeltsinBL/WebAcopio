@@ -6,7 +6,7 @@ export const useInformeIngresoGastoInitialForm = (data) => {
   const [informeFecha, setInformeFecha] = useState(obtenerSoloFechaLocal({date: new Date()}))
   const [informeEstado, setInformeEstado] = useState('Activo')
   const [personaIdModel, setPersonaIdModel] = useState("")
-  const [proveedorIdModel, setProveedorIdModel] = useState("")
+  const [proveedorIdModel, setProveedorIdModel] = useState(0)
   const [tierraIdModel, setTierraIdModel] = useState("")
   const [campoModel, setCampoModel] = useState("")
   const [utModel, setUtModel] = useState("")
@@ -21,12 +21,12 @@ export const useInformeIngresoGastoInitialForm = (data) => {
 
   const [servicioTransporteSeleccionadosList, setServicioTransporteSeleccionadosList] = useState([])
   const [servicioPaleroSeleccionadosList, setServicioPaleroSeleccionadosList] = useState([])
-  const [recojoSeleccionadosList, setRecojoSeleccionadosList] = useState([])
+  const [corteSeleccionadosList, setCorteSeleccionadosList] = useState([])
   const [liquidacionSeleccionadosList, setLiquidacionSeleccionadosList] = useState([])
 
   const [showPopupServicioTransporte, setShowPopupServicioTransporte] = useState(false)
   const [showPopupServicioPalero, setShowPopupServicioPalero] = useState(false)
-  const [showPopupRecojo, setShowPopupRecojo] = useState(false)
+  const [showPopupCorte, setShowPopupCorte] = useState(false)
   const [showPopupLiquidacion, setShowPopupLiquidacion] = useState(false)
   
   const [sumaPesoBrutoTransporteModel, setSumaPesoBrutoTransporteModel] = useState(0)
@@ -37,9 +37,9 @@ export const useInformeIngresoGastoInitialForm = (data) => {
   const [sumaPrecioPaleroModel, setSumaPrecioPaleroModel] = useState(0)
   const [sumaTotalPaleroModel, setSumaTotalPaleroModel] = useState(0)
 
-  const [sumaPesoBrutoRecojoModel, setSumaPesoBrutoRecojoModel] = useState(0)
-  const [sumaPrecioRecojoModel, setSumaPrecioRecojoModel] = useState(0)
-  const [sumaTotalRecojoModel, setSumaTotalRecojoModel] = useState(0)
+  const [sumaPesoBrutoCorteModel, setSumaPesoBrutoCorteModel] = useState(0)
+  const [sumaPrecioCorteModel, setSumaPrecioCorteModel] = useState(0)
+  const [sumaTotalCorteModel, setSumaTotalCorteModel] = useState(0)
 
   const [sumaPesoNetoLiquidacionModel, setSumaPesoNetoLiquidacionModel] = useState(0)
   const [sumaPesoBrutoLiquidacionModel, setSumaPesoBrutoLiquidacionModel] = useState(0)
@@ -53,7 +53,7 @@ export const useInformeIngresoGastoInitialForm = (data) => {
   const [sumaPesoBrutoOtrosGastosModel, setSumaPesoBrutoOtrosGastosModel] = useState(0)
   const [sumaPrecioOtrosGastosModel, setSumaPrecioOtrosGastosModel] = useState(0)
   const [sumaTotalOtrosGastosModel, setSumaTotalOtrosGastosModel] = useState(0)
-  
+  const [resultadoModel, setResultadoModel] = useState('')
   const seleccionPersona = data?.personaId ? {id: data.personaId, nombre: data.personaNombre } : null
   
   useEffect(() =>{
@@ -74,7 +74,7 @@ export const useInformeIngresoGastoInitialForm = (data) => {
       setFacturaList(data.informeFacturas)
       setServicioTransporteSeleccionadosList(data.informeServiciosTransportes)
       setServicioPaleroSeleccionadosList(data.informeServiciosPaleros)
-      setRecojoSeleccionadosList(data.informeRecojos)
+      setCorteSeleccionadosList(data.informeCortes)
       setLiquidacionSeleccionadosList(data.informeLiquidaciones)
 
       setSumaPesoBrutoImpuestosModel(data.impuestoPesoBruto)
@@ -83,6 +83,7 @@ export const useInformeIngresoGastoInitialForm = (data) => {
       setSumaPesoBrutoOtrosGastosModel(data.otrosPesoBruto)
       setSumaPrecioOtrosGastosModel(data.otrosPrecio)
       setSumaTotalOtrosGastosModel(data.otrosTotal)
+      setResultadoModel(data.informeResultado)
     }
   }, [data])
 
@@ -120,14 +121,17 @@ export const useInformeIngresoGastoInitialForm = (data) => {
     setSumaTotalPaleroModel(FormatteDecimalMath(sumaTotales.total, 2))
   },[servicioPaleroSeleccionadosList])
   useEffect(()=>{
-    const sumaTotales = recojoSeleccionadosList.reduce((acumulador, servicio) => {
+    const sumaTotales = corteSeleccionadosList.reduce((acumulador, servicio) => {
       return {
-          precioTotal: acumulador.precioTotal + parseFloat(servicio.recojoTotalPrecio),
+        precioTotal: acumulador.precioTotal + parseFloat(servicio.cortePrecio),
+        pesoBrutoTotal: acumulador.pesoBrutoTotal + parseFloat(servicio.cortePesoBrutoTotal),
+        total: acumulador.total + parseFloat(servicio.corteTotal)
       };
-    }, { precioTotal: 0})
-    setSumaPrecioRecojoModel(FormatteDecimalMath(sumaTotales.precioTotal, 2))
-    setSumaTotalRecojoModel(FormatteDecimalMath(sumaTotales.precioTotal * sumaPesoBrutoRecojoModel,2))
-  },[recojoSeleccionadosList, sumaPesoBrutoRecojoModel])
+    }, {  precioTotal: 0, pesoBrutoTotal: 0, total: 0 })
+    setSumaPesoBrutoCorteModel(FormatteDecimalMath(sumaTotales.pesoBrutoTotal, 3))
+    setSumaPrecioCorteModel(FormatteDecimalMath(sumaTotales.precioTotal, 2))
+    setSumaTotalCorteModel(FormatteDecimalMath(sumaTotales.total,2))
+  },[corteSeleccionadosList, sumaPesoBrutoCorteModel])
   useEffect(()=>{
     const sumaTotales = liquidacionSeleccionadosList.reduce((acumulador, servicio) => {
       return {
@@ -137,7 +141,6 @@ export const useInformeIngresoGastoInitialForm = (data) => {
           total: acumulador.total + parseFloat(servicio.liquidacionToneladaTotal)
       };
     }, { precioTotal: 0, pesoBrutoTotal: 0,pesoNetoTotal: 0, total: 0 })
-    setSumaPesoBrutoRecojoModel(FormatteDecimalMath(sumaTotales.pesoBrutoTotal, 3))
     setSumaPesoNetoLiquidacionModel(FormatteDecimalMath(sumaTotales.pesoNetoTotal, 3))
     setSumaPesoBrutoLiquidacionModel(FormatteDecimalMath(sumaTotales.pesoBrutoTotal, 3))
     setSumaPrecioLiquidacionModel(FormatteDecimalMath(sumaTotales.precioTotal, 2))
@@ -161,10 +164,10 @@ export const useInformeIngresoGastoInitialForm = (data) => {
   useEffect(()=>{
     setCostoTotalModel( 
       (parseFloat(sumaTotalTransporteModel) || 0)+ (parseFloat(sumaTotalPaleroModel) || 0)+
-      (parseFloat(sumaTotalRecojoModel) || 0)+ (parseFloat(sumaTotalLiquidacionModel) || 0)+
+      (parseFloat(sumaTotalCorteModel) || 0)+ (parseFloat(sumaTotalLiquidacionModel) || 0)+
       (parseFloat(sumaTotalImpuestosModel) || 0)+ (parseFloat(sumaTotalOtrosGastosModel) || 0)
     )
-  }, [sumaTotalTransporteModel, sumaTotalPaleroModel, sumaTotalRecojoModel,
+  }, [sumaTotalTransporteModel, sumaTotalPaleroModel, sumaTotalCorteModel,
     sumaTotalLiquidacionModel, sumaTotalImpuestosModel, sumaTotalOtrosGastosModel])
   useEffect(()=>{
     setUtilidadTotalModel(
@@ -181,20 +184,21 @@ export const useInformeIngresoGastoInitialForm = (data) => {
     facturaList, setFacturaList, informeEstado, facturaTotalModel,
     showPopupServicioTransporte, setShowPopupServicioTransporte,
     showPopupServicioPalero, setShowPopupServicioPalero,
-    showPopupRecojo, setShowPopupRecojo,
+    showPopupCorte, setShowPopupCorte,
     showPopupLiquidacion, setShowPopupLiquidacion,
     servicioTransporteSeleccionadosList, setServicioTransporteSeleccionadosList,
     servicioPaleroSeleccionadosList, setServicioPaleroSeleccionadosList,
-    recojoSeleccionadosList, setRecojoSeleccionadosList,
+    corteSeleccionadosList, setCorteSeleccionadosList,
     liquidacionSeleccionadosList, setLiquidacionSeleccionadosList,
     sumaPesoBrutoTransporteModel, sumaPrecioTransporteModel, sumaTotalTransporteModel,
     sumaPesoBrutoPaleroModel, sumaPrecioPaleroModel, sumaTotalPaleroModel,
-    sumaPesoBrutoRecojoModel, setSumaPesoBrutoRecojoModel, sumaPrecioRecojoModel,
-    sumaTotalRecojoModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
+    sumaPesoBrutoCorteModel, setSumaPesoBrutoCorteModel, sumaPrecioCorteModel,
+    sumaTotalCorteModel, sumaPesoBrutoLiquidacionModel, sumaPrecioLiquidacionModel,
     sumaTotalLiquidacionModel, sumaPesoBrutoImpuestosModel, setSumaPesoBrutoImpuestosModel,
     sumaPesoNetoLiquidacionModel, sumaPrecioImpuestosModel, setSumaPrecioImpuestosModel, sumaTotalImpuestosModel, 
     sumaPesoBrutoOtrosGastosModel, setSumaPesoBrutoOtrosGastosModel,
     sumaPrecioOtrosGastosModel, setSumaPrecioOtrosGastosModel,
-    sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel
+    sumaTotalOtrosGastosModel, costoTotalModel, utilidadTotalModel,
+    resultadoModel, setResultadoModel,
   }
 }

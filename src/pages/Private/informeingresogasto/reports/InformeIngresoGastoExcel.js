@@ -187,8 +187,8 @@ export const InformeIngresoGastoExcel = (data) => {
   totalRowPorPagar.getCell(8).alignment = {horizontal: 'right', vertical:'middle'}
   
   worksheet.addRow([])
-  worksheet.addRow(["RESULTADO", data.liquidacionEstadoDescripcion]).font = boldStyle
-  worksheet.addRow(["El precio acordado con el sembrador es viable porque sí deja utilidad", data.liquidacionEstadoDescripcion])
+  worksheet.addRow(["RESULTADO"]).font = boldStyle
+  worksheet.addRow([data.informeResultado])
 
   return workbook
 }

@@ -8,45 +8,40 @@ export const useInformeIngresoGastoValidation = () => {
       if(servicio){
         if (!values.personaIdModel) {
           nuevosErrores.sembrador = "La información del Sembrador es obligatorio."
-          toast.warning(nuevosErrores.sembrador, 
-            { style: { background: 'black', color:' yellow' }} 
-          )
+          PopupValidationWarning({texto: nuevosErrores.sembrador})
         }
         if (!values.campoModel) {
           nuevosErrores.campo = "La información de CAMPO es obligatorio."
-          toast.warning(nuevosErrores.campo, 
-            { style: { background: 'black', color:' yellow' }} 
-          )
+          PopupValidationWarning({texto: nuevosErrores.campo})
         }
         if (!values.utModel) {
           nuevosErrores.ut = "La información de la UT es obligatorio."
-          toast.warning(nuevosErrores.ut, 
-            { style: { background: 'black', color:' yellow' }} 
-          )
+          PopupValidationWarning({texto: nuevosErrores.ut})
         }
       }
       if (factura){
         if (!values.facturaFechaModel) {
           nuevosErrores.facturaFecha = "El campo FECHA es obligatorio."
-          toast.warning(nuevosErrores.facturaFecha, 
-            { style: { background: 'black', color:' yellow' }} 
-          )
+          PopupValidationWarning({texto: nuevosErrores.facturaFecha})
         }
         if (!values.facturaNumeroModel) {
           nuevosErrores.facturaNumero = "El campo FACTURA es obligatorio."
-          toast.warning(nuevosErrores.facturaNumero, 
-            { style: { background: 'black', color:' yellow' }} 
-          )
+          PopupValidationWarning({texto: nuevosErrores.facturaNumero})
         }
         if (!values.facturaImporteModel || !parseFloat(values.facturaImporteModel)) {
           nuevosErrores.facturaImporte = "El campo IMPORTE es obligatorio."
-          toast.warning(nuevosErrores.facturaImporte, 
-            { style: { background: 'black', color:' yellow' }} 
-          )
+          PopupValidationWarning({texto: nuevosErrores.facturaImporte})
         }
       }
       if(save){
-        
+        if(!values.facturaTotalModel){
+          nuevosErrores.totalImporteNetoFactura ="La información de TOTAL en IMPORTE NETO es obligatorio"
+          PopupValidationWarning({texto: nuevosErrores.totalImporteNetoFactura})
+        }
+        if(!values.resultadoModel) {
+          nuevosErrores.resultado ="La información de RESULTADO es obligatorio"
+          PopupValidationWarning({texto: nuevosErrores.resultado})
+        }
       }
       setErrores(nuevosErrores)  
       return {
@@ -55,4 +50,10 @@ export const useInformeIngresoGastoValidation = () => {
       }
     }  
     return { validate, errores }
+}
+
+const PopupValidationWarning = ({texto}) =>{
+  return toast.warning(texto, 
+    { style: { background: 'black', color:' yellow' }} 
+  )
 }

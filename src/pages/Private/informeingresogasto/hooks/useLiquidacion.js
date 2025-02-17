@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { informeListLiquidacion } from "~services/informe"
 import { InformeIngresoGastoAdapterLiquidacion } from "../adapter/InformeIngresoGastoAdapter"
 
-export const useLiquidacion = (proveedorId) => {
+export const useLiquidacion = (personaId) => {
   const [liquidacionList, setLiquidacionList] = useState([])
 
   useEffect(()=>{
@@ -10,7 +10,7 @@ export const useLiquidacion = (proveedorId) => {
   },[])
 
   const getLiquidacion = async () => {
-    const liquidaciones = await informeListLiquidacion(proveedorId)
+    const liquidaciones = await informeListLiquidacion(personaId)
     setLiquidacionList(InformeIngresoGastoAdapterLiquidacion(liquidaciones))
   }
   return { liquidacionList }

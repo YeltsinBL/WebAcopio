@@ -15,14 +15,13 @@ export const InformeIngresoGastoAdapterLiquidacion = (liquidacionesList)=>{
     }
   })
 }
-export const InformeIngresoGastoAdapterRecojo = (recojosList)=>{
-  return recojosList.map(recojo =>{
-    return {...recojo, 
-      recojoFechaInicio: convertirFechaDDMMYYYY(recojo.recojoFechaInicio),
-      recojoFechaFin   : convertirFechaDDMMYYYY(recojo.recojoFechaFin),
-      recojoCamionesPrecio : FormatteDecimalMath(recojo.recojoCamionesPrecio,2),
-      recojoDiasPrecio : FormatteDecimalMath(recojo.recojoDiasPrecio,2),
-      recojoTotalPrecio : FormatteDecimalMath(recojo.recojoTotalPrecio,2)
+export const InformeIngresoGastoAdapterCorte = (cortesList)=>{
+  return cortesList.map(corte =>{
+    return {...corte, 
+      corteFecha: convertirFechaDDMMYYYY(corte.corteFecha),
+      cortePrecio : FormatteDecimalMath(corte.cortePrecio,2),
+      cortePesoBrutoTotal : FormatteDecimalMath(corte.cortePesoBrutoTotal,3),
+      corteTotal : FormatteDecimalMath(corte.corteTotal,2)
     }
   })
 }
@@ -51,11 +50,11 @@ export const InformeIngresoGastoAdapterList = (data) => {
 }
 
 export const InformeIngresoGastoAdapterSave = (data) => {
-  console.log(data)
   let save ={
     informeFacturaTotal: data.facturaTotalModel,
     informeCostoTotal:data.costoTotalModel,
-    informeTotal: data.utilidadTotalModel
+    informeTotal: data.utilidadTotalModel,
+    informeResultado: data.resultadoModel
   }
   const costos = [
     {
@@ -64,9 +63,9 @@ export const InformeIngresoGastoAdapterSave = (data) => {
       informeCostoTotal: data.sumaTotalLiquidacionModel,
       informeCostoOrden: 1
     },{
-      informeCostoPrecio: data.sumaPrecioRecojoModel,
-      informeCostoTonelada: data.sumaPesoBrutoRecojoModel,
-      informeCostoTotal: data.sumaTotalRecojoModel,
+      informeCostoPrecio: data.sumaPrecioCorteModel,
+      informeCostoTonelada: data.sumaPesoBrutoCorteModel,
+      informeCostoTotal: data.sumaTotalCorteModel,
       informeCostoOrden: 2
     },{
       informeCostoPrecio: data.sumaPrecioPaleroModel,
@@ -97,7 +96,7 @@ export const InformeIngresoGastoAdapterSave = (data) => {
   }else{
     const facturas= data.facturaList?.map(detalle => (formatterFactura(detalle)))
     const liquidaciones= data.liquidacionSeleccionadosList?.map(detalle => (formatterSeleccionados(detalle)))
-    const recojos= data.recojoSeleccionadosList?.map(detalle => (formatterSeleccionados(detalle)))
+    const cortes= data.corteSeleccionadosList?.map(detalle => (formatterSeleccionados(detalle)))
     const transportes= data.servicioTransporteSeleccionadosList?.map(detalle => (formatterSeleccionados(detalle)))
     const paleros= data.servicioPaleroSeleccionadosList?.map(detalle => (formatterSeleccionados(detalle)))
     
@@ -112,7 +111,7 @@ export const InformeIngresoGastoAdapterSave = (data) => {
       informeCostos: costos,
       informeServiciosTransportes: transportes,
       informeServiciosPaleros: paleros,
-      informeRecojos: recojos,
+      informeCortes: cortes,
       informeLiquidaciones: liquidaciones
 
     }
@@ -127,7 +126,7 @@ const formatterFactura = (data) => {
 }
 const formatterSeleccionados = (data) => {
   return {
-    id: data.liquidacionId || data.recojoId || data.servicioId,
+    id: data.liquidacionId || data.corteId || data.servicioId,
   }
 }
 
@@ -136,11 +135,11 @@ export const InformeIngresoGastoAdapterGetData = (data) => {
   const costos= data.informeCostos?.map(detalle => (formatterGetCosto(detalle)))
   const transportes= data.informeServiciosTransportes?.map(detalle => (formatterGetServicio(detalle)))
   const paleros= data.informeServiciosPaleros?.map(detalle => (formatterGetServicio(detalle)))
-  const recojos= data.informeRecojos?.map(detalle => (formatterGetRecojo(detalle)))
+  const cortes= data.informeCortes?.map(detalle => (formatterGetCorte(detalle)))
   const liquidaciones= data.informeLiquidaciones?.map(detalle => (formatterGetLiquidacion(detalle)))
   
   const costoLiquidaciones = costos.find(item => item.informeCostoOrden === 1)
-  const costoRecojo = costos.find(item => item.informeCostoOrden === 2)
+  const costoCorte = costos.find(item => item.informeCostoOrden === 2)
   const costoPalero = costos.find(item => item.informeCostoOrden === 3)
   const costoTransporte = costos.find(item => item.informeCostoOrden === 4)
   const impuestos = costos.find(item => item.informeCostoOrden === 5)
@@ -156,9 +155,9 @@ export const InformeIngresoGastoAdapterGetData = (data) => {
     informeCostos: costos,
     informeServiciosTransportes: transportes,
     informeServiciosPaleros: paleros,
-    informeRecojos: recojos,
+    informeCortes: cortes,
     informeLiquidaciones: liquidaciones,
-    costoLiquidaciones, costoRecojo,
+    costoLiquidaciones, costoCorte,
     costoPalero, costoTransporte,
     impuestoPrecio:impuestos.informeCostoPrecio,
     impuestoPesoBruto:impuestos.informeCostoTonelada,
@@ -190,13 +189,12 @@ const formatterGetServicio = (data) => {
     servicioTotal: FormatteDecimalMath(data.servicioTotal,2)
   }
 }
-const formatterGetRecojo = (data) => {
+const formatterGetCorte = (data) => {
   return {...data,
-    recojoFechaInicio:  convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date: data.recojoFechaInicio})),
-    recojoFechaFin:  convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date: data.recojoFechaFin})),
-    recojoCamionesPrecio:  FormatteDecimalMath(data.recojoCamionesPrecio,2),
-    recojoDiasPrecio: FormatteDecimalMath(data.recojoDiasPrecio, 2),
-    recojoTotalPrecio: FormatteDecimalMath(data.recojoTotalPrecio,2)
+    corteFecha:  convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date: data.corteFecha})),
+    cortePesoBrutoTotal:  FormatteDecimalMath(data.cortePesoBrutoTotal,3),
+    cortePrecio: FormatteDecimalMath(data.cortePrecio, 2),
+    corteTotal: FormatteDecimalMath(data.corteTotal,2)
   }
 }
 const formatterGetLiquidacion = (data) => {

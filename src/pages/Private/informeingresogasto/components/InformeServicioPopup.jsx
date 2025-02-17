@@ -3,7 +3,7 @@ import {
   ContainerPopupTableCustom, Footer, FooterButton, NoRegistros, TableBodyCustom, TableTd, 
   TitleCustom 
 } from "~components/common"
-import { useServicio } from "../hooks/useServicio"
+import { useServicio } from "../hooks"
 
 export const InformeServicioPopup = ({headers, transporte, titulo, onShowModel}) => {
   const [selectedRows, setSelectedRows] = useState([])
