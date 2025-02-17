@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import CorteTicketPopupTable from '~components/corte/CorteTicketPopupTable'
 import { Footer, FooterButton } from '~components/common'
-import { searchTicketsByCarguillo } from '~services/ticket'
+import { searchTicketsByCarguillo, searchTicketsForPalero } from '~services/ticket'
 
 
 export const ServicioTransportePopup = ({onShowModel, headers, carguilloId}) => {
@@ -12,7 +12,10 @@ export const ServicioTransportePopup = ({onShowModel, headers, carguilloId}) => 
     getTicketActive()
   }, [])
   const getTicketActive = async() => {
-    const tickets = await searchTicketsByCarguillo(carguilloId)
+    let tickets = []
+    if(carguilloId)
+      tickets = await searchTicketsByCarguillo(carguilloId)
+    else tickets = await searchTicketsForPalero()
     setTICKET_DATA(tickets)
   }
 

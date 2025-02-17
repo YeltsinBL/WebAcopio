@@ -108,15 +108,3 @@ export const servicioPaleroSave = async({method, servicioPalero}) => {
     return ResponseErrorServidor
   }
 }
-export const servicioPaleroGetServicioTransporte = async() =>{
-  try {
-    const response = await fetch(`${appSetting.apiUrl}Servicio/Palero/ServicioTransporteAvailable`,{
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    return await response.json()
-  } catch (error) {
-    
-  }
-}

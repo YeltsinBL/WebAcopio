@@ -110,6 +110,21 @@ export const searchTicketsByProveedor = async(proveedorId) => {
     throw new Error('Error al buscar tickets')
   }
 }
+export const searchTicketsForPalero = async() => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Ticket/Palero`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
+    const tickets = await response.json()
+    return formatteTickets(tickets)
+
+  } catch (error) {
+    console.log('searchTicketsForPalero:', error.message)
+    throw new Error('Error al buscar tickets')
+  }
+}
 
 const formatteTickets =(tickets) =>{
   return tickets.map(ticket =>{

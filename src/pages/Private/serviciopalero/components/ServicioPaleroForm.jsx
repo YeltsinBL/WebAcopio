@@ -3,7 +3,7 @@ import { toast } from "sonner"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom,
   InputDecimalCustom, InputTextCustom, MessageValidationInput, NoRegistros, SectionModel, 
-  TableBodyCustom, TableContainerCustom, TableFooterCustom,
+  TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom,
   TableHeaderCustom, TableTd, TitleCustom
 } from "~components/common"
 import { searchCarguilloList } from "~services/carguillo"
@@ -11,8 +11,9 @@ import {
   FormatteDecimalMath, formatterDataCombo, obtenerSoloFechaLocal
 } from "~utils/index"
 import { servicioPaleroSave } from "~services/servicio"
-import { ServicioTransportePopup } from "./ServicioPaleroPopup"
 import { ServicioPaleroAdapterSave } from "../adapter/ServicioPaleroAdapter"
+import { ServicioTransportePopup } from "~pages/Private/serviciotransporte/components"
+import { Trash2 } from "lucide-react"
 
 export const ServicioPaleroForm = ({onShowModel, data}) => {
   const [carguilloList, setCarguilloList] = useState([])
@@ -22,7 +23,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   const [servicioPrecioModel, setServicioPrecioModel] = useState(0)
   const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
   const [totalModel, setTotalModel] = useState('')
-  const [servicioTransporteSelected, setServicioTransporteSelected] = useState([])
+  //const [servicioTransporteSelected, setServicioTransporteSelected] = useState([])
   const [ticketSelected, setTicketSelected] = useState([])
   const [servicioDescripcion, setServicioDescripcion] = useState('Activo')
   const [showPopup, setShowPopup] = useState(false)
@@ -30,8 +31,8 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   const [errores, setErrores] = useState({})
 
   const seleccionCarguillo = data?.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
-  const headers = ['Ingenio', 'Campo', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
-    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Estado']
+  const headers  = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
 
   useEffect(() => {
     const total = ticketSelected.reduce(getSum, 0)
@@ -89,19 +90,16 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
     if(data.length > 0) {
       if(ticketSelected.length > 0){
         const mergedArray = [
-          ...servicioTransporteSelected,
-          ...data.filter((item2) => !servicioTransporteSelected.some((item1) => item1.servicioId === item2.servicioId)),
+          ...ticketSelected,
+          ...data.filter((item2) => !ticketSelected.some((item1) => item1.ticketId === item2.ticketId)),
         ]
-        setServicioTransporteSelected(mergedArray)
-        const rest = mergedArray.flatMap(servicio => {return servicio.servicioDetails})
-        setTicketSelected(rest)
-      } else {
-        setServicioTransporteSelected(data)
-        const rest = data.flatMap(servicio => {return servicio.servicioDetails})
-        setTicketSelected(rest)
-      }
+        setTicketSelected(mergedArray)
+      }else setTicketSelected(data)
     }
     setShowPopup(false)
+  }
+  const onRowDelete= (data)=>{
+    setTicketSelected(ticketSelected.filter(ticket => ticket.ticketId !== data.ticketId))
   }
   const handleGuardar = async(e)=>{
     e.preventDefault()
@@ -111,7 +109,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
         servicioIdModel, servicioDescripcion,
         fechaModel, carguilloIdModel,
         servicioPrecioModel, sumaPesoBrutoModel,
-        totalModel, servicioTransporteSelected        
+        totalModel, ticketSelected        
       }
       const servicioSave = await servicioPaleroSave({
         method:servicioIdModel>0?'PUT':'POST',
@@ -176,7 +174,6 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
               <tr key={ticket.ticketId} >
                 <TableTd hidden>{ticket.ticketId}</TableTd>
                 <TableTd>{ticket.ticketIngenio}</TableTd>
-                <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketViaje}</TableTd>
                 <TableTd>{ticket.ticketFecha}</TableTd>
                 <TableTd>{ticket.ticketVehiculo}</TableTd>
@@ -185,7 +182,14 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
                 <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
                 <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketPesoBruto}</TableTd> 
+                <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
+                <TableTd hidden={servicioIdModel > 0}>
+                  <TableButton className='text-red-400 hover:text-red-300'
+                    onRowSelect={()=>onRowDelete(ticket)} >
+                    <Trash2 size={18} />
+                  </TableButton>
+                </TableTd>
               </tr>
             ))
           ): ( <NoRegistros colSpan={headers.length}/> )}
@@ -209,7 +213,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
         )}
         <FooterButton accion={handleCancelar} name={'Cancelar'} />
       </Footer>
-      {showPopup ? <ServicioTransportePopup onShowModel={resspuestaShowModel} headers={headers} carguilloId={carguilloIdModel}/>    : ''}
+      {showPopup ? <ServicioTransportePopup onShowModel={resspuestaShowModel} headers={headers} carguilloId={null}/>    : ''}
     </>
   )
 }
