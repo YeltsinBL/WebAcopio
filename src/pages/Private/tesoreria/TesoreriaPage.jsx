@@ -9,6 +9,7 @@ import { TesoreriaFilter } from "./components/TesoreriaFilter"
 import { TesoreriaTable } from "./components/TesoreriaTable"
 import { TesoreriaForm } from "./components/TesoreriaForm"
 import { TesoreriaAdapterGetData, TesoreriaAdapterList } from "./adapters/TesoreriaAdapter"
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 
 function TesoreriaPage() {
   const handleGoBack = useClosePage()
@@ -17,10 +18,16 @@ function TesoreriaPage() {
   const [showModal, setShowModal] = useState(false)
 
   useEffect(()=>{
-    getTesorerias()
+    getTesorerias({
+      fechaDesde: obtenerFechaInicialMes(), 
+      fechaHasta: obtenerSoloFechaLocal({date: new Date()}),
+      proveedorId:''
+    })
   },[])
-  const getTesorerias = async(filters) =>{
-    const tesorerias = await searchTesoreria(filters)
+  const getTesorerias = async({fechaDesde= obtenerFechaInicialMes(), 
+    fechaHasta= obtenerSoloFechaLocal({date: new Date()}),
+    proveedorId=''}) =>{
+    const tesorerias = await searchTesoreria({fechaDesde, fechaHasta, proveedorId})
     setTesoreriaList(TesoreriaAdapterList(tesorerias))
   }
   const handleDataFromChild = (data)=>{
@@ -28,7 +35,7 @@ function TesoreriaPage() {
       fechaDesde, fechaHasta, proveedorId
     } = data
     if(fechaDesde=='' && fechaHasta=='' && proveedorId =='')
-      return getTesorerias()
+      return getTesorerias({})
     return getTesorerias({fechaDesde, fechaHasta, proveedorId})
   }
   const handleRowSelect = async(rowData) =>{
@@ -41,13 +48,13 @@ function TesoreriaPage() {
   const handleSaveModel = (data) =>{
     if(data.result) {
       toast.success(data.errorMessage)
-      getTesorerias()
+      getTesorerias({})
     }
     setShowModal(false)
   }
   return (
     <ContainerPageCustom>
-      <Header title={'Tesoreria'}/>
+      <Header title={'Liquidación Pago'}/>
       <Main>
         { !showModal ?
         <>

@@ -6,7 +6,7 @@ import {
 export const TesoreriaTable = ({data, onRowSelect}) => {
   const headers =['Fecha', 'Sembrador', 'UT', 'Campo', 'Monto','Pagado','Pendiente', 'Acciones']
   return (
-    <Table nameTitle={'Lista de Tesoreria'} headers={headers}>
+    <Table nameTitle={'Lista de Liquidación de Pago'} headers={headers}>
      { data.length > 0 ? (
         data.map((tesoreria) =>(
           <tr key={tesoreria.tesoreriaId}>

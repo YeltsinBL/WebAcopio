@@ -45,7 +45,7 @@ const PrivateRoute = () => {
         <Route path='/recojo' element={<RecojoPage />} />
         <Route path='/serviciotransporte' element={<ServicioTransportePage />} />
         <Route path='/liquidacion' element={<LiquidacionPage />} />
-        <Route path='/tesoreria' element={<TesoreriaPage />} />
+        <Route path='/liquidacionpago' element={<TesoreriaPage />} />
         <Route path='/serviciopalero' element={<ServicioPaleroPage />} />
         <Route path='/reportemasivo' element={<ReporteMasivoPage />} />
         <Route path='/producto' element={<ProdutoPage />} />

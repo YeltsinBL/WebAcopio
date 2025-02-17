@@ -173,7 +173,7 @@ export const TesoreriaForm = ({onShowModel, data}) => {
   }
   return (
     <>
-      <SectionModel title={(tesoreriaId > 0 ? 'Información de':'Registrar') + ' Tesoreria'}>
+      <SectionModel title={(tesoreriaId > 0 ? 'Información de':'Registrar') + ' Liquidación Pago'}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 '>
           <FilterOption htmlFor={'FechaModel'} name={'Fecha'}>
             <InputDateCustom fechaValue={fechaModel}

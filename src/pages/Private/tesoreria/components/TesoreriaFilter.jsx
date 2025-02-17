@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react"
 import { 
-    ButtonCustom,
-    ComboBoxCustom,
-    FilterOption, InputDateCustom, SectionFilter
-} from "../../../../components/common"
-import { searchProveedorAvailable } from "../../../../services/proveedor"
-import { formatterDataCombo } from "../../../../utils"
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter
+} from "~components/common"
+import { searchProveedorAvailable } from "~services/proveedor"
+import { 
+  formatterDataCombo, obtenerFechaInicialMes, obtenerSoloFechaLocal 
+} from "~utils/index"
 
 export const TesoreriaFilter = ({onFiltersValue}) => {
   const [utList, setUtList] = useState([])
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
+  const [fechaDesdeFilter, setFechaDesdeFilter] = useState(obtenerFechaInicialMes())
+  const [fechaHastaFilter, setFechaHastaFilter] = useState(obtenerSoloFechaLocal({date: new Date()}))
   const [utFilter, setUtFilter] = useState('')
 
   useEffect(()=>{
