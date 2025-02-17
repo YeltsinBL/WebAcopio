@@ -1,6 +1,5 @@
 import ExcelJS from "exceljs"
 export const InformeIngresoGastoExcel = (data) => {
-  console.log(data)
   let currentRow = 8;
   const obtenerTextoPrioridad = (orden) => {
     switch (orden) {

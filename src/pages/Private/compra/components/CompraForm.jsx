@@ -45,7 +45,6 @@ export const CompraForm = ({onShowModel, data}) => {
     getDistribuidor()
   }, [])
   useEffect(()=>{
-    console.log(data)
     if(data){
       setCompraId(data.compraId)
       setFechaModel(data.compraFecha)

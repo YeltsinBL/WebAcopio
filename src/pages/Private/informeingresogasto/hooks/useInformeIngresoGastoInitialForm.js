@@ -58,7 +58,6 @@ export const useInformeIngresoGastoInitialForm = (data) => {
   
   useEffect(() =>{
     if(data){
-      console.log(data)
       setInformeId(data.informeId)
       setPersonaIdModel(data.personaId)
       setTierraIdModel(data.tierraId)

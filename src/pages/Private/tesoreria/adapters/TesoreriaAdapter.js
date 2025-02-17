@@ -9,7 +9,6 @@ export const TesoreriaAdapterList =(tesorerias)=>{
 
 export const TesoreriaAdapterGetData =(tesoreria)=>{
   const formatter= tesoreria.tesoreriaDetallePagos?.map(tesoreriaDetail => (formatterTesoreriaDetail(tesoreriaDetail)))
-  console.log('formatter:', formatter)
   return {...tesoreria, 
     tesoreriaMonto: FormatteDecimalMath(tesoreria.tesoreriaMonto,2),
     tesoreriaPagado: FormatteDecimalMath(tesoreria.tesoreriaPagado,2),

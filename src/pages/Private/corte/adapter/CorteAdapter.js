@@ -33,7 +33,6 @@ const formatterticket = (ticket) => {
 
 
 export const corteAdpterSave =(data) =>{
-  //console.log(data)
   let save ={
     cortePrecio: data.precioModel,
     corteTotal: data.totalModel,

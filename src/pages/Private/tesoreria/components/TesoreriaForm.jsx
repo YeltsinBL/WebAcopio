@@ -107,7 +107,6 @@ export const TesoreriaForm = ({onShowModel, data}) => {
   }
   const handleAgregarProveedor = (e) => {
     e.preventDefault()
-    console.log(validarCampos(true))
     if (validarCampos(true)) {
       const updatePlacaList = [...tesoreriaDetallePagado, 
         { tesoreriaDetallePagoId: `temp-${Date.now()}`,
@@ -117,7 +116,6 @@ export const TesoreriaForm = ({onShowModel, data}) => {
         tesoreriaDetallePagoBanco: bancoModel,
         tesoreriaDetallePagoCtaCte: cteModel,
       }]
-      console.log(updatePlacaList)
       setTesoreriaDetallePagado(updatePlacaList)
     }
     setPagadoModel(0)
@@ -157,7 +155,6 @@ export const TesoreriaForm = ({onShowModel, data}) => {
           userCreatedName: "ADMIN"
         }
       }
-      console.log(tesoreriaModel)
       const tesoreriaResp = await tesoreriaSave(tesoreriaId > 0? 'PUT':'POST', tesoreriaModel)
       if(!tesoreriaResp.result) 
         return toast.error(tesoreriaResp.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})

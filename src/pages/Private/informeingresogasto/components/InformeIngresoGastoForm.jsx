@@ -208,9 +208,7 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
     }
     const { isValid } = validate({servicio:true, save:true, values:valuesData})
     if(isValid){
-      console.log(valuesData)
       const save = InformeIngresoGastoAdapterSave(valuesData)
-      console.log(save)
       const response = await informeSave(informeId > 0 ? 'PUT' : 'POST',save)
       if(!response.result) 
         return toast.error(response.message, { id: toastLoadingCustom, style: { color:'red' }})
