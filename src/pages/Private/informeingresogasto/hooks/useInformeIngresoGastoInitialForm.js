@@ -161,11 +161,10 @@ export const useInformeIngresoGastoInitialForm = (data) => {
     return setSumaTotalOtrosGastosModel(0)
   }, [sumaPesoBrutoOtrosGastosModel, sumaPrecioOtrosGastosModel])
   useEffect(()=>{
-    setCostoTotalModel( 
-      (parseFloat(sumaTotalTransporteModel) || 0)+ (parseFloat(sumaTotalPaleroModel) || 0)+
+    const calculate = (parseFloat(sumaTotalTransporteModel) || 0)+ (parseFloat(sumaTotalPaleroModel) || 0)+
       (parseFloat(sumaTotalCorteModel) || 0)+ (parseFloat(sumaTotalLiquidacionModel) || 0)+
       (parseFloat(sumaTotalImpuestosModel) || 0)+ (parseFloat(sumaTotalOtrosGastosModel) || 0)
-    )
+    setCostoTotalModel(FormatteDecimalMath(calculate, 2) )
   }, [sumaTotalTransporteModel, sumaTotalPaleroModel, sumaTotalCorteModel,
     sumaTotalLiquidacionModel, sumaTotalImpuestosModel, sumaTotalOtrosGastosModel])
   useEffect(()=>{
