@@ -240,7 +240,7 @@ export const VentaForm = ({onShowModel, data}) => {
             detalleVenta.map((detalle) => (
                 <tr key={detalle.productoId} >
                 <TableTd hidden>{detalle.productoId}</TableTd>
-                <TableTd>{detalle.productoCantidad}</TableTd>
+                <TableTd>{detalle.productoStock}</TableTd>
                 <TableTd>{detalle.productoNombre}</TableTd>
                 <TableTd>{detalle.productoPrecioVenta}</TableTd>
                 <TableTd>{detalle.cantidad}</TableTd>

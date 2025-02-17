@@ -46,7 +46,7 @@ export const VentaProductoPopup = ({onShowModel}) => {
             <tr key={producto.productoId}>
               <TableTd hidden={true}>{producto.productoId} </TableTd>
               <TableTd>{producto.productoNombre}</TableTd>
-              <TableTd>{producto.productoCantidad}</TableTd>
+              <TableTd>{producto.productoStock}</TableTd>
               <TableTd>{producto.productoPrecioVenta}</TableTd>
               <TableTd>
                 <input

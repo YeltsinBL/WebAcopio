@@ -1,26 +1,49 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { PopupValidationWarning } from "~components/common/MessagePopupValidation"
 
 export const useVentaValidation = () => {
   const [errores, setErrores] = useState({})  
   const validate = (save = false, product = false, payment = false, values) => {
     const nuevosErrores = {}  
     if(save){
-      if (!values.fechaModel) nuevosErrores.fechaModel = "El campo FECHA es obligatorio."
-      if (!values.comprobanteModel) nuevosErrores.comprobante = "El campo TIPO COMPROBANTE es obligatorio."
-      if (!values.personaModel) nuevosErrores.persona = "El campo PERSONA es obligatorio."
-      if (!values.ventaTipoModel) nuevosErrores.ventaTipo= "El campo TIPO es obligatorio"
-      if (values.ventaTipoModel == 3 && !values.ventaDiaModel) nuevosErrores.numero = "El campo DIAS es obligatorio"
-      if (!values.ventaEstadoModel) nuevosErrores.ventaEstado= "El campo ESTADO es obligatorio"      
-      if (values.detalleVenta.length ==0) nuevosErrores.detalle = "Seleccione al menos un producto"
-      if (!values.totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
+      if (!values.fechaModel) {
+        nuevosErrores.fechaModel = "El campo FECHA es obligatorio."
+        PopupValidationWarning({texto: nuevosErrores.fechaModel})
+      }
+      if (!values.comprobanteModel) {
+        nuevosErrores.comprobante = "El campo TIPO COMPROBANTE es obligatorio."
+        PopupValidationWarning({texto: nuevosErrores.comprobante})
+      }
+      if (!values.personaModel) {
+        nuevosErrores.persona = "El campo PERSONA es obligatorio."
+        PopupValidationWarning({texto: nuevosErrores.persona})
+      }
+      if (!values.ventaTipoModel) {
+        nuevosErrores.ventaTipo= "El campo TIPO es obligatorio"
+        PopupValidationWarning({texto: nuevosErrores.ventaTipo})
+      }
+      if (values.ventaTipoModel == 3 && !values.ventaDiaModel) {
+        nuevosErrores.numero = "El campo DIAS es obligatorio"
+        PopupValidationWarning({texto: nuevosErrores.numero})
+      }
+      // if (!values.ventaEstadoModel) {
+      //   nuevosErrores.ventaEstado= "El campo ESTADO es obligatorio"
+      //   PopupValidationWarning({texto: nuevosErrores.ventaEstado})
+      // }      
+      if (values.detalleVenta.length ==0) {
+        nuevosErrores.detalle = "Seleccione al menos un producto"
+        PopupValidationWarning({texto: nuevosErrores.detalle})
+      }
+      if (!values.totalModel) {
+        nuevosErrores.total = "El campo TOTAL es obligatorio."
+        PopupValidationWarning({texto: nuevosErrores.total})
+      }
       if(
           values.detalleVenta.length > 0 && 
           values.detalleVenta.filter((data) => data.cantidad ==0 || data.precio ==0).length > 0
         ){
-        toast.warning('No se puede guardar una venta con CANTIDAD o PRECIO en cero', 
-          { style: { background: 'black', color:' yellow' }} 
-        )
+          PopupValidationWarning({texto: 'No se puede guardar una venta con CANTIDAD o PRECIO en cero'})
       }
     }
     if (product){
