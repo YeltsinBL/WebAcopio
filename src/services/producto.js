@@ -14,9 +14,8 @@ export const searchProductoTipos = async() => {
     return ResponseErrorServidor
   }
 }
-export const searchProducto = async(search) => {
-  let url = `${appSetting.apiUrl}Producto`
-  if(search != null) url += `?nombre=${search.name}&estado=${search.estado}&stock=${search.stock}`
+export const searchProducto = async({nombre='', estado='', stock=''}) => {
+  let url = `${appSetting.apiUrl}Producto?nombre=${nombre}&estado=${estado}&stock=${stock}`
   
   try {
     const response = await fetch(url, {

@@ -4,15 +4,18 @@ import {
 import { productoSave } from "~services/producto"
 import { productoAdapterChangeStatus } from "../adapter/ProductoAdapter"
 import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { toast } from "sonner"
 
 export const ProductoFormDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e)=>{
-    e.preventDefault()
+    e.preventDefault()    
+    const toastLoadingCustom = toast.loading('Cargando...')
     let dataAdapter = productoAdapterChangeStatus( data )
-    const servicio = await productoSave('DELETE', dataAdapter )
-    if (servicio.result) 
-      return sendDataDismissModel(ServicesResponseAdapter(servicio))
-    return sendDataDismissModel({result:false})
+    const servicio = ServicesResponseAdapter(await productoSave('DELETE', dataAdapter ))
+    if (!servicio.result) 
+      toast.error(servicio.message, {id: toastLoadingCustom, style: { color:'red' }})
+    else toast.success(servicio.message, {id: toastLoadingCustom})
+    return sendDataDismissModel(servicio)
   }
   const handleCancelar =(e)=>{
     e.preventDefault()

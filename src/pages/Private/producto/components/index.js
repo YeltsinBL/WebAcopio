@@ -1,3 +1,5 @@
 export * from './ProductoFilter'
+export * from './ProductoForm'
 export * from './ProductoFormDelete'
 export * from './ProductoTable'
+export * from './index'

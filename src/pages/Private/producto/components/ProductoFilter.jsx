@@ -19,7 +19,7 @@ export const ProductoFilter = ({onProductFilters}) => {
   }
 const sendDataToParent = (event) => {
   event.preventDefault()
-  onProductFilters({name:nameFilter, estado:estadoFilter, stock: stockFilter})
+  onProductFilters({nombre:nameFilter, estado:estadoFilter, stock: stockFilter})
 }
   return (
     <SectionFilter>

@@ -3,6 +3,7 @@ import { obtenerFechaLocal } from "~utils/index"
 export const productoAdapterSave = (data) => {
   let save = { productoNombre: data.productoNombre,
     productoPrecioVenta:data.productoPrecio,
+    productoStock: data.productStockInicial,
     productoTipoId: data.productoTipoId}
   if(data.productoId>0){
     return {...save, 
