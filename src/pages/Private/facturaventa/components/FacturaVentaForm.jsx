@@ -86,7 +86,7 @@ export const FacturaVentaForm = ({onShowModel, data}) => {
   return (
     <>
       <SectionModel title={(facturaVentaId > 0 ? 'Información de':'Registrar') + ' Factura Venta'}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-3">
           <FilterOption htmlFor={'FechaModel'} name={'Fecha de Emisión'}>
             <InputDateCustom fechaValue={facturaVentaFecha}
               valueError={errores.fecha}
