@@ -81,7 +81,7 @@ export const VentaForm = ({onShowModel, data}) => {
       const updateDetalle = detalleVenta.map((item) =>
         item.productoId === productoId ? {...item,
           cantidad:cantidadModal,
-          precio:FormatteDecimalMath(precioModal, 2)
+          productoPrecioVenta:FormatteDecimalMath(precioModal, 2)
         }:item)
       setDetalleVenta(updateDetalle)
       setProductoId(0)
