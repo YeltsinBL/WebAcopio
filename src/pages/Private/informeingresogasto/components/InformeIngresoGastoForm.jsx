@@ -393,16 +393,16 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
           :(<NoRegistros colSpan={headersCorte.length} />)}
         </TableBodyCustom>
         <TableFooterCustom>
-          <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Precios'}>
+          <FilterOption htmlFor={'ToneladasPrecioCorteModel'} name={'Precios'}>
             <InputDecimalCustom placeholder="Automático"
               textValue={sumaPrecioCorteModel} readOnly />
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
+          <FilterOption htmlFor={'ToneladasPesoNetoCorteModel'} name={'Toneladas'}>
             <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPesoBrutoCorteModel}
               decimales={3} textValue={sumaPesoBrutoCorteModel} valueError={errores.pesoBrutoCorte}
               placeholder='Ejm: 100.565' />
           </FilterOption>
-          <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
+          <FilterOption htmlFor={'ToneladasTotalCorteModel'} name={'Totales'}>
             <InputDecimalCustom readOnly
               placeholder='Automático' textValue={sumaTotalCorteModel} />
           </FilterOption>
@@ -439,15 +439,15 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
           :(<NoRegistros colSpan={headersServicio.length} />)}
         </TableBodyCustom>
         <TableFooterCustom>
-          <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Precios'}>
+          <FilterOption htmlFor={'ToneladasPrecioTransporteModel'} name={'Precios'}>
             <InputDecimalCustom placeholder="Automático"
               textValue={sumaPrecioTransporteModel} readOnly />
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
+          <FilterOption htmlFor={'ToneladasPesoNetoTransporteModel'} name={'Toneladas'}>
             <InputDecimalCustom readOnly
               placeholder='Automático' textValue={sumaPesoBrutoTransporteModel} />
           </FilterOption>
-          <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
+          <FilterOption htmlFor={'ToneladasTotalTransporteModel'} name={'Totales'}>
             <InputDecimalCustom readOnly
               placeholder='Automático' textValue={sumaTotalTransporteModel} />
           </FilterOption>
@@ -484,15 +484,15 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
           :(<NoRegistros colSpan={headersServicio.length} />)}
         </TableBodyCustom>
         <TableFooterCustom>
-          <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Precios'}>
+          <FilterOption htmlFor={'ToneladasPrecioPäleroModel'} name={'Precios'}>
             <InputDecimalCustom placeholder="Automático"
               textValue={sumaPrecioPaleroModel} readOnly />
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
+          <FilterOption htmlFor={'ToneladasPesoNetoPaleroModel'} name={'Toneladas'}>
             <InputDecimalCustom readOnly
               placeholder='Automático' textValue={sumaPesoBrutoPaleroModel} />
           </FilterOption>
-          <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
+          <FilterOption htmlFor={'ToneladasTotalPaleroModel'} name={'Totales'}>
             <InputDecimalCustom readOnly
               placeholder='Automático' textValue={sumaTotalPaleroModel} />
           </FilterOption>
@@ -503,20 +503,20 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
           <TitleCustom titulo={'Impuestos'}  />
         </TableHeaderCustom>
         <TableFooterCustom>
-        <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Precios'}>
+        <FilterOption htmlFor={'ToneladasPrecioImpuestoModel'} name={'Precios'}>
             <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPrecioImpuestosModel}
               decimales={2} textValue={sumaPrecioImpuestosModel} valueError={errores.precioImpuestos}
               placeholder="Ejm: 100.55"
               />
-            {errores.pCompra && <MessageValidationInput mensaje={errores.precioImpuestos}/>}
+            {errores.precioImpuestos && <MessageValidationInput mensaje={errores.precioImpuestos}/>}
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
+          <FilterOption htmlFor={'ToneladasPesoNetoImpuestoModel'} name={'Toneladas'}>
             <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPesoBrutoImpuestosModel}
               decimales={3} textValue={sumaPesoBrutoImpuestosModel} valueError={errores.pesoBrutoImpuestos}
               placeholder='Ejm: 100.565' />
-            {errores.pCompra && <MessageValidationInput mensaje={errores.pesoBrutoImpuestos}/>}
+            {errores.pesoBrutoImpuestos && <MessageValidationInput mensaje={errores.pesoBrutoImpuestos}/>}
           </FilterOption>
-          <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
+          <FilterOption htmlFor={'ToneladasTotalImpuestoModel'} name={'Totales'}>
             <InputDecimalCustom readOnly={informeId>0}
               placeholder='Automático' textValue={sumaTotalImpuestosModel} />
           </FilterOption>
@@ -527,20 +527,20 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
           <TitleCustom titulo={'Otros Gastos'}  />
         </TableHeaderCustom>
         <TableFooterCustom>
-        <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Precios'}>
+        <FilterOption htmlFor={'ToneladasPrecioOtrosModel'} name={'Precios'}>
             <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPrecioOtrosGastosModel}
               decimales={2} textValue={sumaPrecioOtrosGastosModel} valueError={errores.precioOtrosGastos}
               placeholder="Ejm: 100.55"
               />
-            {errores.pCompra && <MessageValidationInput mensaje={errores.precioOtrosGastos}/>}
+            {errores.precioOtrosGastos && <MessageValidationInput mensaje={errores.precioOtrosGastos}/>}
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
+          <FilterOption htmlFor={'ToneladasPesoNetoOtrosModel'} name={'Toneladas'}>
             <InputDecimalCustom readOnly={informeId>0} onChange={setSumaPesoBrutoOtrosGastosModel}
               decimales={3} textValue={sumaPesoBrutoOtrosGastosModel} valueError={errores.pesoBrutoOtrosGastos}
               placeholder='Ejm: 100.565' />
-            {errores.pCompra && <MessageValidationInput mensaje={errores.pesoBrutoOtrosGastos}/>}
+            {errores.pesoBrutoOtrosGastos && <MessageValidationInput mensaje={errores.pesoBrutoOtrosGastos}/>}
           </FilterOption>
-          <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
+          <FilterOption htmlFor={'ToneladasTotalOtrosModel'} name={'Totales'}>
             <InputDecimalCustom readOnly={informeId>0}
               placeholder='Automático' textValue={sumaTotalOtrosGastosModel} />
           </FilterOption>
@@ -551,15 +551,15 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
           <TitleCustom titulo={'Utilidad'}  />
         </TableHeaderCustom>
         <TableFooterCustom>
-          <FilterOption htmlFor={'ToneladasPCompraModel'} name={'Total Factura'}>
+          <FilterOption htmlFor={'TotalFacturaUtilidadModel'} name={'Total Factura'}>
             <InputDecimalCustom decimales={2} readOnly textValue={facturaTotalModel}
               placeholder="Automático"/>
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Total Costo'}>
+          <FilterOption htmlFor={'TotalCostoUtilidadModel'} name={'Total Costo'}>
             <InputDecimalCustom decimales={2} readOnly textValue={costoTotalModel}
               placeholder="Automático"/>
           </FilterOption>
-          <FilterOption htmlFor={'ToneladasTotalModel'} name={'Total Utilidad'}>
+          <FilterOption htmlFor={'UtilidadModel'} name={'Total Utilidad'}>
             <InputDecimalCustom readOnly={informeId>0}
               placeholder='Automático' textValue={utilidadTotalModel} />
           </FilterOption>
