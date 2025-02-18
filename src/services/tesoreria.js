@@ -3,7 +3,7 @@ import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
 export const searchTesoreria = async(search) => {
   let url = `${appSetting.apiUrl}Tesoreria`
-  if(search != null) url += `?fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}&proveedorId=${search.proveedorId}`
+  if(search != null) url += `?fechaDesde=${search.fechaDesde}&fechaHasta=${search.fechaHasta}&personaId=${search.personaId}`
   
   try {
     const response = await fetch(url, {

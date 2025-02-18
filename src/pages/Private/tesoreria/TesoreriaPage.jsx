@@ -21,22 +21,22 @@ function TesoreriaPage() {
     getTesorerias({
       fechaDesde: obtenerFechaInicialMes(), 
       fechaHasta: obtenerSoloFechaLocal({date: new Date()}),
-      proveedorId:''
+      personaId:''
     })
   },[])
   const getTesorerias = async({fechaDesde= obtenerFechaInicialMes(), 
     fechaHasta= obtenerSoloFechaLocal({date: new Date()}),
-    proveedorId=''}) =>{
-    const tesorerias = await searchTesoreria({fechaDesde, fechaHasta, proveedorId})
+    personaId=''}) =>{
+    const tesorerias = await searchTesoreria({fechaDesde, fechaHasta, personaId})
     setTesoreriaList(TesoreriaAdapterList(tesorerias))
   }
   const handleDataFromChild = (data)=>{
     const {
-      fechaDesde, fechaHasta, proveedorId
+      fechaDesde, fechaHasta, personaId
     } = data
-    if(fechaDesde=='' && fechaHasta=='' && proveedorId =='')
+    if(fechaDesde=='' && fechaHasta=='' && personaId =='')
       return getTesorerias({})
-    return getTesorerias({fechaDesde, fechaHasta, proveedorId})
+    return getTesorerias({fechaDesde, fechaHasta, personaId})
   }
   const handleRowSelect = async(rowData) =>{
     if(rowData.tesoreriaId){

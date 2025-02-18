@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter
 } from "~components/common"
-import { searchProveedorAvailable } from "~services/proveedor"
+import { searchProveedorPersona } from "~services/proveedor"
 import { 
   formatterDataCombo, obtenerFechaInicialMes, obtenerSoloFechaLocal 
 } from "~utils/index"
@@ -17,9 +17,9 @@ export const TesoreriaFilter = ({onFiltersValue}) => {
     getUts()
   }, [])
   const getUts = async() => {
-    const uts = await searchProveedorAvailable()
+    const uts = await searchProveedorPersona()
     const formatter= uts?.map(ut =>(
-      formatterDataCombo(ut.id, ut.ut)))
+      formatterDataCombo(ut.personId, ut.proveedorNombre)))
     setUtList(formatter)
     
   }
@@ -32,7 +32,7 @@ export const TesoreriaFilter = ({onFiltersValue}) => {
     onFiltersValue({
       fechaDesde:fechaDesdeFilter, 
       fechaHasta: fechaHastaFilter, 
-      proveedorId: utFilter
+      personaId: utFilter
     })
   }
   return (
