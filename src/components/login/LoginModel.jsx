@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from "react"
-import { 
-  FilterOption, Footer, FooterButton, MessageValidationInput, SectionModel 
-} from "../common"
-import { AuthorizationLogIn, AuthorizationResetPassword, AuthorizationVerifyPassword } from "../../services/authorization"
-import { clearLocalStorage, obtenerFechaLocal } from "../../utils"
-import { useClosePage } from "../../hooks/common"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { createUser, resetUser, UserKey } from "../../redux/states/user"
-import { clearModuleNames } from "../../redux/states/modules"
+import { 
+  FilterOption, Footer, FooterButton, MessageValidationInput, SectionModel 
+} from "~components/common"
+import { 
+  AuthorizationLogIn, AuthorizationResetPassword, AuthorizationVerifyPassword 
+} from "~services/authorization"
+import { useClosePage } from "~hooks/common"
+import { createUser, resetUser, UserKey } from "~redux/states/user"
+import { clearModuleNames } from "~redux/states/modules"
 import { Spinner } from "~assets/icons"
 import { Eye, EyeOff } from "lucide-react"
+import { clearLocalStorage } from "~utils/localStorage"
+import { obtenerFechaLocal } from "~utils/index"
 
 export const LoginModel = () => {
   
