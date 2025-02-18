@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom"
 import { createUser, resetUser, UserKey } from "../../redux/states/user"
 import { clearModuleNames } from "../../redux/states/modules"
 import { Spinner } from "~assets/icons"
+import { Eye, EyeOff } from "lucide-react"
 
 export const LoginModel = () => {
   
@@ -26,6 +27,9 @@ export const LoginModel = () => {
   const [loading, setLoading] = useState(false)
   //const [errMsg, setErrMsg] = useState('')
   const [errores, setErrores] = useState({})
+  const [showPassword, setShowPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+
   useEffect(() => {
       userRef.current.focus();
       clearLocalStorage(UserKey)
@@ -33,6 +37,12 @@ export const LoginModel = () => {
       dispatch(clearModuleNames())
       navigate("/login", {replace: true})
   }, [])
+
+  const togglePasswordVisibility = () => 
+    setShowPassword(!showPassword)
+  const toggleNewPasswordVisibility = () => 
+    setShowNewPassword(!showNewPassword)
+  
   const validation= () => {
     const nuevosErrores = {}
     if(!user) nuevosErrores.userName = 'El campo Usuario es obligatorio'
@@ -96,25 +106,33 @@ export const LoginModel = () => {
           </FilterOption>
           <FilterOption htmlFor={'password'} name={'Contraseña'}>
             <InputFieldPassword
-              type={'password'}
+              type={showPassword ? "text" : "password"}
               id={'password'}
               value={pwd}
               setValue={setPwd}
               placeholder={'Ingrese su Contraseña'}
               valueError={errores.password}
             />
+            <span className="absolute right-8  cursor-pointer"
+              onClick={togglePasswordVisibility}>
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
             {errores.password && <MessageValidationInput mensaje={errores.password}/>}
           </FilterOption>
           {changePassword && (
           <FilterOption htmlFor={'newPassword'} name={'Nueva Contraseña'}>
             <InputFieldPassword
-              type={'password'}
+              type={showNewPassword ? "text" : "password"}
               id={'newPassword'}
               value={newPassword}
               setValue={setNewPassword}
               placeholder={'ingrese su Nueva Contraseña'}
               valueError={errores.newPassword}
             />
+            <span className="absolute right-8  cursor-pointer"
+              onClick={toggleNewPasswordVisibility}>
+            {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
             {errores.newPassword && <MessageValidationInput mensaje={errores.newPassword}/>}
           </FilterOption>)}
           <div className='flex flex-col items-center gap-1 w-1/8'>
