@@ -8,7 +8,10 @@ import {
   TableContainerCustom, TableFooterCustom, TableHeaderCustom, TableTd,
   TitleCustom
 } from "~components/common"
-import { FormatteDecimalMath } from "~utils/index"
+import { 
+  convertirFechaDDMMYYYY, convertirFechaToISO, convertirFechaToYMD, FormatteDecimalMath,
+  obtenerSoloFechaLocal
+} from "~utils/index"
 import { CompraProductoPopup } from "."
 import { compraAdapterSave } from "../adapter/CompraAdapter"
 import { compraSave } from "~services/compra"
@@ -30,6 +33,8 @@ export const CompraForm = ({onShowModel, data}) => {
     precioModal, setPrecioModal,
     subImporteModal, showPopup, setShowPopup,
     productoRecojoId, setProductoRecojoId,
+    recojoFechaModel, setRecojoFechaModel,
+    recojoGuiaModel, setRecojoGuiaModel,
     productoRecojoModal, setProductoRecojoModal,
     cantidadRecojoModal, setCantidadRecojoModal,
     recogidosRecojoModal, setRecogidosRecojoModal,
@@ -89,6 +94,8 @@ export const CompraForm = ({onShowModel, data}) => {
       const nuevoProducto = {
         compraDetalleRecojoId: `temp-${Date.now()}`,
         productoId: productoId,
+        compraDetalleRecojoFecha:convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date: new Date()})),
+        compraDetalleRecojoGuia:'',
         productoNombre: productoModal,
         compraDetallePorRecoger: cantidadModal,
         compraDetalleRecogidos: 0,
@@ -131,12 +138,16 @@ export const CompraForm = ({onShowModel, data}) => {
     if(isValid){
       const updateDetalleRecojo = detalleCompraRecojo.map((item) =>
         item.compraDetalleRecojoId === productoRecojoId ? {...item,
+          compraDetalleRecojoFecha:convertirFechaDDMMYYYY(recojoFechaModel),
+          compraDetalleRecojoGuia:recojoGuiaModel,
           compraDetalleRecogidos:recogidosRecojoModal,
           compraDetallePendientes:pendienteRecojoModal
         }:item)
       toast.success('Recojode producto actualizado')
       setDetalleCompraRecojo(updateDetalleRecojo)
       setProductoRecojoId(0)
+      setRecojoFechaModel(obtenerSoloFechaLocal({date: new Date()}))
+      setRecojoGuiaModel('')
       setProductoRecojoModal('')
       setCantidadRecojoModal(0)
       setRecogidosRecojoModal(0)
@@ -145,6 +156,8 @@ export const CompraForm = ({onShowModel, data}) => {
   }
   const onRowSelectRecojo =(data)=>{
     setProductoRecojoId(data.compraDetalleRecojoId)
+    setRecojoFechaModel(convertirFechaToYMD(convertirFechaToISO(data.compraDetalleRecojoFecha)))
+    setRecojoGuiaModel(data.compraDetalleRecojoGuia)
     setProductoRecojoModal(data.productoNombre)
     setCantidadRecojoModal(data.compraDetallePorRecoger || 0)
     setRecogidosRecojoModal(data.compraDetalleRecogidos || 0)
@@ -154,6 +167,8 @@ export const CompraForm = ({onShowModel, data}) => {
     const updateAdicionalesList = [...detalleCompraRecojo, {
       compraDetalleRecojoId: `temp-${Date.now()}`,
       productoId: data.productoId,
+      compraDetalleRecojoFecha:convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date:new Date()})),
+      compraDetalleRecojoGuia:'',
       productoNombre: data.productoNombre,
       compraDetallePorRecoger: data.pendientes ==0 ? data.cantidad :data.pendientes,
       compraDetalleRecogidos:0,
@@ -182,7 +197,7 @@ export const CompraForm = ({onShowModel, data}) => {
       const save = compraAdapterSave({
         compraId, fechaModel, comprobanteModel,
         numeroModel, distribuidorModel, totalModel, totalPendienteModel,
-        detalleCompra, detalleCompraRecojo, detalleCompraRecojo})
+        detalleCompra, detalleCompraRecojo})
       const response = await compraSave(compraId > 0? 'PUT':'POST', save)
       if(!response.result)
         return toast.error(response.message, { id: toastLoadingCustom, style: { color:'red' }})
@@ -322,6 +337,16 @@ export const CompraForm = ({onShowModel, data}) => {
             <TitleCustom titulo={'Productos Recogidos'}  />  
           </div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
+            <FilterOption htmlFor={'RecojoFechaModel'} name={'Fecha'}>
+              <InputDateCustom fechaValue={recojoFechaModel}
+                valueError={errores.recojoFecha}
+                setFechaValue={setRecojoFechaModel} readOnly={productoRecojoId == 0} />
+              {errores.recojoFecha && <MessageValidationInput mensaje={errores.recojoFecha}/>}
+            </FilterOption>
+            <FilterOption htmlFor={'RecojoGuia'} name={'Guía'}>
+              <InputTextCustom onChange={setRecojoGuiaModel} textValue={recojoGuiaModel} 
+                placeholder="Ingrese la guía" readOnly={productoRecojoId == 0} />
+            </FilterOption>
             <FilterOption htmlFor={'ProductoNombreRecojoModal'} name={'Producto'}>
               <InputTextCustom textValue={productoRecojoModal} placeholder="Automático" readOnly/>
             </FilterOption>
@@ -347,6 +372,8 @@ export const CompraForm = ({onShowModel, data}) => {
               <tr key={detalle.compraDetalleRecojoId} >
                 <TableTd hidden>{detalle.compraDetalleRecojoId}</TableTd>
                 <TableTd hidden>{detalle.productoId}</TableTd>
+                <TableTd>{detalle.compraDetalleRecojoFecha}</TableTd>
+                <TableTd>{detalle.compraDetalleRecojoGuia}</TableTd>
                 <TableTd>{detalle.productoNombre}</TableTd>
                 <TableTd>{detalle.compraDetallePorRecoger}</TableTd>
                 <TableTd>{detalle.compraDetalleRecogidos}</TableTd>

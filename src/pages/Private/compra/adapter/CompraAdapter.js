@@ -1,4 +1,7 @@
-import { convertirFechaDDMMYYYY, FormatteDecimalMath, obtenerFechaLocal } from "~utils/index"
+import { 
+  convertirFechaDDMMYYYY, convertirFechaToISO, convertirFechaToYMD, FormatteDecimalMath,
+  obtenerFechaLocal, obtenerSoloFechaLocal 
+} from "~utils/index"
 
 export const CompraAdapterFilter = (data) =>{
   const { 
@@ -71,12 +74,14 @@ const formatterDetalle = (data) => {
 
 export const compraAdapterGetData = (data) => {
   const detalles= data.compraDetalles?.map(detalle => (formatterGetDataDetalle(detalle)))
+  const detallesRecojo= data.compraDetallesRecojo?.map(detalle => (formatterGetDataDetalleRecojo(detalle)))
+  
   return {...data,
     compraFecha: data.compraFecha.split("T")[0],
     compraTotal: FormatteDecimalMath(data.compraTotal, 2),
     compraStatus: data.compraStatus ? 'Activo':'Inactivo',
     compraDetalles: detalles,
-    compraDetalleRecojo:data.compraDetallesRecojo,
+    compraDetallesRecojo:detallesRecojo,
   }
 }
 const formatterGetDataDetalle = (data) => {
@@ -87,21 +92,17 @@ const formatterGetDataDetalle = (data) => {
     pendientes: data.compraDetallePendientes,
   }
 }
+const formatterGetDataDetalleRecojo = (data) => {
+  return {...data,
+    compraDetalleRecojoFecha: convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date:data.compraDetalleRecojoFecha})),
+  }
+}
 const formatterDetalleRecojoSave = (data) => {
   return {...data,
     compraDetalleRecojoId: (typeof data.compraDetalleRecojoId === "string" 
       && data.compraDetalleRecojoId.startsWith("temp")) ?
       0: data.compraDetalleRecojoId,
-  }
-}
-const formatterDetalleRecojo = (data) => {
-  return {
-    productoRecojoId: data.compraDetalleRecojoId,
-    productoId: data.productoId,
-    productoNombre: data.productoNombre,
-    cantidad: data.compraDetallePorRecoger,
-    recogidos: data.compraDetalleRecogidos,
-    pendientes: data.compraDetallePendientes,
+    compraDetalleRecojoFecha:convertirFechaToYMD(convertirFechaToISO(data.compraDetalleRecojoFecha)),
   }
 }
 const fusionarDetalles = (detalles, detallesRecojo) => {

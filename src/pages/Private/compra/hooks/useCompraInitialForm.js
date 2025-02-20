@@ -24,6 +24,8 @@ export const useCompraInitialForm = (data) => {
   const [showPopup, setShowPopup] = useState(false)
 
   const [productoRecojoId, setProductoRecojoId] = useState(0)
+  const [recojoFechaModel, setRecojoFechaModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
+  const [recojoGuiaModel, setRecojoGuiaModel] = useState('')
   const [productoRecojoModal, setProductoRecojoModal] = useState('')
   const [cantidadRecojoModal, setCantidadRecojoModal] = useState(0)
   const [recogidosRecojoModal, setRecogidosRecojoModal] = useState(0)
@@ -37,13 +39,14 @@ export const useCompraInitialForm = (data) => {
   const seleccionDistribuidor = data?.tipoComprobanteId ? {id: data.distribuidorId, nombre: data.distribuidorNombre } : null
 
   const headers = ['Producto', 'Cantidad', 'Precio', 'SubImporte', 'Recogidos', 'Pendientes', 'Acciones']
-  const headersRecojo = ['Producto', 'Por Recoger', 'Recogidos', 'Pendiente', 'Acciones']
+  const headersRecojo = ['Fecha', 'Guía','Producto', 'Por Recoger', 'Recogidos', 'Pendiente', 'Acciones']
 
   useEffect(() => {
     getDistribuidor()
   }, [])
 
   useEffect(()=>{
+    console.log(data)
     if(data){
       setCompraId(data.compraId)
       setFechaModel(data.compraFecha)
@@ -53,7 +56,7 @@ export const useCompraInitialForm = (data) => {
       setTotalModel(data.compraTotal)
       setservicioEstado(data.compraStatus)
       setDetalleCompra(data.compraDetalles)
-      setDetalleCompraRecojo(data.compraDetalleRecojo)
+      setDetalleCompraRecojo(data.compraDetallesRecojo)
       setTotalPendienteModel(data.pendienteRecojo)
     }
   }, [data])
@@ -110,6 +113,8 @@ export const useCompraInitialForm = (data) => {
     precioModal, setPrecioModal,
     subImporteModal, showPopup, setShowPopup,
     productoRecojoId, setProductoRecojoId,
+    recojoFechaModel, setRecojoFechaModel,
+    recojoGuiaModel, setRecojoGuiaModel,
     productoRecojoModal, setProductoRecojoModal,
     cantidadRecojoModal, setCantidadRecojoModal,
     recogidosRecojoModal, setRecogidosRecojoModal,
