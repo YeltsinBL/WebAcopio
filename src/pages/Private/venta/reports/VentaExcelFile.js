@@ -1,5 +1,5 @@
 import ExcelJS from "exceljs"
-import { convertirFechaDDMMYYYY } from "~utils/index"
+import { convertirFechaDDMMYYYY, FormatteDecimalMath } from "~utils/index"
 export const VentaExcelFile = (data) => {
   let detailRow = 6
   // Crear el workbook y una hoja
@@ -28,13 +28,16 @@ export const VentaExcelFile = (data) => {
 
   worksheet.addRow(["Señor", data.personaNombre]).font = boldStyle
   worksheet.addRow(["Fecha", convertirFechaDDMMYYYY(data.ventaFecha)]).font = boldStyle
+  worksheet.addRow(["Tipo", data.ventaTipoNombre, data.ventaTipoId ==3?"Días:":"", data.ventaTipoId ==3?data.ventaDia:""]).font = boldStyle
 
   // Separador vacío
   worksheet.addRow([])
 
   const headerRow = worksheet.addRow([
     "CANT.",
-    "DESCRIPCIÓN",
+    "DESCRIPCIÓN","","","","",
+    "PRECIO",
+    "SUBTOTAL",
   ])
   headerRow.eachCell((cell) => {
     cell.border = borderStyle
@@ -42,19 +45,22 @@ export const VentaExcelFile = (data) => {
     cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }
   })
   // Fusionar las celdas 
-  worksheet.mergeCells('B5:F5') // Combina columnas B-F en esta fila
+  worksheet.mergeCells(`B${detailRow}:F${detailRow}`) // Combina columnas B-F en esta fila
   // Obtener la celda fusionada
-  const mergedCellPCompra = worksheet.getCell('B5')
+  const mergedCellPCompra = worksheet.getCell(`B${detailRow}`)
   mergedCellPCompra.value = "DESCRIPCIÓN"
   mergedCellPCompra.font = boldStyle
   mergedCellPCompra.alignment = { horizontal: 'center', vertical: 'middle' }
-  
+
+  detailRow+=1
 
   // Agregar datos de la tabla
   data.ventaDetalles.forEach((detalle) => {
     const row = worksheet.addRow([
       detalle.cantidad,
-      detalle.productoNombre
+      detalle.productoNombre,"","","","",
+      FormatteDecimalMath(detalle.ventaDetallePrecio,2),
+      FormatteDecimalMath(parseInt(detalle.cantidad)*parseFloat(detalle.ventaDetallePrecio),2),
     ])
     row.eachCell((cell) => {
       cell.border = borderStyle
@@ -67,5 +73,22 @@ export const VentaExcelFile = (data) => {
     detailRow += 1
   })
   
+  const headerRowTotal = worksheet.addRow([
+    "","","","","","",
+    "TOTAL",
+    data.ventaTotal,
+  ])
+  headerRowTotal.eachCell((cell) => {
+    cell.border = borderStyle
+    cell.font = boldStyle
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }
+  })
+  
+  worksheet.mergeCells(`A${detailRow}:G${detailRow}`)
+  const mergedCellTotal = worksheet.getCell(`G${detailRow}`)
+  mergedCellTotal.value = "TOTAL"
+  mergedCellTotal.font = boldStyle
+  mergedCellTotal.alignment = { horizontal: 'right', vertical: 'middle' }
+
   return workbook
 }
