@@ -43,7 +43,18 @@ export const useVentaValidation = () => {
           values.detalleVenta.length > 0 && 
           values.detalleVenta.filter((data) => data.cantidad ==0 || data.precio ==0).length > 0
         ){
-          PopupValidationWarning({texto: 'No se puede guardar una venta con CANTIDAD o PRECIO en cero'})
+          nuevosErrores.cantidadPrecio = "No se puede guardar una venta con CANTIDAD o PRECIO en cero"
+          PopupValidationWarning({texto: nuevosErrores.cantidadPrecio})
+      }
+      if(values.ventaTipoModel == 2){
+        if(values.detallePagado.length ==0){
+          nuevosErrores.detallePagos = "Agregue el pago"
+          PopupValidationWarning({texto: nuevosErrores.detallePagos})
+        }
+        if(parseFloat(values.pendientePagarModel) >0){
+          nuevosErrores.totalPagado = "Este PAGO debe ser igual al TOTAL de la VENTA"
+          PopupValidationWarning({texto: nuevosErrores.totalPagado})
+        }
       }
     }
     if (product){

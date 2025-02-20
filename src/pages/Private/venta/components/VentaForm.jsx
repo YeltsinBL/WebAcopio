@@ -123,7 +123,8 @@ export const VentaForm = ({onShowModel, data}) => {
     const { isValid } = validate(true,false,false,{
         fechaModel, comprobanteModel:seleccionTipoComprobante , ventaDiaModel,
         personaModel, detalleVenta, totalModel,
-        ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id
+        ventaTipoModel, ventaEstadoModel: ventaEstadoModel.id, pendientePagarModel,
+        detallePagado
       })
     if(isValid){
       const save = ventaAdapterSave({
@@ -134,9 +135,7 @@ export const VentaForm = ({onShowModel, data}) => {
       const response = await ventaSave(ventaId > 0 ? 'PUT' : 'POST', save)
       if(!response.result)
         return toast.error(response.message, { id: toastLoadingCustom, style: { color:'red' }})
-      setTimeout(() => {
-        toast.dismiss(toastLoadingCustom)
-      })
+      toast.success(response.message, { id: toastLoadingCustom })
       return onShowModel(response)
     }
     setTimeout(() => {
@@ -332,12 +331,14 @@ export const VentaForm = ({onShowModel, data}) => {
             ))
           ):(<NoRegistros colSpan={headers.length}/>)}
         </TableBodyCustom>
+        {errores.detallePagos && <MessageValidationInput mensaje={errores.detallePagos}/>}
         <TableFooterCustom>
-          <FilterOption htmlFor={'utPagado'} name={'Pagado'}>
+          <FilterOption htmlFor={'TotalPagado'} name={'Pagado'}>
             <InputDecimalCustom placeholder={'Automático'} textValue={totalPagadoModel}
-              readOnly decimales={2}/>
+              readOnly decimales={2} valueError={errores.totalPagado}/>
+              {errores.totalPagado && <MessageValidationInput mensaje={errores.totalPagado}/>}
           </FilterOption>
-          <FilterOption htmlFor={'utPendientePagar'} name={'Pendiente a Pagar'}>
+          <FilterOption htmlFor={'TotalPendientePagar'} name={'Pendiente a Pagar'}>
             <InputDecimalCustom placeholder={'Automático'} textValue={pendientePagarModel}
               readOnly decimales={2}/>
           </FilterOption> 

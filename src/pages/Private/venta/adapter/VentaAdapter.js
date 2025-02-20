@@ -82,6 +82,6 @@ const formatterDetalle = (data) => {
   return {
     productoId: data.productoId,
     cantidad: data.cantidad,
-    precio: FormatteDecimalMath(data.precio, 2)
+    precio: FormatteDecimalMath(data.productoPrecioVenta, 2)
   }
 }

@@ -95,7 +95,7 @@ export const useVentaInitialForm = (data) => {
   }
   useEffect(()=>{
     if(totalPagadoModel >= 0 && totalModel > 0) 
-      return setPendientePagar(totalModel - totalPagadoModel)
+      return setPendientePagar(FormatteDecimalMath(totalModel - totalPagadoModel, 2))
     return setPendientePagar(0)
   }, [totalModel, totalPagadoModel])
   useEffect(()=>{

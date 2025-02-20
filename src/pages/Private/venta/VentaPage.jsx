@@ -13,6 +13,7 @@ import {
 import { useClosePage } from "~hooks/common"
 import { ExportToExcel, ExportToPdf } from "~components/download"
 import { VentaExcelFile, VentaPdfFile } from "./reports"
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 
 const VentaPage = () => {
   const handleGoBack = useClosePage()
@@ -24,7 +25,10 @@ const VentaPage = () => {
   const [ventaList, setVentaList] = useState([])
 
   useEffect(() => {
-    getventa()
+    getventa({
+      fechaDesde:obtenerFechaInicialMes(), fechaHasta: obtenerSoloFechaLocal({date:new Date()}), 
+      tipoVentaId:'', numeroComprobante:'', estadoId:''}
+    )
   }, [])
   const getventa = async(filter) => {
     const ventas = await searchVenta(filter)
@@ -51,10 +55,12 @@ const VentaPage = () => {
   }
   // Guardar
   const handleShowModel = (data) => {
-    if(data.result){ 
-      toast.success(data.message)
-      getventa()
-    }
+    if(data.result) 
+      getventa(
+        { fechaDesde:obtenerFechaInicialMes(), fechaHasta: obtenerSoloFechaLocal({date:new Date()}), 
+        tipoVentaId:'', numeroComprobante:'', estadoId:''}
+      )
+    
     setShowModel(true)
   }
   // Eliminar
@@ -65,7 +71,10 @@ const VentaPage = () => {
   const handleShowModelDelete = (data) =>{
     if(data.result){ 
       toast.success(data.message)
-      getventa()
+      getventa({
+        fechaDesde:obtenerFechaInicialMes(), fechaHasta: obtenerSoloFechaLocal({date:new Date()}), 
+        tipoVentaId:'', numeroComprobante:'', estadoId:''}
+      )
     }
     setShowModalDelete(false)
   }
