@@ -3,7 +3,7 @@ import { NoRegistros, Table, TableButton, TableTd } from "~components/common"
 
 export const CompraTable = ({data, onRowSelect, onDeleteSelect}) => {
   const headers = ['Fecha', 'Tipo Comprobante', 'N° Comprobante', 
-        'Total', 'Estado', 'Acciones']
+        'Total', 'Pendiente Recojo', 'Estado', 'Acciones']
   return (
     <Table nameTitle={"Lista de Compra"} headers={headers} >
       {data.length > 0 ? (
@@ -14,18 +14,19 @@ export const CompraTable = ({data, onRowSelect, onDeleteSelect}) => {
             <TableTd>{compra.tipoComprobanteDescripcion}</TableTd>
             <TableTd>{compra.compraNumeroComprobante}</TableTd>
             <TableTd>{compra.compraTotal}</TableTd>
+            <TableTd>{compra.pendienteRecojo}</TableTd>
             <TableTd>{compra.compraEstado}</TableTd>
             <TableTd>
               <TableButton className="text-blue-500 hover:text-blue-700 px-3"
                 onRowSelect={() => onRowSelect(compra)} >
                 <Edit size={18} />
               </TableButton>
-              {compra.compraStatus ?
+              {/* {compra.compraStatus ?
                 <TableButton className='text-red-400 hover:text-red-300'
                   onRowSelect={() => onDeleteSelect(compra)} >
                   <Trash2 size={18} />
                 </TableButton> 
-              :''}
+              :''} */}
             </TableTd>
           </tr>
         ))

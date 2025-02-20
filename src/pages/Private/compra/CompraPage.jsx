@@ -5,6 +5,7 @@ import { CompraFilter, CompraForm, CompraFormDelete, CompraTable } from "./compo
 import { useClosePage } from "~hooks/common"
 import { compraGetById, searchCompra } from "~services/compra"
 import { compraAdapterGetData, compraAdapterList } from "./adapter/CompraAdapter"
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 
 const CompraPage = () => {
   const handleGoBack = useClosePage()
@@ -16,21 +17,18 @@ const CompraPage = () => {
   const [compraList, setCompraList] = useState([])
 
   useEffect(() => {
-    getCompra()
+    getCompra({
+      fechaDesde: obtenerFechaInicialMes(),
+      fechaHasta: obtenerSoloFechaLocal({date: new Date()}),
+      tipoComprobanteId: '', numeroComprobante: '', estadoId: ''
+    })
   }, [])
   const getCompra = async(filter) => {
     const compras = await searchCompra(filter)
     setCompraList(compraAdapterList(compras)|| [])
   }
-  const handleDataFromChild = (data) => {
-    const { 
-      fechaDesde, fechaHasta, tipoComprobanteId, numeroComprobante, estadoId 
-    } = data
-    if(fechaDesde=='' && fechaHasta=='' && tipoComprobanteId=='' && numeroComprobante=='' && estadoId=='' ){
-      return getCompra()
-    }
-    return getCompra({fechaDesde, fechaHasta, tipoComprobanteId, numeroComprobante, estadoId})
-  }
+  const handleDataFromChild = (data) => getCompra(data)
+
   // Obtener
   const handleRowSelect = async(rowData) => {
     if(rowData.compraId != null){
@@ -43,10 +41,7 @@ const CompraPage = () => {
   }
   // Guardar
   const handleShowModel = (data) => {
-    if(data.result){ 
-      toast.success(data.message)
-      getCompra()
-    }
+    if(data.result) getCompra()    
     setShowModel(true)
   }
   // Eliminar

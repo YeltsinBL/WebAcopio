@@ -22,8 +22,10 @@ export const CompraProductoPopup = ({onShowModel}) => {
       const updatedRows = selectedRows.filter((selectedRow) => selectedRow.productoId !== row.productoId)
       return setSelectedRows(updatedRows)
     }
-    row.cantidad=0,
-    row.precio=0,
+    row.cantidad=0
+    row.precio=0
+    row.recogidos=0
+    row.pendientes=0
     setSelectedRows([...selectedRows, row])
   }
   const handleAgregar = (e) => {

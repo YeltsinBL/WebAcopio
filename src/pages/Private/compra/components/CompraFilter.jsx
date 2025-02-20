@@ -1,30 +1,22 @@
-import { useEffect, useState } from "react"
 import { 
-  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, InputTextCustom, SectionFilter 
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, InputTextCustom,
+  SectionFilter 
 } from "~components/common"
 import { ESTADO_BASIC } from "~components/mocks/DataList"
-import { searchTipoComprobante } from "~services/tipos"
-import { formatterDataCombo } from "~utils/index"
+import { useCompraInitialFilter } from "../hooks"
+import { CompraAdapterFilter } from "../adapter/CompraAdapter"
+import { useTipoComprobante } from "../hooks/useTipoComprobante"
 
 export const CompraFilter = ({onFiltersValue}) => {
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [comprobanteFilter, setComprobanteFilter] = useState('')
-  const [numeroFilter, setNumeroFilter] = useState('')
-  const [estadoFilter, setEstadoFilter] = useState('')
+  const {
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    comprobanteFilter, setComprobanteFilter,
+    numeroFilter, setNumeroFilter,
+    estadoFilter, setEstadoFilter,
+  } = useCompraInitialFilter()
+  const {comprobantesList} = useTipoComprobante()
 
-  const [comprobantesList, setComprobantesList] = useState([])
-
-  useEffect(() => {
-    getComprobantes()
-  }, [])
-  const getComprobantes = async() => {
-    const estados = await searchTipoComprobante()
-    const formatter= estados?.map(tipo =>(
-      formatterDataCombo(tipo.tipoComprobanteId, tipo.tipoComprobanteNombre)
-    ))
-    setComprobantesList(formatter)
-  }
   const handleComprobanteChange = (option) =>
     setComprobanteFilter((option==''|| isNaN(option))?'':option)
   const handleEstadoChange= (option) => {
@@ -33,11 +25,12 @@ export const CompraFilter = ({onFiltersValue}) => {
   }
   const handleSearch = (e) => {
     e.preventDefault()
-    onFiltersValue({
-      fechaDesde: fechaDesdeFilter, fechaHasta: fechaHastaFilter, 
-      tipoComprobanteId: comprobanteFilter, numeroComprobante: numeroFilter,
-      estadoId: estadoFilter})
-    }
+    onFiltersValue(CompraAdapterFilter({
+      fechaDesdeFilter, fechaHastaFilter, 
+      comprobanteFilter, numeroFilter,
+      estadoFilter
+    }))
+  }
   return (
     <SectionFilter>
       <FilterOption htmlFor={'FechaDesdeFilter'} name={'Fecha Desde'}>
