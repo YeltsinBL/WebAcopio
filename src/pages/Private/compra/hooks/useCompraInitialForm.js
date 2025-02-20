@@ -46,7 +46,6 @@ export const useCompraInitialForm = (data) => {
   }, [])
 
   useEffect(()=>{
-    console.log(data)
     if(data){
       setCompraId(data.compraId)
       setFechaModel(data.compraFecha)

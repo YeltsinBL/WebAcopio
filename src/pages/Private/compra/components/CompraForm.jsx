@@ -133,7 +133,7 @@ export const CompraForm = ({onShowModel, data}) => {
   const handleUpdateProductRecojo = (e) => {
     e.preventDefault()    
     const { isValid } = validate(
-      { productRecojo: true, values:{ recogidosRecojoModal }}
+      { productRecojo: true, values:{ recojoFechaModel, recogidosRecojoModal }}
     )
     if(isValid){
       const updateDetalleRecojo = detalleCompraRecojo.map((item) =>

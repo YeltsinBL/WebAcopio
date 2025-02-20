@@ -94,7 +94,7 @@ const formatterGetDataDetalle = (data) => {
 }
 const formatterGetDataDetalleRecojo = (data) => {
   return {...data,
-    compraDetalleRecojoFecha: convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date:data.compraDetalleRecojoFecha})),
+    compraDetalleRecojoFecha: data.compraDetalleRecojoFecha ? convertirFechaDDMMYYYY(obtenerSoloFechaLocal({date:data.compraDetalleRecojoFecha})):'',
   }
 }
 const formatterDetalleRecojoSave = (data) => {

@@ -45,6 +45,10 @@ export const useCompraValidation = () => {
       }
     }
     if (productRecojo){
+      if (!values.recojoFechaModel) {
+        nuevosErrores.recojoFecha = "El campo FECHA es obligatorio."
+        PopupValidationWarning({texto: nuevosErrores.recojoFecha})
+      }
       if (!values.recogidosRecojoModal) {
         nuevosErrores.recogidos = "El campo RECOGIDOS es obligatorio."
         PopupValidationWarning({texto: nuevosErrores.recogidos})
