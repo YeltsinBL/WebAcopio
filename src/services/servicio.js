@@ -89,7 +89,7 @@ export const servicioPaleroGetById = async({id}) => {
       headers: { 'Content-Type': 'application/json' }
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioPaleroGetById:', error.message)
     throw new Error('Error al obtener el Servicio Palero')
@@ -102,7 +102,7 @@ export const servicioPaleroSave = async({method, servicioPalero}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(servicioPalero)
     })
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioPaleroSave:', error.message)
     return ResponseErrorServidor

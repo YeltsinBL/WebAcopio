@@ -42,16 +42,20 @@ const handleGoBack = useClosePage()
   }
   const handleRowSelect = async(rowData) =>{
     if(rowData.servicioId){
+      const toastLoadingCustom = toast.loading('Cargando...')
       const servicio = await servicioPaleroGetById({id:rowData.servicioId})
-      setSelectedRowData(AdapterServicioGetData(servicio))
-    }else setSelectedRowData(null)
-    setShowModal(true)
+      if(!servicio.result)
+        return toast.error(servicio.message, { id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(servicio.message, {id: toastLoadingCustom})
+      setSelectedRowData(AdapterServicioGetData(servicio.data))
+      setShowModal(true)
+    }else {
+      setSelectedRowData(null)
+      setShowModal(true)
+    }
   }  
   const handleSaveModel = (data) =>{
-    if(data.result){
-      toast.success(data.errorMessage)
-      getServicios()
-    }
+    if(data.result) getServicios()    
     setShowModal(false)
   }
   const handleRowDelete = (data) =>{
@@ -59,23 +63,20 @@ const handleGoBack = useClosePage()
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result) {
-      toast.success(data.errorMessage)
-      getServicios()
-    }
+    if(data.result) getServicios()    
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(servicioId) =>{
     const servicio = await servicioPaleroGetById({id: servicioId})
     await ExportToExcel(
-      ServicioPaleroExcelFile(AdapterServicioGetDataExport(servicio)),
+      ServicioPaleroExcelFile(AdapterServicioGetDataExport(servicio.data)),
       'ServicioPaleroReporte'
     )
   }
   const handleRowExportPdf = async(servicioId) =>{
     const servicio = await servicioPaleroGetById({id: servicioId})
     ExportToPdf(
-      ServicioPaleroPdfFile(AdapterServicioGetDataExport(servicio)), 
+      ServicioPaleroPdfFile(AdapterServicioGetDataExport(servicio.data)), 
       'ServicioPaleroReporte'
     )
   }
