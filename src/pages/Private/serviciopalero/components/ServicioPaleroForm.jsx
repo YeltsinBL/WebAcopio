@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom,
@@ -6,85 +6,33 @@ import {
   TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom,
   TableHeaderCustom, TableTd, TitleCustom
 } from "~components/common"
-import { searchCarguilloList } from "~services/carguillo"
-import { 
-  FormatteDecimalMath, formatterDataCombo, obtenerSoloFechaLocal
-} from "~utils/index"
 import { servicioPaleroSave } from "~services/servicio"
 import { ServicioPaleroAdapterSave } from "../adapter/ServicioPaleroAdapter"
 import { ServicioTransportePopup } from "~pages/Private/serviciotransporte/components"
-import { Trash2 } from "lucide-react"
+import { useServicioPaleroForm, useServicioPaleroValidation } from "../hooks"
+import { convertirFechaDDMMYYYY } from "~utils/index"
 
 export const ServicioPaleroForm = ({onShowModel, data}) => {
-  const [carguilloList, setCarguilloList] = useState([])
-  const [servicioIdModel, setServicioIdModel] = useState(0)
-  const [fechaModel, setFechaModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
-  const [carguilloIdModel, setCarguilloIdModel] = useState(0)
-  const [servicioPrecioModel, setServicioPrecioModel] = useState(0)
-  const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
-  const [totalModel, setTotalModel] = useState('')
-  //const [servicioTransporteSelected, setServicioTransporteSelected] = useState([])
-  const [ticketSelected, setTicketSelected] = useState([])
-  const [servicioDescripcion, setServicioDescripcion] = useState('Activo')
-  const [showPopup, setShowPopup] = useState(false)
-
-  const [errores, setErrores] = useState({})
-
-  const seleccionCarguillo = data?.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
-  const headers  = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
-    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
-
-  useEffect(() => {
-    const total = ticketSelected.reduce(getSum, 0)
-    if(total>0) return setSumaPesoBrutoModel(FormatteDecimalMath(total,3))
-    return setSumaPesoBrutoModel('')
-  }, [ticketSelected])
-  useEffect(()=>{
-    if(servicioPrecioModel>= 0 && sumaPesoBrutoModel > 0) 
-      return setTotalModel(FormatteDecimalMath(servicioPrecioModel * sumaPesoBrutoModel,2))
-    return setTotalModel('')
-  },[servicioPrecioModel, sumaPesoBrutoModel])
-  const getSum=(total, num) =>{
-    return total + parseFloat(num.ticketPesoBruto)
-  }
-  useEffect(()=>{    
-    getCarguillo()
-    if(data){
-      setServicioIdModel(data.servicioId || 0)
-      setFechaModel(
-        data.servicioFecha || obtenerSoloFechaLocal({ date: new Date() }))
-      setCarguilloIdModel(data.carguilloId || 0)
-      setServicioPrecioModel(data.servicioPrecio || 0)
-      setServicioDescripcion(data.servicioEstadoDescripcion || 'Activo')
-      setTicketSelected(data.servicioDetails || [])
-    }
-  }, [])
-  const getCarguillo = async() => {
-    const paleros = await searchCarguilloList({tipoCarguilloId:1, titular:'', estado: 1})
-    const formatter = paleros.map(palero =>
-      (formatterDataCombo(palero.carguilloId, palero.carguilloTitular)))
-      setCarguilloList(formatter)
-  }
-  const validarCampos = (viewPopUp = false) => {
-    const nuevosErrores = {}
-    if(!viewPopUp){
-      if (!fechaModel) nuevosErrores.fechaModel = "El campo FECHA es obligatorio."
-      //if (!servicioPrecioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
-      if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA PESO BRUTO es obligatorio."
-      if (!totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
-    }
-    if (!carguilloIdModel) nuevosErrores.carguillo = "El campo PALERO es obligatorio."
-  
-    setErrores(nuevosErrores)
-
-    return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
-  }
+  const {
+    carguilloList, servicioIdModel, 
+    fechaModel, setFechaModel, carguilloIdModel, setCarguilloIdModel,
+    servicioPrecioModel, setServicioPrecioModel, sumaPesoBrutoModel, 
+    totalModel, ticketSelected, setTicketSelected,
+    servicioDescripcion, setServicioDescripcion, showPopup, setShowPopup,
+    fechaPagadoModel, setFechaPagadoModel, pagando, 
+    pagadoModel, setPagadoModel, bancoModel, setBancoModel,
+    cteModel, setCteModel, totalPagadoModel,
+    efectivo, setEfectivo, detallePagado, setDetallePagado,
+    pendientePagarModel, seleccionCarguillo, headers, headersPagos
+  } = useServicioPaleroForm(data)
+  const {validate, errores} = useServicioPaleroValidation()
 
   const handleSelectionCarguilloChange = (option) => setCarguilloIdModel(option)
   const handleShowModel = () => {
-    if(validarCampos(true)){
-      setShowPopup(true)
-    }
+    const { isValid } = validate({
+      values: { carguilloIdModel }
+    })
+    if(isValid) setShowPopup(true)    
   }
   const resspuestaShowModel = (data) => {
     if(data.length > 0) {
@@ -101,16 +49,44 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   const onRowDelete= (data)=>{
     setTicketSelected(ticketSelected.filter(ticket => ticket.ticketId !== data.ticketId))
   }
+  const handleAgregarPagos = (e) => {
+    e.preventDefault()
+    const { isValid } = validate({
+      payment:true,
+      values:{ fechaPagadoModel, pagadoModel, cteModel, efectivo,pendientePagarModel, carguilloIdModel }
+    })
+    if (isValid) {
+      const updatePlacaList = [...detallePagado, 
+        { detallePagoId: `temp-${Date.now()}`,
+        detallePagoFecha: fechaPagadoModel,
+        detallePagoPagado: pagadoModel,
+        detallePagoEfectivo: efectivo,
+        detallePagoBanco: bancoModel,
+        detallePagoCtaCte: cteModel,
+      }]
+      setDetallePagado(updatePlacaList)
+      setPagadoModel(0)
+      setBancoModel('')
+      setCteModel('')
+      setEfectivo(false)
+    }
+  }
   const handleGuardar = async(e)=>{
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
-    if(validarCampos()){
-      let servicioModel = {
-        servicioIdModel, servicioDescripcion,
-        fechaModel, carguilloIdModel,
-        servicioPrecioModel, sumaPesoBrutoModel,
-        totalModel, ticketSelected        
-      }
+    let servicioModel = {
+      servicioIdModel, servicioDescripcion,
+      fechaModel, carguilloIdModel,
+      servicioPrecioModel, sumaPesoBrutoModel,
+      totalModel, ticketSelected, detallePagado,
+      totalPagadoModel, pendientePagarModel
+    }
+    const { isValid } = validate({
+      save:true,
+      values: servicioModel
+    })
+    if(isValid){
+      console.log(ServicioPaleroAdapterSave(servicioModel))
       const servicioSave = await servicioPaleroSave({
         method:servicioIdModel>0?'PUT':'POST',
         servicioPalero: ServicioPaleroAdapterSave(servicioModel)
@@ -204,6 +180,81 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
             {errores.total && <MessageValidationInput mensaje={errores.total}/>}
           </FilterOption>
         </TableFooterCustom>
+      </TableContainerCustom>
+      
+      <TableContainerCustom>
+        <TableHeaderCustom grid>
+          <TitleCustom titulo={'Lista de Pagos'}  />
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
+              <FilterOption htmlFor={'FechaPagadoModel'} name={'Fecha Pagado'}>
+                <InputDateCustom fechaValue={fechaPagadoModel}
+                  valueError={errores.fechaModel ? true: false}
+                  setFechaValue={setFechaPagadoModel} readOnly={!pagando} />
+                {errores.fechaPagadoModel && <MessageValidationInput mensaje={errores.fechaPagadoModel}/>}
+              </FilterOption>
+              <FilterOption htmlFor={'utPagado'} name={'Pagado'}>
+                <InputDecimalCustom onChange={setPagadoModel} placeholder={'Ingrese el monto que va ha pagar'} 
+                  textValue={pagadoModel} readOnly={!pagando}
+                  decimales={2}/>
+                {errores.pagado && <MessageValidationInput mensaje={errores.pagado}/>}
+              </FilterOption>
+              <FilterOption htmlFor={'BancoModel'} name={'Banco'}>
+                <InputTextCustom onChange={setBancoModel} placeholder='Ejm: Interbank'
+                  textValue={bancoModel} readOnly={!pagando} />
+              </FilterOption>
+              <FilterOption htmlFor={'CtaCteModel'} name={'Cta. Cte'}>
+                <InputTextCustom onChange={setCteModel} placeholder='Ingrese el Cte del Sembrador'
+                  valueError={errores.ctacte} readOnly={!pagando}
+                  textValue={cteModel} />
+                {errores.ctacte && <MessageValidationInput mensaje={errores.ctacte}/>}
+              </FilterOption>
+              <div className='pr-6'>
+                <label htmlFor="EfectivoModel" className="text-white pr-3 ">Efectivo</label>
+                <input type="checkbox" id="efectivo" 
+                  checked={efectivo} readOnly={!pagando}
+                  onChange={(e) => setEfectivo(e.target.checked)}/>
+              </div>
+              <ButtonCustom extraClassName={`${!pagando ? 'hidden' : ''} max-h-9 mt-6 md:w-28 `} name={'Agregar'} 
+                onClick={handleAgregarPagos}  />
+            </div>
+          </TableHeaderCustom>
+          <TableBodyCustom headers={headersPagos}>
+            {detallePagado.length > 0 ?(
+              detallePagado.map((item)=>(
+                <tr key={item.detallePagoId} >
+                  <TableTd hidden>{item.detallePagoId}</TableTd>
+                  <TableTd>{convertirFechaDDMMYYYY(item.detallePagoFecha)}</TableTd>
+                  <TableTd>{item.detallePagoPagado}</TableTd>
+                  <TableTd>{item.detallePagoEfectivo ? 'Si':'No'}</TableTd>
+                  <TableTd>{item.detallePagoBanco}</TableTd>
+                  <TableTd>{item.detallePagoCtaCte}</TableTd>
+                  <TableTd>
+                    {
+                      typeof item.detallePagoId === "string" && 
+                      item.detallePagoId?.startsWith('temp') &&
+                    <TableButton className={'text-red-400 hover:text-red-300'}
+                      onRowSelect={()=>onRowDelete(item)}>
+                      <Trash2 size={18} />
+                    </TableButton>
+                    }
+                    
+                  </TableTd>
+                </tr>
+              ))
+            ):(<NoRegistros colSpan={headers.length}/>)}
+          </TableBodyCustom>
+          {errores.detallePagos && <MessageValidationInput mensaje={errores.detallePagos}/>}
+          <TableFooterCustom>
+            <FilterOption htmlFor={'TotalPagado'} name={'Pagado'}>
+              <InputDecimalCustom placeholder={'Automático'} textValue={totalPagadoModel}
+                readOnly decimales={2} valueError={errores.totalPagado}/>
+                {errores.totalPagado && <MessageValidationInput mensaje={errores.totalPagado}/>}
+            </FilterOption>
+            <FilterOption htmlFor={'TotalPendientePagar'} name={'Pendiente a Pagar'}>
+              <InputDecimalCustom placeholder={'Automático'} textValue={pendientePagarModel}
+                readOnly decimales={2}/>
+            </FilterOption> 
+          </TableFooterCustom>
       </TableContainerCustom>
       <Footer>
         {servicioDescripcion =='Activo' && (
