@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { toast, Toaster } from "sonner"
+import { Toaster } from "sonner"
 import { 
   ContainerPageCustom, Footer, FooterButton, Header, Main 
 } from "~components/common"
@@ -49,10 +49,7 @@ function LiquidacionPage() {
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.result){
-      toast.success(data.errorMessage)
-      getLiquidacion()
-    }
+    if(data.result) getLiquidacion()    
     setShowModal(false)
   }
   const handleRowDelete = (data) =>{
@@ -60,10 +57,7 @@ function LiquidacionPage() {
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result){
-      toast.success(data.errorMessage)
-      getLiquidacion()
-    }
+    if(data.result) getLiquidacion()    
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(liquidacionId) =>{

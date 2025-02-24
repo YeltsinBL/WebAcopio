@@ -1,3 +1,4 @@
+import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { 
   convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, 
@@ -73,7 +74,7 @@ export const liquidacionSave = async({method, liquidacion}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(liquidacion)
     })
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('liquidacionSave:', error.message)
     return ResponseErrorServidor

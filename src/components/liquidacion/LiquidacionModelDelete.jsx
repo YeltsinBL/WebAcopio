@@ -18,10 +18,8 @@ export function LiquidacionModelDelete({onShowModel, data}) {
       }
     })
     if (!proveedor.result) 
-      return toast.error(proveedor.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-    setTimeout(() => {
-      toast.dismiss(toastLoadingCustom)
-    })
+      return toast.error(proveedor.message, { id: toastLoadingCustom, style: { color:'red' }})
+    toast.success(proveedor.message, {id: toastLoadingCustom})
     return sendDataDismissModel(proveedor)
   }
   const handleCancelar = (e) => {

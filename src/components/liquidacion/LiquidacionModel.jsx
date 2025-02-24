@@ -63,6 +63,8 @@ export function LiquidacionModel({onShowModel, data}) {
   
   useEffect(()=>{
     proveedorListAliquidar()
+  }, [])
+  useEffect(()=>{
     if(data){
       setLiquidacionIdModel(data.liquidacionId || 0)
       setPersonaIdModel(data.personaId || '')
@@ -92,7 +94,7 @@ export function LiquidacionModel({onShowModel, data}) {
       setAdicionalesTotal(data.adicionalTotal || 0)
       setLiquidacionEstado(data.liquidacionEstadoDescripcion || 'Activo')
     }
-  }, [])
+  }, [data])
   useEffect(() => {
     const total = ticketsSeleccionadosList.reduce(getSum, 0)
     if(total>0) return setSumaPesoBrutoModel(FormatteDecimalMath(total,3))
@@ -328,8 +330,8 @@ export function LiquidacionModel({onShowModel, data}) {
       }
       const save = await liquidacionSave({method: liquidacionIdModel>0?'PUT':'POST', liquidacion})
       if(!save.result) 
-        return toast.error(save.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-      setTimeout(() => { toast.dismiss(toastLoadingCustom) })
+        return toast.error(save.message, { id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(save.message, {id: toastLoadingCustom})
       return onShowModel(save)
     }
     setTimeout(() => {
