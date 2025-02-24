@@ -1,3 +1,4 @@
+import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -70,7 +71,7 @@ export const proveedorGetById = async({id}) => {
       },
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('proveedorGetById:', error.message)
     return ResponseErrorServidor
@@ -86,7 +87,7 @@ export const proveedorSave = async(method, proveedor) => {
       },
       body: JSON.stringify(proveedor)
     })
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('proveedorSave:', error.message)
     return ResponseErrorServidor

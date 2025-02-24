@@ -27,7 +27,7 @@ const ProveedorPage = () => {
     const searchProveedores = await searchProveedor(search)
     if(searchProveedores.result === false)
       return toast.error(
-        searchProveedores.errorMessage, 
+        searchProveedores.message, 
         { id: toastLoadingCustom, style: { color:'red' } }
       )
     setTimeout(() => {
@@ -42,24 +42,19 @@ const ProveedorPage = () => {
     getProducts(data)
   }
   const handleShowModel = (data) => {
-    if(data.proveedorId > 0) {
-      toast.success("Guardado")
-      getProducts()
-    }
+    if(data.result) getProducts()    
     setShowModal(false)
   }
   // Función para manejar la selección de una fila desde la tabla
   const handleRowSelect = async(rowData) => {
-    const toastLoadingCustom = toast.loading('Cargando...');
     if(rowData.proveedorId != null){
+      const toastLoadingCustom = toast.loading('Cargando...');
       const proveedorById = await proveedorGetById({id:rowData.proveedorId})
       if(proveedorById.result === false)
-        return toast.error(proveedorById.errorMessage, {id: toastLoadingCustom, style: { color:'red' }})
+        return toast.error(proveedorById.message, {id: toastLoadingCustom, style: { color:'red' }})
       setSelectedRowData(proveedorById.data)
-    }else setSelectedRowData(rowData)    
-    setTimeout(() => {
-      toast.dismiss(toastLoadingCustom)
-    })
+      toast.success(proveedorById.message, {id: toastLoadingCustom})
+    }else setSelectedRowData(rowData)
     setShowModal(true)
   }
   // Función para eliminar un producto
@@ -68,10 +63,8 @@ const ProveedorPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.id > 0){
-      toast.success("Eliminado")
-      getProducts()
-    }
+    if(data.result) getProducts()
+    
     setShowModalDelete(false)
   }
   return (

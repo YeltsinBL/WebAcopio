@@ -15,19 +15,14 @@ export const ProveedorModelDelete = ({onShowModel, data}) => {
           userModifiedAt: obtenerFechaLocal({date: new Date()})
         })
         if (proveedor.result) {
-          setTimeout(() => {
-            toast.dismiss(toastLoadingCustom)
-          })
-          return sendDataDismissModel(proveedor.data)
+          toast.success(proveedor.message, {id: toastLoadingCustom})
+          return onShowModel(proveedor)
         }
-        return toast.error(proveedor.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
+        return toast.error(proveedor.message, { id: toastLoadingCustom, style: { color:'red' }})
       }
       const handleCancelar = (e) => {
         e.preventDefault()
-        sendDataDismissModel(0)
-      }
-      const sendDataDismissModel = (valor) => {
-        onShowModel({id:valor})
+        return onShowModel({result:false})
       }
   return (
     <ModalDelete title={'Desactivar Proveedor'}
