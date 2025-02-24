@@ -12,10 +12,12 @@ import {
   AdapterServicioGetDataExport
 } from "~/adapters/ServicioAdapter"
 import { 
-  ServicioPaleroExcelFile, ServicioPaleroFilter, ServicioPaleroForm, 
-  ServicioPaleroFormDelete, ServicioPaleroPdfFile, ServicioPaleroTable 
+  ServicioPaleroFilter, ServicioPaleroForm, 
+  ServicioPaleroFormDelete, ServicioPaleroTable 
 } from "./components"
 import { ExportToExcel, ExportToPdf } from "~components/download"
+import { ServicioPaleroExcelFile, ServicioPaleroExcelGeneralFile, ServicioPaleroPdfFile, ServicioPaleroPdfGeneralFile } from "./reports"
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 
 const ServicioPaleroPage = () => {
 const handleGoBack = useClosePage()
@@ -26,20 +28,17 @@ const handleGoBack = useClosePage()
   const [modelDelete, setModelDelete] = useState(false)
   
   useEffect(()=>{
-    getServicios()
+    getServicios({})
   },[])
-  const getServicios = async(filters) =>{
-    const servicios = await servicioPaleroSearch(filters)
+  const getServicios = async({fechaDesdeFilter= obtenerFechaInicialMes(), 
+      fechaHastaFilter= obtenerSoloFechaLocal({date: new Date()}),
+      carguilloFilter='', estadoFilter =''}) =>{
+    const servicios = await servicioPaleroSearch({fechaDesdeFilter,
+      fechaHastaFilter, carguilloFilter, estadoFilter})
     setServicioList(AdapterListadoServicio(servicios))
   }
-  const handleDataFromChild = (data)=>{
-    const {
-      fechaDesdeFilter, fechaHastaFilter, carguilloFilter, estadoFilter
-    } = data
-    if(fechaDesdeFilter=='' && fechaHastaFilter=='' && carguilloFilter =='' && estadoFilter=='')
-      return getServicios()
-    return getServicios({fechaDesdeFilter, fechaHastaFilter, carguilloFilter, estadoFilter})
-  }
+  const handleDataFromChild = (data)=> getServicios(data)
+  
   const handleRowSelect = async(rowData) =>{
     if(rowData.servicioId){
       const toastLoadingCustom = toast.loading('Cargando...')
@@ -55,7 +54,7 @@ const handleGoBack = useClosePage()
     }
   }  
   const handleSaveModel = (data) =>{
-    if(data.result) getServicios()    
+    if(data.result) getServicios({})    
     setShowModal(false)
   }
   const handleRowDelete = (data) =>{
@@ -63,7 +62,7 @@ const handleGoBack = useClosePage()
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result) getServicios()    
+    if(data.result) getServicios({})    
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(servicioId) =>{
@@ -80,6 +79,18 @@ const handleGoBack = useClosePage()
       'ServicioPaleroReporte'
     )
   }
+    const handleRowExportExcelGeneral = async() =>{
+      await ExportToExcel(
+        ServicioPaleroExcelGeneralFile(servicioList),
+        'ServicioPaleroReporteGeneral'
+      )
+    }
+    const handleRowExportPdfGeneral = async() =>{
+      ExportToPdf(
+        ServicioPaleroPdfGeneralFile(servicioList), 
+        'ServicioPaleroReporteGeneral'
+      )
+    }
   return (
     <ContainerPageCustom>
       <Header title={'Servicio Palero'}/>
@@ -90,6 +101,8 @@ const handleGoBack = useClosePage()
           <ServicioPaleroTable data={servicioList} onRowSelect={handleRowSelect} onRowDelete={handleRowDelete} 
             exportExcel={handleRowExportExcel} exportPdf={handleRowExportPdf} /> 
           <Footer>
+            <FooterButton name={'Excel'} accion={handleRowExportExcelGeneral} />
+            <FooterButton name={'PDF'} accion={handleRowExportPdfGeneral} />
             <FooterButton name={'Nuevo'} accion={handleRowSelect} />
             <FooterButton name={'Salir'} accion={handleGoBack} />
           </Footer>
