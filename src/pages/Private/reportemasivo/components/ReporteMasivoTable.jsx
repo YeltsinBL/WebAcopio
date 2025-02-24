@@ -10,10 +10,12 @@ export const ReporteMasivoTable = ({data}) => {
   ]
   const summary = data.reduce(
     (acc, item) => {
+      if(item.liquidacionEstadoDescripcion != "Anulado"){
       acc.liquidacionPesoNeto += parseFloat(item.liquidacionPesoNeto)
       acc.liquidacionPesoBruto += parseFloat(item.liquidacionPesoBruto)
       acc.liquidacionPagar += parseFloat(item.liquidacionPagar)
-      return acc;
+    }
+    return acc;
     },
     { liquidacionPesoNeto: 0, liquidacionPesoBruto: 0, liquidacionPagar: 0 }
   )

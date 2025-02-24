@@ -1,35 +1,16 @@
-import { useEffect, useState } from "react"
-import { ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter } from "~components/common"
-import { searchAsignaTierra } from "~services/asignartierra"
-import { liquidacionEstadosList } from "~services/liquidacion"
-import { formatterDataCombo } from "~utils/index"
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter 
+} from "~components/common"
+import { useReporteMasivoFilter } from "../hooks/useReporteMasivoFilter"
 
 export const ReporteMasivoFilter = ({onFiltersValue}) => {
-  const [utList, setUtList] = useState([])
-  const [liquidacionEstadoList, setLiquidacionEstadoList] = useState([])
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [utFilter, setUtFilter] = useState('')
-  const [estadoFilter, setEstadoFilter] = useState('')
-
-  useEffect(()=>{
-    getUts()
-    getTicketEstados()
-  }, [])
-
-  const getUts = async() => {
-    const uts = await searchAsignaTierra()
-    const formatter= uts?.map(ut =>(
-      formatterDataCombo(ut.asignarTierraProveedorId, ut.asignarTierraProveedorUT)))
-    setUtList(formatter)
-    
-  }
-  const getTicketEstados = async() => {
-    const estados = await liquidacionEstadosList()
-    const formatter= estados?.map(estado =>(
-      formatterDataCombo(estado.estadoId, estado.estadoDescripcion)))
-    setLiquidacionEstadoList(formatter)
-  }
+  const {
+    utList, liquidacionEstadoList, 
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    utFilter, setUtFilter,
+    estadoFilter, setEstadoFilter
+  } = useReporteMasivoFilter()
   const handleSelectionUTChange = (option) => setUtFilter((option==''|| isNaN(option))?'':option)
   const handleSelectionEstadoChange = (option) => setEstadoFilter(option)
   

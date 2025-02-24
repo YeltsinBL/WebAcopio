@@ -58,10 +58,11 @@ export const ReporteMasivoExcel = (data) => {
     row.getCell(7).alignment = {horizontal: 'right', vertical:'middle'}
     row.getCell(8).alignment = {horizontal: 'right', vertical:'middle'}
     row.getCell(9).alignment = {horizontal: 'center', vertical:'middle'}
-
+    if(detalle.liquidacionEstadoDescripcion != "Anulado"){
     sumaPesoBruto += parseFloat(detalle.liquidacionPesoBruto)
     sumaPesoNeto += parseFloat(detalle.liquidacionPesoNeto)
     sumaTotal += parseFloat(detalle.liquidacionPagar)
+    }
   })
   
   // Agregar el total al lado de la suma de peso bruto

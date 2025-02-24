@@ -4,9 +4,11 @@ export const ReporteMasivoPdf = (data) => {
   const { totalPesoNeto, totalPesoBruto, liquidacionPagar, detalleFilas } = data.reduce(
     (acc, liquidacion) => {
       // Sumar valores
+      if(liquidacion.liquidacionEstadoDescripcion != "Anulado"){
       acc.totalPesoNeto += parseFloat(liquidacion.liquidacionPesoNeto) || 0;
       acc.totalPesoBruto += parseFloat(liquidacion.liquidacionPesoBruto) || 0;
       acc.liquidacionPagar += parseFloat(liquidacion.liquidacionPagar) || 0;
+      }
   
       // Construir detalle
       acc.detalleFilas.push([
@@ -50,7 +52,7 @@ export const ReporteMasivoPdf = (data) => {
         style: "table",
         table: {
           headerRows: 1,
-          widths: ["*", "*", "*", "*", "*", "*","*", "*", "*"],
+          widths: ["auto", "*", "auto", "auto", "auto", "auto","auto", "auto", "auto"],
           body: [
             // Encabezados
             [

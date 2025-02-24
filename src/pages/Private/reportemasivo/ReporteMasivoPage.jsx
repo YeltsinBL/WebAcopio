@@ -11,26 +11,25 @@ import { liquidacionSearch } from "~services/liquidacion"
 import { ExportToExcel, ExportToPdf } from "~components/download"
 import { ReporteMasivoExcel } from "./reports/ReporteMasivoExcel"
 import { ReporteMasivoPdf } from "./reports/ReporteMasivoPdf"
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 
 const ReporteMasivoPage = () => {
   const handleGoBack = useClosePage()
   const [liquidacionList, setLiquidacionList] = useState([])
 
   useEffect(()=>{
-    getLiquidacion()
+    getLiquidacion({})
   }, [])
-  const getLiquidacion = async(filters) =>{
-    const liquidacionesList = await liquidacionSearch(filters)
+  const getLiquidacion = async({fechaDesdeFilter= obtenerFechaInicialMes(), 
+      fechaHastaFilter= obtenerSoloFechaLocal({date: new Date()}),
+      utFilter='', estadoFilter =''}) =>{
+    const liquidacionesList = await liquidacionSearch({
+      fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter
+    })
     setLiquidacionList(ReporteMasivoAdapterList(liquidacionesList))
   }
-  const handleDataFromChild = (data)=>{
-    const {
-      fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter
-    } = data
-    if(fechaDesdeFilter=='' && fechaHastaFilter=='' && utFilter =='' && estadoFilter=='')
-      return getLiquidacion()
-    return getLiquidacion({fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter})
-  }
+  const handleDataFromChild = (data)=> getLiquidacion(data)
+
   const handleRowExportExcel = async() =>{
     await ExportToExcel(ReporteMasivoExcel(liquidacionList), 'ReporteMasivo')
   }
