@@ -82,7 +82,7 @@ export const ServicioTransportePdfGeneralFile = (data) => {
       {
         style: "table",
         table: {
-          widths: ["*", "auto", "auto"],
+          widths: ["62%", "16%", "auto"],
           body: [
             [
               {text: "TOTALES ANULADOS:", bold: true, alignment: "right"}, 
@@ -96,7 +96,7 @@ export const ServicioTransportePdfGeneralFile = (data) => {
             ],
             [
               {text: "TOTALES PAGADOS:", bold: true, alignment: "right"}, 
-              { text: FormatteDecimalMath(totalPesoBrutoPagado,3),  bold: true, alignment: "center" },
+              { text: FormatteDecimalMath(totalPesoBrutoPagado,3),  bold: true, alignment: "right" },
               { text: FormatteDecimalMath(totalPagado,2),  bold: true, alignment: "right" }, 
             ],
           ],

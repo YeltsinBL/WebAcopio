@@ -81,7 +81,7 @@ export const ServicioPaleroPdfGeneralFile = (data) => {
       {
         style: "table",
         table: {
-          widths: ["*", "auto", "auto"],
+          widths: ["63%", "16%", "auto"],
           body: [
             [
               {text: "TOTALES ANULADOS:", bold: true, alignment: "right"}, 
