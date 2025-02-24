@@ -1,2 +1,5 @@
 export * from './ServicioTransporteExcelFile'
+export * from './ServicioTransporteExcelGeneralFile'
 export * from './ServicioTransportePdfFile'
+export * from './ServicioTransportePdfGeneralFile'
+export * from './index'

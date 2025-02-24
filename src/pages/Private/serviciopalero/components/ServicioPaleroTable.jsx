@@ -3,7 +3,7 @@ import { ExcelIcon, PDFIcon } from "~assets/icons"
 import { NoRegistros, Table, TableButton, TableTd } from "~components/common"
 
 export const ServicioPaleroTable = ({data, onRowSelect, onRowDelete, exportExcel, exportPdf}) => {
-  const headers =['Fecha', 'Palero', 'Precio', 'PesoBruto','Total', 'Estado', 'Acciones']
+  const headers =['Fecha', 'Palero', 'Precio', 'Peso Bruto','Total', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Servicio Palero'} headers={headers}>
       {data.length > 0 ? (

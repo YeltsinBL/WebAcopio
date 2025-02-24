@@ -5,7 +5,7 @@ import {
 } from '~components/common'
 
 export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete, exportExcel, exportPdf}) => {
-  const headers =['Fecha', 'Transportista', 'Trans. Precio', 'Total', 'Estado', 'Acciones']
+  const headers =['Fecha', 'Transportista', 'Precio', 'Peso Bruto','Total', 'Estado', 'Acciones']
   return (
     <Table nameTitle={'Lista de Servicio Transporte'} headers={headers}>
       {data.length > 0 ? (
@@ -15,6 +15,7 @@ export const ServicioTransporteTable = ({data, onRowSelect, onRowDelete, exportE
             <TableTd>{servicio.servicioFecha}</TableTd>
             <TableTd>{servicio.servicioCarguilloTitular}</TableTd>
             <TableTd> {servicio.servicioPrecio} </TableTd>
+            <TableTd> {servicio.servicioPesoBruto} </TableTd>
             <TableTd> {servicio.servicioTotal} </TableTd>
             <TableTd> {servicio.servicioEstadoDescripcion} </TableTd>
             <TableTd>
