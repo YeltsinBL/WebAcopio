@@ -11,7 +11,6 @@ import { toast, Toaster } from "sonner"
 import { ExportToExcel, ExportToPdf } from "~components/download"
 import { ProductoExcel } from "./reports/ProductoExcel"
 import { ProductoPdf } from "./reports/ProductoPdf"
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 
 const ProductoPage = () => {
   const handleGoBack = useClosePage()
@@ -48,13 +47,11 @@ const ProductoPage = () => {
     ExportToPdf(ProductoPdf(filteredUsers), 'Producto')
   }
   const onRowSelect = async(rowData) =>{
-    console.log(rowData)
     if(rowData.productoId){
       const toastLoadingCustom = toast.loading('Cargando...')
-      const producto = await productoGetById({id:rowData.productoId})
-      const response = ServicesResponseAdapter(producto)
+      const response = await productoGetById({id:rowData.productoId})
       if(response.result === false)
-        return toast.error(response.errorMessage, {id: toastLoadingCustom, style: { color:'red' }})
+        return toast.error(response.message, {id: toastLoadingCustom, style: { color:'red' }})
       toast.success(response.message, {id: toastLoadingCustom})
       setProductData(response.data)
     } else setProductData(null)

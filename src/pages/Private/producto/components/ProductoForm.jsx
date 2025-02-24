@@ -6,7 +6,6 @@ import {
 import { useInitialProducto, useValidationProducto } from "../hooks"
 import { productoAdapterSave } from "../adapter/ProductoAdapter"
 import { productoSave } from "~services/producto"
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { toast } from "sonner"
 
 export const ProductoForm = ({data, onShowModel}) => {
@@ -31,8 +30,7 @@ export const ProductoForm = ({data, onShowModel}) => {
       let dataAdapter = productoAdapterSave({ 
         productoId, productoNombre, productoPrecio, productoTipoId, productStockInicial
       })
-      const producto = await productoSave(productoId > 0 ?'PUT':'POST', dataAdapter)
-      const response = ServicesResponseAdapter(producto)
+      const response = await productoSave(productoId > 0 ?'PUT':'POST', dataAdapter)
       if(response.result === false) 
         return toast.error(response.message, {id: toastLoadingCustom, style: { color:'red' }})
       toast.success(response.message, {id: toastLoadingCustom})

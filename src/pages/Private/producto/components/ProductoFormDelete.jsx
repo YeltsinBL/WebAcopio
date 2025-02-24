@@ -3,7 +3,6 @@ import {
 } from "~components/common"
 import { productoSave } from "~services/producto"
 import { productoAdapterChangeStatus } from "../adapter/ProductoAdapter"
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { toast } from "sonner"
 
 export const ProductoFormDelete = ({onShowModel, data}) => {
@@ -11,7 +10,7 @@ export const ProductoFormDelete = ({onShowModel, data}) => {
     e.preventDefault()    
     const toastLoadingCustom = toast.loading('Cargando...')
     let dataAdapter = productoAdapterChangeStatus( data )
-    const servicio = ServicesResponseAdapter(await productoSave('DELETE', dataAdapter ))
+    const servicio = await productoSave('DELETE', dataAdapter )
     if (!servicio.result) 
       toast.error(servicio.message, {id: toastLoadingCustom, style: { color:'red' }})
     else toast.success(servicio.message, {id: toastLoadingCustom})
