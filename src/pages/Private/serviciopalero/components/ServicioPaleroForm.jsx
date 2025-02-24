@@ -49,6 +49,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
   const onRowDelete= (data)=>{
     setTicketSelected(ticketSelected.filter(ticket => ticket.ticketId !== data.ticketId))
   }
+
   const handleAgregarPagos = (e) => {
     e.preventDefault()
     const { isValid } = validate({
@@ -71,6 +72,11 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
       setEfectivo(false)
     }
   }
+  const onRowDeletePagos = (data) => {
+    if (typeof data.detallePagoId === "string" && data.detallePagoId.startsWith("temp")) {
+      setDetallePagado(detallePagado.filter((item) => item.detallePagoId !== data.detallePagoId))
+    }
+  }
   const handleGuardar = async(e)=>{
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
@@ -86,7 +92,6 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
       values: servicioModel
     })
     if(isValid){
-      console.log(ServicioPaleroAdapterSave(servicioModel))
       const servicioSave = await servicioPaleroSave({
         method:servicioIdModel>0?'PUT':'POST',
         servicioPalero: ServicioPaleroAdapterSave(servicioModel)
@@ -214,7 +219,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
                   checked={efectivo} readOnly={!pagando}
                   onChange={(e) => setEfectivo(e.target.checked)}/>
               </div>
-              <ButtonCustom extraClassName={`${!pagando ? 'hidden' : ''} max-h-9 mt-6 md:w-28 `} name={'Agregar'} 
+              <ButtonCustom extraClassName={`${servicioDescripcion =='Activo' && pagando ? '' : 'hidden'} max-h-9 mt-6 md:w-28 `} name={'Agregar'} 
                 onClick={handleAgregarPagos}  />
             </div>
           </TableHeaderCustom>
@@ -233,7 +238,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
                       typeof item.detallePagoId === "string" && 
                       item.detallePagoId?.startsWith('temp') &&
                     <TableButton className={'text-red-400 hover:text-red-300'}
-                      onRowSelect={()=>onRowDelete(item)}>
+                      onRowSelect={()=>onRowDeletePagos(item)}>
                       <Trash2 size={18} />
                     </TableButton>
                     }

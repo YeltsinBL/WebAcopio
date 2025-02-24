@@ -92,7 +92,7 @@ export const servicioPaleroGetById = async({id}) => {
     return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioPaleroGetById:', error.message)
-    throw new Error('Error al obtener el Servicio Palero')
+    return ResponseErrorServidor
   }
 }
 export const servicioPaleroSave = async({method, servicioPalero}) => {

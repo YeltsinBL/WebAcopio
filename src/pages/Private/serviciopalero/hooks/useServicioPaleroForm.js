@@ -42,7 +42,6 @@ export const useServicioPaleroForm = (data) => {
   }
   useEffect(()=>{
     if(data){
-      console.log(data)
       setServicioIdModel(data.servicioId || 0)
       setFechaModel(
         data.servicioFecha || obtenerSoloFechaLocal({ date: new Date() }))
@@ -53,7 +52,7 @@ export const useServicioPaleroForm = (data) => {
       setTotalModel(data.ventaTotal)
 
       setDetallePagado(data.detallePagos || [])
-      setPagando(data.servicioId >0 && data.servicioPendientePagar > 0)
+      //setPagando(data.servicioId >0 && data.servicioPendientePagar > 0)
     }
   }, [data])
 
@@ -72,8 +71,11 @@ export const useServicioPaleroForm = (data) => {
   }
 
   useEffect(()=>{
-    if(totalPagadoModel >= 0 && totalModel > 0) 
-      return setPendientePagar(FormatteDecimalMath(totalModel - totalPagadoModel, 2))
+    if(totalPagadoModel >= 0 && totalModel > 0) {
+      const result = FormatteDecimalMath(totalModel - totalPagadoModel, 2)
+      setPagando(result>0)
+      return setPendientePagar(result)
+    }
     return setPendientePagar(0)
   }, [totalModel, totalPagadoModel])
   useEffect(()=>{
