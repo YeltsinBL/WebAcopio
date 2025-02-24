@@ -40,16 +40,14 @@ function TesoreriaPage() {
   }
   const handleRowSelect = async(rowData) =>{
     if(rowData.tesoreriaId){
+      
       const servicio = await tesoreriaGetById({id:rowData.tesoreriaId})
       setSelectedRowData(TesoreriaAdapterGetData(servicio))
     }else setSelectedRowData(null)
     setShowModal(true)
   }
   const handleSaveModel = (data) =>{
-    if(data.result) {
-      toast.success(data.errorMessage)
-      getTesorerias({})
-    }
+    if(data.result) getTesorerias({})    
     setShowModal(false)
   }
   return (

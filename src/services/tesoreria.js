@@ -1,3 +1,4 @@
+import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -46,7 +47,7 @@ export const tesoreriaSave = async(method, tesoreria) => {
       },
       body: JSON.stringify(tesoreria)
     })
-    return await response.json()
+    return ServicesResponseAdapter(await response.json())
   } catch (error) {
     console.log('tesoreriaSave:', error.message)
     return ResponseErrorServidor

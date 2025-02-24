@@ -13,6 +13,7 @@ import {
 } from "~utils/index"
 import { liquidacionSearch } from "~services/liquidacion"
 import { tesoreriaSave } from "~services/tesoreria"
+import { PopupValidationWarning } from "~components/common/MessagePopupValidation"
 
 export const TesoreriaForm = ({onShowModel, data}) => {
   const [liquidacionList, setLiquidacionList] = useState([])
@@ -92,15 +93,23 @@ export const TesoreriaForm = ({onShowModel, data}) => {
       if (!fechaPagadoModel) nuevosErrores.fechaPagadoModel = "El campo FECHA es obligatorio."
       if (!pagadoModel) nuevosErrores.pagado = "El campo PAGADO es obligatorio."
       if (!cteModel && !efectivo) nuevosErrores.ctacte = "El campo CTA. CTE. es obligatorio."
-      if (pendientePagarModel ==0) toast.warning('Ya ha pagado el total de la deuda', {style: { 
-        background: 'black',
-        color:' yellow' }} )
+      if (pendientePagarModel ==0) {
+        nuevosErrores.pendientePagar = "Ya ha pagado el total de la deuda"
+        PopupValidationWarning({texto:nuevosErrores.pendientePagar})
+      }
     }else{
-      if (!fechaModel) nuevosErrores.fechaModel = "El campo FECHA es obligatorio."
-      if (!liquidacionId) nuevosErrores.ut = "El campo SEEMBRADOR es obligatorio."
-      if (tesoreriaDetallePagado.length == 0) toast.warning('Debe agregar al menos un pago', {style: { 
-        background: 'black',
-        color:' yellow' }} )
+      if (!fechaModel) {
+        nuevosErrores.fechaModel = "El campo FECHA es obligatorio."
+        PopupValidationWarning({texto:nuevosErrores.fechaModel})
+      }
+      if (!liquidacionId) {
+        nuevosErrores.ut = "El campo SEMBRADOR es obligatorio."
+        PopupValidationWarning({texto:nuevosErrores.ut})
+      }
+      if (tesoreriaDetallePagado.length == 0) {
+        nuevosErrores.detallePagado = "Debe agregar al menos un pago"
+        PopupValidationWarning({texto:nuevosErrores.detallePagado})
+      }
     }
     setErrores(nuevosErrores)
     return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
@@ -117,11 +126,11 @@ export const TesoreriaForm = ({onShowModel, data}) => {
         tesoreriaDetallePagoCtaCte: cteModel,
       }]
       setTesoreriaDetallePagado(updatePlacaList)
+      setPagadoModel(0)
+      setBancoModel('')
+      setCteModel('')
+      setEfectivo(false)
     }
-    setPagadoModel(0)
-    setBancoModel('')
-    setCteModel('')
-    setEfectivo(false)
   }
   const onRowDelete = (proveedor) => {
     if (typeof proveedor.tesoreriaDetallePagoId === "string" && proveedor.tesoreriaDetallePagoId.startsWith("temp")) {
@@ -157,10 +166,8 @@ export const TesoreriaForm = ({onShowModel, data}) => {
       }
       const tesoreriaResp = await tesoreriaSave(tesoreriaId > 0? 'PUT':'POST', tesoreriaModel)
       if(!tesoreriaResp.result) 
-        return toast.error(tesoreriaResp.errorMessage, { id: toastLoadingCustom, style: { color:'red' }})
-      setTimeout(() => {
-        toast.dismiss(toastLoadingCustom)
-      })
+        return toast.error(tesoreriaResp.message, { id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(tesoreriaResp.message, { id: toastLoadingCustom, style: { color:'green' }})
       return onShowModel(tesoreriaResp)
     }
     setTimeout(() => {
@@ -169,7 +176,7 @@ export const TesoreriaForm = ({onShowModel, data}) => {
   }
   const handleCancelar = (e)=>{
     e.preventDefault()
-    onShowModel({tesoreriaId:0})
+    onShowModel({result:false})
   }
   return (
     <>
@@ -211,7 +218,7 @@ export const TesoreriaForm = ({onShowModel, data}) => {
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
             <FilterOption htmlFor={'FechaPagadoModel'} name={'Fecha Pagado'}>
               <InputDateCustom fechaValue={fechaPagadoModel}
-                valueError={errores.fechaModel ? true: false}
+                valueError={errores.fechaPagadoModel ? true: false}
                 setFechaValue={setFechaPagadoModel} readOnly={!pagando} />
               {errores.fechaPagadoModel && <MessageValidationInput mensaje={errores.fechaPagadoModel}/>}
             </FilterOption>
@@ -266,6 +273,7 @@ export const TesoreriaForm = ({onShowModel, data}) => {
             ))
           ):(<NoRegistros colSpan={headers.length}/>)}
         </TableBodyCustom>
+        {errores.detallePagado && <MessageValidationInput mensaje={errores.detallePagado}/>}
         <TableFooterCustom>
           <FilterOption htmlFor={'utPagado'} name={'Pagado'}>
             <InputDecimalCustom placeholder={'Automático'} textValue={totalPagadoModel}
