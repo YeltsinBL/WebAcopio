@@ -26,9 +26,9 @@ export const ServicioTransporteModalDelete = ({onShowModel, data}) => {
     onShowModel(valor)
   }
   return (
-    <ModalDelete title={'Eliminar Servicio Transporte'} message={`¿Estás seguro(a) que deseas eliminar el Servicio Transporte: ${data.servicioFecha} - ${data.servicioCarguilloTitular}?`}>
+    <ModalDelete title={'Anular Servicio Transporte'} message={`¿Estás seguro(a) que deseas anular el Servicio Transporte: ${data.servicioFecha} - ${data.servicioCarguilloTitular}?`}>
       <Footer>
-        <FooterButton accion={handleGuardar} name={'Eliminar'} />
+        <FooterButton accion={handleGuardar} name={'Anular'} />
         <FooterButton accion={handleCancelar} name={'Cancelar'}/>
       </Footer>
     </ModalDelete>
