@@ -53,11 +53,11 @@ const CortePage = () => {
   }
   const handleRowExportExcel = async(corteId) =>{
     const corte = await corteGetById({id: corteId})
-    await ExportToExcel(CorteExcelFile(corte), 'CorteReporte')
+    await ExportToExcel(CorteExcelFile(corteAdapterGetData(corte)), 'CorteReporte')
   }
   const handleRowExportPdf = async(corteId) =>{
     const corte = await corteGetById({id: corteId})
-    ExportToPdf(CortePdfFile(corte), 'CortePdf')
+    ExportToPdf(CortePdfFile(corteAdapterGetData(corte)), 'CortePdf')
   }
   const handleRowDelete = (data) =>{
     setModelDataDelete(data)

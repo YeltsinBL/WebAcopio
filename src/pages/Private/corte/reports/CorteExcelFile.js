@@ -19,7 +19,6 @@ export const CorteExcelFile = (data) => {
       worksheet.addRow(["Proveedores", data.proveedoresNombres]).font = boldStyle
       worksheet.addRow(["Campo", data.tierraCampo]).font = boldStyle
       //worksheet.addRow(["UC", data.tierraUC])
-      worksheet.addRow(["Precio Corte", data.cortePrecio]).font = boldStyle
       worksheet.addRow(["Estado", data.corteEstadoDescripcion]).font = boldStyle
   
       // Separador vacío
@@ -75,20 +74,60 @@ export const CorteExcelFile = (data) => {
         null,
         null,
         null,
-        "Total:",
+        "Suma Peso Bruto:",
         data.cortePesoBrutoTotal,
-        data.corteTotal, // Total
+        null
       ]);
     
       // Formatear la celda con bordes y negrita
-      totalRow2.getCell(9).font = { bold: true }; // Columna 9, "Total:"
+      totalRow2.getCell(9).font = { bold: true };
       totalRow2.getCell(9).border = borderStyle;
 
-      totalRow2.getCell(10).font = { bold: true }; // Columna 10, "cortePesoBrutoTotal:"
+      totalRow2.getCell(10).font = { bold: true };
       totalRow2.getCell(10).border = borderStyle;
     
-      totalRow2.getCell(11).font = { bold: true }; // Columna 11, corteTotal
-      totalRow2.getCell(11).border = borderStyle;
-  
+   // Agregar el total al lado de la suma de peso bruto
+   const totalRow3 = worksheet.addRow([
+    null, // Dejar las celdas vacías hasta llegar a la posición deseada
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "Precio:",
+    data.cortePrecio,
+    null
+  ]);
+
+  // Formatear la celda con bordes y negrita
+  totalRow3.getCell(9).font = { bold: true };
+  totalRow3.getCell(9).border = borderStyle;
+
+  totalRow3.getCell(10).font = { bold: true };
+  totalRow3.getCell(10).border = borderStyle;
+
+  // Agregar el total al lado de la suma de peso bruto
+  const totalRow4 = worksheet.addRow([
+    null, // Dejar las celdas vacías hasta llegar a la posición deseada
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "Total:",
+    data.corteTotal,
+    null
+  ]);
+
+  // Formatear la celda con bordes y negrita
+  totalRow4.getCell(9).font = { bold: true };
+  totalRow4.getCell(9).border = borderStyle;
+  totalRow4.getCell(10).font = { bold: true };
+  totalRow4.getCell(10).border = borderStyle;
+
   return workbook
 }
