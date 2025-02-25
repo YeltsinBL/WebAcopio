@@ -34,7 +34,7 @@ export const CorteModel = ({ onShowModel, data }) => {
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
   const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
-    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Palero','Campo', 'Estado','Acción']
 
   useEffect(()=> {
     getListUC()
@@ -189,6 +189,7 @@ export const CorteModel = ({ onShowModel, data }) => {
               <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
               <TableTd>{ticket.ticketCamionPeso}</TableTd>
               <TableTd>{ticket.ticketPesoBruto}</TableTd>
+              <TableTd>{ticket.paleroNombre}</TableTd>
               <TableTd>{ticket.ticketCampo}</TableTd>
               <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
               <TableTd hidden={idModel > 0}>

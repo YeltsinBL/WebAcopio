@@ -29,7 +29,7 @@ export const useServicioTransporteForm = (data) => {
 
   const seleccionCarguillo = data?.carguilloId ? {id: data.carguilloId, nombre: data.carguilloTitular } : null
   const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
-    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Palero','Campo', 'Estado','Acción']
   const headersPagos= ['Fecha', 'Pagado','Efectivo','Banco','Cta.Cte.', 'Acción']
 
   useEffect(()=>{    

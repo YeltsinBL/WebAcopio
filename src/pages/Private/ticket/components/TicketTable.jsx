@@ -3,7 +3,7 @@ import { Edit, Trash2 } from 'lucide-react'
 
 export const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
   const headers = ['Ingenio', 'Campo','Viaje', 'Fecha', 'Transportista', 'Camión', 
-      'Vehículo', 'Peso Bruto', 'Estado', 'Acciones']
+      'Vehículo', 'Peso Bruto', 'Palero','Estado', 'Acciones']
   return (
   <Table nameTitle={"Lista de Tickets"} headers={headers} >
 	{TICKET_DATA.length > 0 ? (
@@ -18,6 +18,7 @@ export const TicketTable = ({TICKET_DATA, onRowSelect, onDeleteSelect}) => {
           <TableTd>{ticket.ticketCamion}</TableTd>
           <TableTd>{ticket.ticketVehiculo}</TableTd>
           <TableTd>{ticket.ticketPesoBruto}</TableTd>
+          <TableTd>{ticket.paleroNombre}</TableTd>
           <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
           <TableTd>
             <TableButton className="text-blue-500 hover:text-blue-700 px-3"

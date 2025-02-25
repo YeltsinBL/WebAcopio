@@ -57,7 +57,7 @@ export function LiquidacionModel({onShowModel, data}) {
   const [errores, setErrores] = useState({})
   const seleccionPersona = data.personaId ? {id: data.personaId, nombre: data.personaNombre } : null
   const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
-    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Campo', 'Estado','Acción']
+    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Palero','Campo', 'Estado','Acción']
   const headersFinanciamiento= ['Fecha', 'A Cuenta','Tiempo/Días','Interes Mes %','Interes S/', 'Total','Acciones']
   const headersAdicionales= ['Motivo', 'Monto','Acciones']
   
@@ -386,6 +386,7 @@ export function LiquidacionModel({onShowModel, data}) {
                 <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
                 <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketPesoBruto}</TableTd>
+                <TableTd>{ticket.paleroNombre}</TableTd>
                 <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
                 <TableTd>

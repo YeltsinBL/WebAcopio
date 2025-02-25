@@ -161,6 +161,7 @@ export const ServicioPaleroForm = ({onShowModel, data}) => {
                 <TableTd>{ticket.ticketVehiculoPeso}</TableTd>
                 <TableTd>{ticket.ticketCamionPeso}</TableTd>
                 <TableTd>{ticket.ticketPesoBruto}</TableTd> 
+                <TableTd>{ticket.paleroNombre}</TableTd>
                 <TableTd>{ticket.ticketCampo}</TableTd>
                 <TableTd>{ticket.ticketEstadoDescripcion}</TableTd>
                 <TableTd hidden={servicioIdModel > 0}>
