@@ -4,11 +4,11 @@ export const InformeIngresoGastoPdf = (data) => {
     switch (orden) {
       case 1:
         return "Compra de caña (T. neta)";
-      case 2:
+      case 4:
         return "Transporte de caña (T. bruta)";
       case 3:
         return "Servicio de Pala (T. bruta)";
-      case 4:
+      case 2:
         return "Servicio de Corte (T. bruta)";
       case 5:
         return "Impuestos (T. bruta)";
