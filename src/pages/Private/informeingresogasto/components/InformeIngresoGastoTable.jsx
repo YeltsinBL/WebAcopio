@@ -31,11 +31,11 @@ export const InformeIngresoGastoTable = ({data, onRowSelect, onDeleteSelect, exp
                 onRowSelect={()=>exportPdf(informe.informeId)} >
                 <PDFIcon />
               </TableButton>
-              {/* {informe.informeStatus  &&
+              {informe.informeStatus =="Activo" &&
                 <TableButton className='text-red-400 hover:text-red-300'
                   onRowSelect={() => onDeleteSelect(informe)} >
                   <Trash2 size={18} />
-                </TableButton> } */}
+                </TableButton> }
             </TableTd>
           </tr>
         ))

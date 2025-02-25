@@ -11,6 +11,7 @@ import { InformeIngresoGastoAdapterGetData, InformeIngresoGastoAdapterList } fro
 import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 import { InformeIngresoGastoExcel, InformeIngresoGastoPdf } from "./reports"
 import { ExportToExcel, ExportToPdf } from "~components/download"
+import { InformeIngresoGastoFormDelete } from "./components/InformeIngresoGastoFormDelete"
 
 const InformeIngresoGastoPage = () => {
   const handleGoBack = useClosePage()
@@ -21,13 +22,15 @@ const InformeIngresoGastoPage = () => {
   const [dataModalDelete, setDataModalDelete] = useState({})
   
   useEffect(()=>{
-    getInformes({
-      fechaDesde: obtenerFechaInicialMes(), 
-      fechaHasta: obtenerSoloFechaLocal({date: new Date()}), 
-      sembradorId: '', estadoId: ''})
+    getInformes({})
   },[])
-  const getInformes = async (filters) => {
-    const informes = await InformeIngresoGastoSearch(filters)
+  const getInformes = async ({
+    fechaDesde= obtenerFechaInicialMes(), 
+    fechaHasta= obtenerSoloFechaLocal({date: new Date()}), 
+    sembradorId= '', estadoId= ''}) => {
+    const informes = await InformeIngresoGastoSearch({
+      fechaDesde, fechaHasta, sembradorId, estadoId
+    })
     setInformeList(InformeIngresoGastoAdapterList(informes))
   }
   const handleDataFilter = (data) => getInformes(data)
@@ -43,16 +46,17 @@ const InformeIngresoGastoPage = () => {
   }
   
   const handleSaveModel = (data) => {
-    if(data.result){        
-      getInformes()
-    }
+    if(data.result) getInformes({})
+    
     setShowModel(true)
   }
   const onDelete = (data) => {
-   
+    setDataModalDelete(data)
+    setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    
+    if(data.result) getInformes({})    
+    setShowModalDelete(false)
   }
   const handleRowExportExcel = async(informeId) =>{
     const toastLoadingCustom = toast.loading('Cargando...')
@@ -87,7 +91,7 @@ const InformeIngresoGastoPage = () => {
           </>:
           <InformeIngresoGastoForm onShowModel={handleSaveModel} data={selectedRowData}/>
         }
-        {/* {showModalDelete ? <ProductoFormDelete onShowModel={handleShowModelDelete} data={dataModalDelete} /> :'' } */}
+        {showModalDelete ? <InformeIngresoGastoFormDelete onShowModel={handleShowModelDelete} data={dataModalDelete} /> :'' }
         <Toaster />
       </Main>
     </ContainerPageCustom>

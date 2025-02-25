@@ -351,9 +351,9 @@ export const InformeIngresoGastoForm = ({onShowModel, data}) => {
             <InputDecimalCustom placeholder="Automático"
               textValue={sumaPrecioLiquidacionModel} readOnly />
           </FilterOption>        
-          <FilterOption htmlFor={'ToneladasPesoNetoModel'} name={'Toneladas'}>
+          <FilterOption htmlFor={'ToneladasPesoBrutoModel'} name={'Toneladas'}>
             <InputDecimalCustom readOnly
-              placeholder='Automático' textValue={sumaPesoNetoLiquidacionModel} />
+              placeholder='Automático' textValue={sumaPesoBrutoLiquidacionModel} />
           </FilterOption>
           <FilterOption htmlFor={'ToneladasTotalModel'} name={'Totales'}>
             <InputDecimalCustom readOnly

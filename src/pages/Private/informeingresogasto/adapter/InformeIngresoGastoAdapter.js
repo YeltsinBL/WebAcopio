@@ -61,32 +61,32 @@ export const InformeIngresoGastoAdapterSave = (data) => {
       informeCostoPrecio: data.sumaPrecioLiquidacionModel,
       informeCostoTonelada: data.sumaPesoBrutoLiquidacionModel,
       informeCostoTotal: data.sumaTotalLiquidacionModel,
-      informeCostoOrden: 1
+      informeCostoOrden: 1 // liquidacion
     },{
       informeCostoPrecio: data.sumaPrecioCorteModel,
       informeCostoTonelada: data.sumaPesoBrutoCorteModel,
       informeCostoTotal: data.sumaTotalCorteModel,
-      informeCostoOrden: 2
+      informeCostoOrden: 2 // corte
     },{
       informeCostoPrecio: data.sumaPrecioPaleroModel,
       informeCostoTonelada: data.sumaPesoBrutoPaleroModel,
       informeCostoTotal: data.sumaTotalPaleroModel,
-      informeCostoOrden: 3
+      informeCostoOrden: 3 // pala
     },{
       informeCostoPrecio: data.sumaPrecioTransporteModel,
       informeCostoTonelada: data.sumaPesoBrutoTransporteModel,
       informeCostoTotal: data.sumaTotalTransporteModel,
-      informeCostoOrden: 4
+      informeCostoOrden: 4 // transporte
     },{
       informeCostoPrecio: data.sumaPrecioImpuestosModel,
       informeCostoTonelada: data.sumaPesoBrutoImpuestosModel,
       informeCostoTotal: data.sumaTotalImpuestosModel,
-      informeCostoOrden: 5
+      informeCostoOrden: 5 // impuestos
     },{
       informeCostoPrecio: data.sumaPrecioOtrosGastosModel,
       informeCostoTonelada: data.sumaPesoBrutoOtrosGastosModel,
       informeCostoTotal: data.sumaTotalOtrosGastosModel,
-      informeCostoOrden: 6
+      informeCostoOrden: 6 // otros
     }
   ]
   if(data.informeId>0){
@@ -165,6 +165,13 @@ export const InformeIngresoGastoAdapterGetData = (data) => {
     otrosPrecio:otrosGastos.informeCostoPrecio,
     otrosPesoBruto:otrosGastos.informeCostoTonelada,
     otrosTotal:otrosGastos.informeCostoTotal,
+  }
+}
+export const InformeIngresoGastoAdapterAnular = (data) => {
+  return {
+    informeId:data.informeId,
+    userModifiedAt: obtenerFechaLocal({date: new Date()}),
+    userModifiedName: 'ADMIN'
   }
 }
 const formatterGetFactura = (data) => {
