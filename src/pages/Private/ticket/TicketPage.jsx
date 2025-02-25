@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { 
-  ContainerPageCustom, Footer, FooterButton, Header, Main 
-} from '../../../components/common'
+import { useClosePage } from '~hooks/common'
 import { 
   TicketFilter, TicketFormDelete, TicketForm, TicketTable 
 } from './components'
-import { searchTickets, ticketGetById } from '../../../services/ticket'
-import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimal } from '../../../utils'
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from '~utils/index'
+import { searchTickets, ticketGetById } from '~services/ticket'
+import { 
+  ContainerPageCustom, Footer, FooterButton, Header, Main
+} from '~components/common'
 
 const TicketPage = () => {
+  const handleGoBack = useClosePage()
   const [listTicket, setListTicket] = useState([])
-  const navigate = useNavigate()
   /* Model */
   const [showModel, setShowModel] = useState(true)
   const [selectedRowData, setSelectedRowData] = useState(null)
@@ -19,25 +19,23 @@ const TicketPage = () => {
   const [modalDelete, setModalDelete] = useState({})
 
   useEffect(() => {
-    getTickets()
+    getTickets({})
   }, [])
-  const getTickets = async(filter) => {
-    const tickets = await searchTickets(filter)
+  const getTickets = async({
+    ingenio='', transportista='', viaje='',
+    fechaDesde=obtenerFechaInicialMes(), 
+    fechaHasta=obtenerSoloFechaLocal({date: new Date()}), estado='',
+  }) => {
+    const tickets = await searchTickets({
+      ingenio, transportista, viaje, fechaDesde,
+      fechaHasta, estado
+    })
     setListTicket(tickets|| [])
   }
-  const handleGoBack = () => {
-    navigate('/')
-  }
+
   // Listado Filtro
-  const handleDataFromChild = (data) => {
-    const {
-        ingenio, transportista, viaje, fechaDesde, fechaHasta, estado
-    } = data
-    if(ingenio=='' && transportista=='' && viaje=='' && fechaDesde=='' && fechaHasta=='' && estado==''){
-      return getTickets()
-    }
-    return getTickets({ingenio, transportista, viaje, fechaDesde, fechaHasta, estado})
-  }
+  const handleDataFromChild = (data) => getTickets(data)
+
   // Obtener
   const handleRowSelect = async(rowData) => {
     if(rowData.ticketId != null){
@@ -48,7 +46,7 @@ const TicketPage = () => {
   }
   // Guardar
   const handleShowModel = (data) => {
-    if(data.ticketId>0) getTickets()
+    if(data.ticketId>0) getTickets({})
     setShowModel(true)
   }
   // Eliminar
@@ -57,7 +55,7 @@ const TicketPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.ticketId > 0) getTickets()
+    if(data.ticketId > 0) getTickets({})
     setShowModalDelete(false)
   }
   return (

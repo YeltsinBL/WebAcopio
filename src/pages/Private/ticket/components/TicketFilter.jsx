@@ -1,49 +1,39 @@
-import { useEffect, useState } from 'react'
-import { searchTicketsEstado } from '../../../../services/ticket'
-import { 
-  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, InputTextCustom, SectionFilter 
-} from '../../../../components/common'
-import { formatterDataCombo } from '../../../../utils'
+import {   
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, InputTextCustom, 
+  SectionFilter  } from '~components/common'
+import { useTicketFilter } from '../hooks/useTicketFilter'
+import { TicketAdapterFilter } from '../adapter/TicketAdapter'
 
 export const TicketFilter = ({onFiltersValue}) => {
-  const [ingenioFilter, setIngenioFilter] = useState('')
-  const [transportistaFilter, setTransportistaFilter] = useState('')
-  const [viajeFilter, setviajeFilter] = useState('')
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [estadoFilter, setEstadoFilter] = useState('')
-  
-  const [ticketEstado, setTicketEstado] = useState([])
-
-  useEffect(() => {
-    getTicketEstados()
-  }, [])
-  const getTicketEstados = async() => {
-    const estados = await searchTicketsEstado()
-    const formatter= estados?.map(tipo =>(
-      formatterDataCombo(tipo.ticketEstadoId, tipo.ticketEstadoDescripcion)))
-    setTicketEstado(formatter)
-  }
+  const {
+    ingenioFilter, setIngenioFilter,
+    transportistaFilter, setTransportistaFilter,
+    viajeFilter, setviajeFilter,
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    estadoFilter, setEstadoFilter,
+    ticketEstado,
+  } = useTicketFilter()
   const handleSelectionChange = (option) =>
-    setEstadoFilter((option==''|| isNaN(option))?'':option)
-  
+    setEstadoFilter((option==''|| isNaN(option))?'':option)  
 
   const handleSearch = (e) => {
     e.preventDefault()
-    onFiltersValue({
-      ingenio:ingenioFilter, transportista:transportistaFilter, 
-      viaje:viajeFilter, fechaDesde: fechaDesdeFilter, 
-      fechaHasta: fechaHastaFilter, estado:estadoFilter})
+    onFiltersValue(TicketAdapterFilter({
+      ingenioFilter, transportistaFilter, 
+      viajeFilter, fechaDesdeFilter, 
+      fechaHastaFilter, estadoFilter
+    }))
 }
   return (
     <SectionFilter>
       <FilterOption htmlFor={'FechaDesdeFilter'} name={'Fecha Desde'}>
         <InputDateCustom  fechaValue={fechaDesdeFilter}
-          setFechaValue={(e) => setFechaDesdeFilter(e.target.value)} />
+          setFechaValue={setFechaDesdeFilter} />
       </FilterOption>
       <FilterOption htmlFor={'FechaHastaFilter'} name={'Fecha Hasta'}>
         <InputDateCustom fechaValue={fechaHastaFilter}
-          setFechaValue={(e) => setFechaHastaFilter(e.target.value)} />
+          setFechaValue={setFechaHastaFilter} />
       </FilterOption>
       <FilterOption htmlFor={'IngenioFilter'} name={'Ingenio'}>
         <InputTextCustom  textValue={ingenioFilter}

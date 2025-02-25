@@ -1,15 +1,11 @@
-import { ticketSave } from '../../../../services/ticket'
-import { obtenerFechaLocal } from '../../../../utils'
-import { Footer, FooterButton, ModalDelete } from '../../../../components/common'
+import { ticketSave } from '~services/ticket'
+import { TicketAdapterAnular } from '../adapter/TicketAdapter'
+import { Footer, FooterButton, ModalDelete } from '~components/common'
 
 export const TicketFormDelete = ({onShowModel, data}) => {
   const handleGuardar = async (e) => {
     e.preventDefault()
-    const resp = await ticketSave('DELETE',{
-      id:data.ticketId,
-      userModifiedName: "ADMIN",
-      userModifiedAt: obtenerFechaLocal({date: new Date()})
-    })
+    const resp = await ticketSave('DELETE',TicketAdapterAnular(data))
     if(resp) return sendDataDismissModel(data.ticketId)
     return sendDataDismissModel(0)
   }
