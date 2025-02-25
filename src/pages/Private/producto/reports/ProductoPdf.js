@@ -1,5 +1,3 @@
-import { FormatteDecimalMath } from "~utils/index";
-
 export const ProductoPdf = (data) => {
   return {
     content: [
@@ -35,7 +33,7 @@ export const ProductoPdf = (data) => {
               // Datos
               //...detalleFilasFinancia
               ...data.map((detalle) => [
-                { text: detalle.productoCantidad + ' '+ (detalle.productoTipoDetalle || ''), alignment: "center" },
+                { text: detalle.productoStock + ' '+ (detalle.productoTipoDetalle || ''), alignment: "center" },
                 { text: detalle.productoNombre, alignment: "left" },
               ]),
             ]

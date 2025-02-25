@@ -50,7 +50,7 @@ export const ProductoExcel = (data) => {
 
   data.forEach((detalle) => {
     const row = worksheet.addRow([
-      detalle.productoCantidad + ' '+ (detalle.productoTipoDetalle || ''),
+      detalle.productoStock + ' '+ (detalle.productoTipoDetalle || ''),
       " ",
       detalle.productoNombre,       
     ])
