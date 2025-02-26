@@ -1,7 +1,5 @@
 import { Edit } from 'lucide-react'
-import { 
-  NoRegistros, Table , TableButton, TableTd 
-} from '../../../../components/common'
+import { NoRegistros, Table , TableButton, TableTd  } from '~components/common'
 
 const CarguilloTable = ({data, onRowSelect}) => {
   const headers = ['Tipo', 'Titular', 'Estado', 'Acciones']

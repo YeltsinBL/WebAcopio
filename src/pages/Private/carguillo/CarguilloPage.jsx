@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Footer, FooterButton, Header, Main } from '../../../components/common'
-import { getCarguillobyId, searchCarguilloList } from '../../../services/carguillo'
+import { Footer, FooterButton, Header, Main } from '~components/common'
+import { getCarguillobyId, searchCarguilloList } from '~services/carguillo'
 import { CarguilloFilter, CarguilloForm, CarguilloTable } from './components'
-import { useNavigate } from 'react-router-dom'
+import { useClosePage } from '~hooks/common'
 
 const CarguilloPage = () => {
-  const navigate = useNavigate()
+  const handleGoBack = useClosePage()
   const [carguilloList, setCarguilloList] = useState([])
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [showModel, setShowModel] = useState(false)
@@ -42,9 +42,7 @@ const CarguilloPage = () => {
     }
     setShowModel(false)
   }
-  const handleGoBack = () => {
-    navigate('/')
-  }
+
   return (
     <div className='flex-1 overflow-auto relative z-10'>
       <Header title={'Carguillo'} />

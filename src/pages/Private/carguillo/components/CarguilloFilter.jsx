@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { getCarguilloTipoList } from '../../../../services/carguillo'
-import { formatterDataCombo } from '../../../../utils'
 import { 
-  ButtonCustom, ComboBoxCustom, FilterOption, SectionFilter
-} from '../../../../components/common'
-//import { ESTADO_BASIC } from '../../../../components/mocks/DataList'
+  ButtonCustom, ComboBoxCustom, FilterOption, SectionFilter 
+} from '~components/common'
+import { useCarguilloFilter } from '../hooks'
 
 const CarguilloFilter = ({onFiltersValue}) => {
-  const [carguilloTipo, setCarguilloTipo] = useState('')
-  const [carguilloTitular, setCarguilloTitular] = useState('')
-  //const [carguilloEstado, setCarguilloEstado] = useState('')
-
-  const [carguilloTipoList, setCarguilloTipoList] = useState([])
-
-  useEffect(() => {
-    getCaguilloLists()
-  },[])
-  const getCaguilloLists = async(value) =>{
-    const tipos = await getCarguilloTipoList(value)
-    const formatter = tipos?.map(tipo =>(formatterDataCombo(tipo.carguilloTipoId,tipo.carguilloTipoDescripcion)))
-    setCarguilloTipoList(formatter)
-  }
+  const {
+    carguilloTipo, setCarguilloTipo,
+    carguilloTitular, setCarguilloTitular,
+    carguilloTipoList, 
+  } = useCarguilloFilter()
+  
   const handleCarguilloTipoChange= (option) => 
     setCarguilloTipo((option==''|| isNaN(option))?'':option)
-  
-  // const handleCarguilloEstadoChange= (option) => 
-  //   setCarguilloEstado((option==''|| isNaN(option))?'':option)
   
   const handleSeachCarguillo=(e) => {
     e.preventDefault()

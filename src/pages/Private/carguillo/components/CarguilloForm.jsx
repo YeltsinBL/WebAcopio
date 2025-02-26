@@ -1,103 +1,46 @@
-import React, { useEffect, useState } from 'react'
 import { Power, Trash2 } from 'lucide-react'
-import { 
-  getCarguilloTipoList, saveCarguillo 
-} from '../../../../services/carguillo'
+import { saveCarguillo } from '~services/carguillo'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton,
-  InputTextCustom,
-  MessageValidationInput,
-  NoRegistros, SectionModel,
-  TableBodyCustom,
-  TableButton,
-  TableContainerCustom,
-  TableFooterCustom,
-  TableHeaderCustom,
-  TableTd,
-  TitleCustom
-} from '../../../../components/common'
-import { 
-  formatterDataCombo, obtenerFechaLocal 
-} from '../../../../utils'
+  InputTextCustom, MessageValidationInput, NoRegistros, SectionModel,
+  TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom,
+  TableHeaderCustom, TableTd, TitleCustom
+ } from '~components/common'
+import { obtenerFechaLocal } from '~utils/index'
+import { useCarguilloForm, useCarguilloValidate } from '../hooks'
 
 const CarguilloForm = ({ onShowModel, data }) => {
-  const [carguilloId, setCarguilloId] = useState(0)
-  const [tipoId, setTipoId] = useState('')
-  const [titular, setTitular] = useState('')
-  const [tipoTransporteId, setTipoTransporteId] = useState('')
-  const [placa, setPlaca] = useState('')
-  const [errores, setErrores] = useState({})
+  const {
+    carguilloId, tipoId, setTipoId,
+    titular, setTitular,
+    tipoTransporteId, setTipoTransporteId,
+    placa, setPlaca, seleccionTipo,
+    carguilloTipoList, carguilloTipoTransporteList, 
+    placasList, setPlacasList,
+    isRequiredPlaca, setIsRequiredPlaca,
+    TIPO_TRANSPORTISTAID, headers
+  } = useCarguilloForm(data)
+  const { validate, errores } = useCarguilloValidate()
 
-  const seleccionTipo = data.carguilloTipoId ? {id:data.carguilloTipoId, nombre:data.carguilloTipoDescripcion} : null
-  const [carguilloTipoList, setCarguilloTipoList] = useState([])
-  const [carguilloTipoTransporteList, setCarguilloTipoTransporteList] = useState([])
-  const [placasList, setPlacasList] = useState([])
-  const TIPO_TRANSPORTISTAID = import.meta.env.VITE_TIPOTRANSPORTISTAId
-  const [isRequiredPlaca, setIsRequiredPlaca] = useState(false)
-
-  const headers= ['Tipo Transporte', 'Placa','Estado','Acción ']
-  
-  useEffect(()=>{
-    getCarguilloTipo()
-    getCarguilloTipoTransporte(false)
-  }, [])
-  useEffect(()=>{
-    if(data){
-      setCarguilloId(data.carguilloId || 0)
-      setTitular(data.carguilloTitular || '')
-      setTipoId(data.carguilloTipoId || '')
-      setPlacasList(data.carguilloDetalle || [])
-    }
-  },[data])
-  const getCarguilloTipo = async(value) =>{
-    const tipos = await getCarguilloTipoList(value)
-    const formatter = tipos?.map(tipo =>(formatterDataCombo(tipo.carguilloTipoId,tipo.carguilloTipoDescripcion)))
-    setCarguilloTipoList(formatter)
-  }
-  const getCarguilloTipoTransporte = async(value) =>{
-    const tipos = await getCarguilloTipoList(value)
-    const formatter = tipos?.map(tipo =>(formatterDataCombo(tipo.carguilloTipoId,tipo.carguilloTipoDescripcion)))
-    setCarguilloTipoTransporteList(formatter)
-  }
   const handleSelectionChange = (option) => {
     setTipoId(option)
     if(option==TIPO_TRANSPORTISTAID) setIsRequiredPlaca(true)
     else setIsRequiredPlaca(false)
     setPlacasList([])
   }
-  const validarCampos = (isPlaca= false) => {
-    const nuevosErrores = {}
-    if (!titular) nuevosErrores.titular = "El campo TITULAR es obligatorio."
-    if (!tipoId) nuevosErrores.tipoId = "El campo TIPO es obligatorio."
-    if (isPlaca) {
-      if(!tipoTransporteId) nuevosErrores.tipoTransporteId = 'Seleccione un TRANSPORTE antes de agregar.'
-      if(!placa) nuevosErrores.placa = 'Ingrese una PLACA antes de agregar.'
-    }
-    if (!isPlaca && !verificarCantidadTipoTransporte(placasList)) 
-      nuevosErrores.isRequiredPlaca = "Agregue al menos una placa para cada Tipo de transporte"
-    setErrores(nuevosErrores)  
-    return Object.keys(nuevosErrores).length === 0
-  }  
   const handleSelectionTipoTransporteChange = (option) => {
     setTipoTransporteId(option)
   }
-  const verificarCantidadTipoTransporte = (array) => {
-    if (isRequiredPlaca){
-      const uniqueTypes = new Set(array.map(item => item.carguilloTipoId));
-      return uniqueTypes.size >= 2;
-    }
-    return true
-  };
+
   const handleAgregarPlaca = (e) => {
     e.preventDefault()
-    if (validarCampos(true)) {
-      const isDuplicado = placasList.some(
-        (item) => item.carguilloTipoId === tipoTransporteId &&
-        item.carguilloDetallePlaca === placa
-      )
-      if(isDuplicado) return setErrores({placa:"La placa ya ha sido agregado con este tipo de transporte"})
-      
-        const nombreTipo = carguilloTipoTransporteList
+    const {isValid} = validate(
+      {isPlaca:true, values:{
+        titular, tipoId, tipoTransporteId, placa, tipoTransporteId, placasList
+      }}
+    )
+    if(isValid){
+      const nombreTipo = carguilloTipoTransporteList
         .filter((tipo)=>tipo.id ==tipoTransporteId)
       setPlaca('')
       const updatePlacaList = [...placasList, 
@@ -127,7 +70,12 @@ const CarguilloForm = ({ onShowModel, data }) => {
 
   const handleGuardar = async(e) => {
     e.preventDefault()
-    if (validarCampos()) {
+    const {isValid} = validate(
+      {values:{
+        carguilloId, titular, tipoId, placasList, isRequiredPlaca
+      }}
+    )
+    if(isValid){
       if(carguilloId > 0){
         const save={
           carguilloId: carguilloId,
