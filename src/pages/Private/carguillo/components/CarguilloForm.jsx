@@ -6,8 +6,9 @@ import {
   TableBodyCustom, TableButton, TableContainerCustom, TableFooterCustom,
   TableHeaderCustom, TableTd, TitleCustom
  } from '~components/common'
-import { obtenerFechaLocal } from '~utils/index'
 import { useCarguilloForm, useCarguilloValidate } from '../hooks'
+import { toast } from 'sonner'
+import { CarguilloAdapterSave } from '../adapter/CarguilloAdapter'
 
 const CarguilloForm = ({ onShowModel, data }) => {
   const {
@@ -70,47 +71,23 @@ const CarguilloForm = ({ onShowModel, data }) => {
 
   const handleGuardar = async(e) => {
     e.preventDefault()
-    const {isValid} = validate(
-      {values:{
-        carguilloId, titular, tipoId, placasList, isRequiredPlaca
-      }}
-    )
-    if(isValid){
-      if(carguilloId > 0){
-        const save={
-          carguilloId: carguilloId,
-          carguilloTitular: titular,
-          carguilloTipoId: tipoId,
-          userModifiedName: 'ADMIN',
-          userModifiedAt: obtenerFechaLocal({date: new Date()}),
-          carguilloDetalle: reemplazarIdTemporal(placasList)
-        }
-        const carguillo =await saveCarguillo('PUT', save)
-        return onShowModel(carguillo)
-      }
-      const save={
-        carguilloTitular: titular,
-        carguilloTipoId: tipoId,
-        userCreatedName: 'ADMIN',
-        userCreatedAt: obtenerFechaLocal({date: new Date()}),
-        carguilloDetalle: placasList
-      }
-      const carguillo =await saveCarguillo('POST', save)
+    const toastLoadingCustom = toast.loading('Cargando...')
+    const save = {
+      carguilloId, titular, tipoId, placasList, isRequiredPlaca
+    }
+    const {isValid} = validate({values:save})
+    if(isValid){      
+      const carguillo =await saveCarguillo(carguilloId > 0?'PUT':'POST', CarguilloAdapterSave(save))
+      if(carguillo.result === false)
+        return toast.error(carguillo.message, {id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(carguillo.message, {id: toastLoadingCustom})
       onShowModel(carguillo)
     }
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({carguilloId:0})
+    onShowModel({result:false})
   }
-  const reemplazarIdTemporal = (data) => {
-    return data.map((item) => ({
-      ...item,
-      carguilloDetalleId: typeof item.carguilloDetalleId === "string" && item.carguilloDetalleId.startsWith("temp")
-        ? 0 // Cambiar los temporales a 0
-        : item.carguilloDetalleId,
-    }));
-  };
   return (
     <>
     <SectionModel title={(carguilloId > 0 ? 'Información del':'Registrar') + ' Carguillo'}>

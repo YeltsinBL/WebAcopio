@@ -49,7 +49,6 @@ const CosechaPage = () => {
     if(rowData.cosechaId != null){
       const toastLoadingCustom = toast.loading('Cargando...')
       const cosechaById = await cosechaGetById({id:rowData.cosechaId})
-      console.log(cosechaById)
       if(cosechaById.result === false)
         return toast.error(cosechaById.message, {id: toastLoadingCustom, style: { color:'red' }})
       toast.success(cosechaById.message, {id: toastLoadingCustom})

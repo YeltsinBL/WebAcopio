@@ -1,3 +1,4 @@
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "../settings/appsetting"
 
 export const getCarguilloTipoList = async(isCarguillo)=>{
@@ -27,7 +28,7 @@ export const searchCarguilloList = async(filters) =>{
         headers:{'Content-Type': 'application/json'}
     })
     if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return await response.json()
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('searchCarguilloList:', error.message)
     throw new Error('Error al buscar los carguillos')
@@ -40,7 +41,7 @@ export const getCarguillobyId = async(id) =>{
         headers:{'Content-Type': 'application/json'}
     })
     if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-    return await response.json()
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('getCarguillobyId:', error.message)
     throw new Error('Error al buscar el carguillo')
@@ -82,7 +83,7 @@ export const saveCarguillo = async(method,carguillo) => {
       body: JSON.stringify(carguillo)
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    return await response.json()
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('saveCarguillo:', error.message)
     throw new Error('Error al guardar el carguillo')

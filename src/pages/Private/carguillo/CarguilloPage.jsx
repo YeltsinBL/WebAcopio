@@ -3,6 +3,7 @@ import { Footer, FooterButton, Header, Main } from '~components/common'
 import { getCarguillobyId, searchCarguilloList } from '~services/carguillo'
 import { CarguilloFilter, CarguilloForm, CarguilloTable } from './components'
 import { useClosePage } from '~hooks/common'
+import { toast, Toaster } from 'sonner'
 
 const CarguilloPage = () => {
   const handleGoBack = useClosePage()
@@ -15,8 +16,12 @@ const CarguilloPage = () => {
   }, [])
 
   const getCarguilloTipoList = async(filters) =>{
+    const toastLoadingCustom = toast.loading('Cargando...')
     const carguillos = await searchCarguilloList(filters)
-    setCarguilloList(carguillos)
+    if(carguillos.result === false)
+      return toast.error(carguillos.message, {id: toastLoadingCustom, style: { color:'red' }})
+    toast.success(carguillos.message, {id: toastLoadingCustom})
+    setCarguilloList(carguillos.data)
   }
   const handleSearchCarguilloList = (data) => {
     const { tipoCarguilloId, titular, estado } = data
@@ -26,20 +31,17 @@ const CarguilloPage = () => {
   }
   const handleRowSelect = async(rowData) => {
     if(rowData.carguilloId != null){
-        const carguillo = await getCarguillobyId(rowData.carguilloId)
-        setSelectedRowData(carguillo)
+      const toastLoadingCustom = toast.loading('Cargando...')
+      const carguillo = await getCarguillobyId(rowData.carguilloId)
+      if(carguillo.result === false)
+        return toast.error(carguillo.message, {id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(carguillo.message, {id: toastLoadingCustom})
+      setSelectedRowData(carguillo.data)
     }else setSelectedRowData(rowData)
     setShowModel(true)
   }
   const handleSaveModel =(data)=>{
-    if(data.carguilloId > 0) {
-      const existIndex = carguilloList.findIndex((item) => item.carguilloId === data.carguilloId)
-      if(existIndex >= 0) {
-        const updatedList = [...carguilloList]
-        updatedList[existIndex] = data
-        setCarguilloList(updatedList)
-      } else setCarguilloList([...carguilloList, data])
-    }
+    if(data.result) getCarguilloTipoList()
     setShowModel(false)
   }
 
@@ -58,6 +60,7 @@ const CarguilloPage = () => {
         </>:
         <CarguilloForm onShowModel={handleSaveModel} data={selectedRowData}/>
         }
+        <Toaster />
       </Main>
     </div>
   )
