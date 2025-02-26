@@ -23,7 +23,7 @@ export const distribuidorGetById = async({id}) => {
     const response = await fetch(`${appSetting.apiUrl}Distribuidor/${id}`, {
       method: 'GET', headers: { 'Content-Type': 'application/json' }
     })
-    return await response.json()
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('distribuidorGetById:', error.message)
     return ResponseErrorServidor
