@@ -83,6 +83,7 @@ const CarguilloForm = ({ onShowModel, data }) => {
       toast.success(carguillo.message, {id: toastLoadingCustom})
       onShowModel(carguillo)
     }
+    setTimeout(() => { toast.dismiss(toastLoadingCustom) })
   }
   const handleCancelar = (e) => {
     e.preventDefault()

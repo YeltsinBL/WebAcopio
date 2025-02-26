@@ -48,6 +48,7 @@ export const CosechaModel = ({ onShowModel, data }) => {
       toast.success(resp.message, {id: toastLoadingCustom})
       return onShowModel(resp)
     }
+    setTimeout(() => { toast.dismiss(toastLoadingCustom) })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
