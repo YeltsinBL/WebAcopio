@@ -1,4 +1,4 @@
-export const ServicesResponseAdapter = (data) => {
+export const ApiResponseAdapter = (data) => {
   return {...data,
     message: data.errorMessage
   }

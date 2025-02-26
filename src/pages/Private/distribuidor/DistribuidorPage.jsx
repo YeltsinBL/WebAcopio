@@ -27,20 +27,15 @@ const DistribuidorPage = () => {
     getDistribuidores(data)
   }
   const handleSaveModel = (data) => {
-    if(data.result) {
-      toast.success(data.message)
-      getDistribuidores()
-    }
+    if(data.result)  getDistribuidores()    
   }
   const onDelete = (data) => {
     setDataModalDelete(data)
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result) {
-      toast.success(data.message)
-      getDistribuidores()
-    }
+    if(data.result) getDistribuidores()
+    
     setShowModalDelete(false)
   }
   return (

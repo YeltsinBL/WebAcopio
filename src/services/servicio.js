@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -55,7 +55,7 @@ export const servicioTransporteSave = async({method, servicioTransporte}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(servicioTransporte)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioTransporteSave:', error.message)
     return ResponseErrorServidor
@@ -89,7 +89,7 @@ export const servicioPaleroGetById = async({id}) => {
       headers: { 'Content-Type': 'application/json' }
     })
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioPaleroGetById:', error.message)
     return ResponseErrorServidor
@@ -102,7 +102,7 @@ export const servicioPaleroSave = async({method, servicioPalero}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(servicioPalero)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('servicioPaleroSave:', error.message)
     return ResponseErrorServidor

@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter";
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter";
 import { appSetting } from "~settings/appsetting"
 import { 
   ResponseErrorServidor
@@ -62,7 +62,7 @@ export const corteSave = async(method, corte) => {
       },
       body: JSON.stringify(corte)
     })  
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('corteSave:', error.message)
     return ResponseErrorServidor

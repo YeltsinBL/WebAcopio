@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -23,7 +23,7 @@ export const compraGetById = async({id}) => {
     const response = await fetch(`${appSetting.apiUrl}Compra/${id}`, {
       method: 'GET', headers: { 'Content-Type': 'application/json' }
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('compraGetById:', error.message)
     return ResponseErrorServidor
@@ -37,7 +37,7 @@ export const compraSave = async(method, data) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('compraSave:', error.message)
     return ResponseErrorServidor

@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 
 export const FacturaVentaEstados = async() => {
@@ -35,7 +35,7 @@ export const FacturaVentaGetById = async({id}) => {
     const response = await fetch(`${appSetting.apiUrl}FacturaVenta/${id}`, {
       method: 'GET', headers: { 'Content-Type': 'application/json' }
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('FacturaVentaGetById:', error.message)
     return ResponseErrorServidor
@@ -49,7 +49,7 @@ export const FacturaVentaSave = async(method, data) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('FacturaVentaSave:', error.message)
     return ResponseErrorServidor

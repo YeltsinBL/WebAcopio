@@ -2,16 +2,20 @@ import {
   Footer, FooterButton, ModalDelete 
 } from "~components/common"
 import { distribuidorAdapterChangeStatus } from "../adapter/DistribuidorAdapter"
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { distribuidorSave } from "~services/distribuidor"
+import { toast } from "sonner"
 
 export const DistribuidorFormDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e)=>{
-    e.preventDefault()
+    e.preventDefault()    
+    const toastLoadingCustom = toast.loading('Cargando...')
     let dataAdapter = distribuidorAdapterChangeStatus( data )
     const servicio = await distribuidorSave('DELETE', dataAdapter )
-    if (servicio.result) 
-      return sendDataDismissModel(ServicesResponseAdapter(servicio))
+    if (servicio.result) {
+      toast.success(servicio.message, {id: toastLoadingCustom})
+      return sendDataDismissModel(servicio)
+    }
+    toast.error(servicio.message, {id: toastLoadingCustom, style: { color:'red' }})
     return sendDataDismissModel({result:false})
   }
   const handleCancelar =(e)=>{

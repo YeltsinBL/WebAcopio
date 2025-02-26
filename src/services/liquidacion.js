@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { 
   convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, 
@@ -74,7 +74,7 @@ export const liquidacionSave = async({method, liquidacion}) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(liquidacion)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('liquidacionSave:', error.message)
     return ResponseErrorServidor

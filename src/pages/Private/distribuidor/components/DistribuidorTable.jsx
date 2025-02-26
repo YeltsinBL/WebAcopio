@@ -5,7 +5,6 @@ import {
   NoRegistros, TableBodyCustom, TableButton, TableContainerCustom, 
   TableFooterCustom, TableHeaderCustom, TableTd, TitleCustom 
 } from "~components/common"
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
 import { useInitialDistribuidor, useValidationDistribuidor } from "../hooks"
 import { distribuidorGetById, distribuidorSave } from "~services/distribuidor"
 import { distribuidorAdapterSave } from "../adapter/DistribuidorAdapter"
@@ -24,16 +23,13 @@ export const DistribuidorTable = ({data, onSave, onDelete}) => {
     const {isValid} = validate({distribuidorRuc, distribuidorNombre})
     if(isValid){
       let dataAdapter = distribuidorAdapterSave({ distribuidorId:0, distribuidorRuc, distribuidorNombre })
-      const distribuidor = await distribuidorSave('POST', dataAdapter)
-      const response = ServicesResponseAdapter(distribuidor)
+      const response = await distribuidorSave('POST', dataAdapter)
       if(response.result === false) 
         return toast.error(response.message, {id: toastLoadingCustom, style: { color:'red' }})
       setDistribuidorId(0)
       setDistribuidorNombre('')
       setDistribuidorRuc('')
-      setTimeout(() => {
-        toast.dismiss(toastLoadingCustom)
-      })
+      toast.success(response.message, {id: toastLoadingCustom})
       return onSave(response)
     }    
     setTimeout(() => {
@@ -49,16 +45,13 @@ export const DistribuidorTable = ({data, onSave, onDelete}) => {
       let dataAdapter = distribuidorAdapterSave({
         distribuidorId, distribuidorRuc, distribuidorNombre
       })
-      const distribuidor = await distribuidorSave('PUT', dataAdapter)
-      const response = ServicesResponseAdapter(distribuidor)
+      const response = await distribuidorSave('PUT', dataAdapter)
       if(response.result === false) 
         return toast.error(response.message, {id: toastLoadingCustom, style: { color:'red' }})
       setDistribuidorId(0)
       setDistribuidorNombre('')
       setDistribuidorRuc('')
-      setTimeout(() => {
-        toast.dismiss(toastLoadingCustom)
-      })
+      toast.success(response.message, {id: toastLoadingCustom})
       return onSave(response)
     }    
     setTimeout(() => {
@@ -68,8 +61,7 @@ export const DistribuidorTable = ({data, onSave, onDelete}) => {
   const onRowSelect = async(rowData) =>{
     if(rowData.distribuidorId){
       const toastLoadingCustom = toast.loading('Cargando...')
-      const distribuidor = await distribuidorGetById({id:rowData.distribuidorId})
-      const response = ServicesResponseAdapter(distribuidor)
+      const response = await distribuidorGetById({id:rowData.distribuidorId})
       if(response.result === false)
         return toast.error(response.message, {id: toastLoadingCustom, style: { color:'red' }})
       setDistribuidorId(response.data.distribuidorId)

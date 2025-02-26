@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -23,7 +23,7 @@ export const clienteGetById = async({id}) => {
     const response = await fetch(`${appSetting.apiUrl}Cliente/${id}`, {
       method: 'GET', headers: { 'Content-Type': 'application/json' }
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('ClienteGetById:', error.message)
     return ResponseErrorServidor
@@ -37,7 +37,7 @@ export const clienteSave = async(method, user) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('ClienteSave:', error.message)
     return ResponseErrorServidor

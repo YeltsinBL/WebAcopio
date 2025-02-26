@@ -1,3 +1,4 @@
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -36,7 +37,7 @@ export const distribuidorSave = async(method, user) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user)
     })
-    return await response.json()
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('distribuidorSave:', error.message)
     return ResponseErrorServidor

@@ -1,4 +1,4 @@
-import { ServicesResponseAdapter } from "~/adapters/ServicesResponseAdapter"
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { ResponseErrorServidor } from "~utils/ResponseErrorServidor"
 
@@ -63,7 +63,7 @@ export const ventaGetById = async({id}) => {
     const response = await fetch(`${appSetting.apiUrl}Venta/${id}`, {
       method: 'GET', headers: { 'Content-Type': 'application/json' }
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('ventaGetById:', error.message)
     return ResponseErrorServidor
@@ -77,7 +77,7 @@ export const ventaSave = async(method, data) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-    return ServicesResponseAdapter(await response.json())
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('ventaSave:', error.message)
     return ResponseErrorServidor
