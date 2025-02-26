@@ -13,6 +13,7 @@ import {
 } from "~utils/index"
 import { useClosePage } from "~hooks/common"
 import { CosechaAdapterList } from "./adapter/CosechaAdapter"
+import { toast, Toaster } from "sonner"
 
 
 const CosechaPage = () => {
@@ -31,10 +32,14 @@ const CosechaPage = () => {
     fechaHasta = obtenerSoloFechaLocal({date: new Date()}),
     uc='', ut='', tipoCosechaId='',
   }) => {
+    const toastLoadingCustom = toast.loading('Cargando...')
     const cosechas = await searchCosecha({
       fechaDesde, fechaHasta, uc, ut, tipoCosechaId
     })
-    setFilteredProducts(CosechaAdapterList(cosechas))
+    if(cosechas.result === false)
+      return toast.error(cosechas.message, {id: toastLoadingCustom, style: { color:'red' }})
+    toast.success(cosechas.message, {id: toastLoadingCustom})
+    setFilteredProducts(CosechaAdapterList(cosechas.data))
   }
 
   const handleDataFromChild = (data) => getProducts(data)
@@ -42,13 +47,18 @@ const CosechaPage = () => {
   // Funciones para manejar botones de la tabla
   const handleRowSelect = async(rowData) => {
     if(rowData.cosechaId != null){
+      const toastLoadingCustom = toast.loading('Cargando...')
       const cosechaById = await cosechaGetById({id:rowData.cosechaId})
-      setSelectedRowData(cosechaById)
+      console.log(cosechaById)
+      if(cosechaById.result === false)
+        return toast.error(cosechaById.message, {id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(cosechaById.message, {id: toastLoadingCustom})
+      setSelectedRowData(cosechaById.data)
     } else setSelectedRowData(null)
     setShowModel(false)
   }
   const handleShowModel = (data) => {
-    if(data.cosechaId>0) getProducts({})    
+    if(data.result) getProducts({})    
     setShowModel(true)
   }
   return (
@@ -66,6 +76,7 @@ const CosechaPage = () => {
         </> : 
         <CosechaModel onShowModel={handleShowModel} data={selectedRowData} />
         }
+        <Toaster />
       </Main>
     </ContainerPageCustom>
   )

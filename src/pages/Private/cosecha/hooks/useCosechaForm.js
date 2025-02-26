@@ -38,7 +38,7 @@ export const useCosechaForm = (data) => {
       setSupervisorModel(data.cosechaSupervisor || '')
       setHasModel(data.cosechaHAS || '')
       setSacModel(data.cosechaSac || '')
-      setRedModel(data.rcosechaReded || '')
+      setRedModel(data.cosechaRed || '')
       setHumedadModel(data.cosechaHumedad || '')
       setCosechaModel(data.cosechaCosechaId || 0)
     }

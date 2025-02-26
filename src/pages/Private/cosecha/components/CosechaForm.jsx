@@ -5,6 +5,7 @@ import {
 import { cosechaSave } from '~services/cosecha'
 import { useCosechaForm, useCosechaValidation } from '../hooks'
 import { CosechaAdapterSave } from '../adapter/CosechaAdapter'
+import { toast } from 'sonner'
 
 export const CosechaModel = ({ onShowModel, data }) => {
   const {
@@ -33,6 +34,7 @@ export const CosechaModel = ({ onShowModel, data }) => {
   const handleSelectionChangeCosechaTipo = (option) => setCosechaModel(option)
   const handleGuardar = async(e) => {
     e.preventDefault()
+    const toastLoadingCustom = toast.loading('Cargando...')
     const save = {
       idModel, utModel, ucModel, fechaModel, cosechaModel,
       hasModel, sacModel, redModel, humedadModel,
@@ -41,12 +43,15 @@ export const CosechaModel = ({ onShowModel, data }) => {
     const {isValid} = validate(save)
     if(isValid){    
       const resp = await cosechaSave(idModel > 0?'PUT':'POST', CosechaAdapterSave(save))
+      if(resp.result === false) 
+        return toast.error(resp.message, {id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(resp.message, {id: toastLoadingCustom})
       return onShowModel(resp)
     }
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({cosechaId:0})
+    onShowModel({result:false})
   }
 
   return (
