@@ -7,6 +7,7 @@ import { ticketSave } from '~services/ticket'
 import { useTicketForm } from '../hooks/useTicketForm'
 import { useTicketValidation } from '../hooks/useTicketValidation'
 import { TicketAdapterGuardar } from '../adapter/TicketAdapter'
+import { toast } from 'sonner'
 
 export const TicketForm = ({ onShowModel, data }) => {
 
@@ -47,7 +48,8 @@ export const TicketForm = ({ onShowModel, data }) => {
   const handleSelectionVehiculoChange = (option) => setVehiculoModel(option)
 
   const handleGuardar = async(e) => {
-    e.preventDefault()
+    e.preventDefault()    
+    const toastLoadingCustom = toast.loading('Cargando...')
     let save = {
       idModel, ingenioModel, campoModel,
       fechaModel, viajeModel,
@@ -63,15 +65,16 @@ export const TicketForm = ({ onShowModel, data }) => {
         idModel > 0?'PUT':'POST',
         TicketAdapterGuardar(save)
       )
-      return retorna(ticket)
+      if(ticket.result === false)
+        return toast.error(ticket.message, {id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(ticket.message, {id: toastLoadingCustom})
+      return onShowModel(ticket)
     }
-  }
-  const retorna = (ticket) => {
-    return onShowModel({...ticket, fecha : new Date(ticket.fecha)})
+    setTimeout(() => { toast.dismiss(toastLoadingCustom) })
   }
   const handleCancelar = (e) => {
     e.preventDefault()
-    onShowModel({id:0})
+    onShowModel({result:false})
   }
   return (
     <>

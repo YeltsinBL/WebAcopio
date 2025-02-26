@@ -1,3 +1,4 @@
+import { ApiResponseAdapter } from "~/adapters/ApiResponseAdapter"
 import { appSetting } from "~settings/appsetting"
 import { 
   convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath
@@ -14,10 +15,8 @@ export const searchTickets = async(search) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)    
-    const data = await response.json()
-    return formatteTickets(data)
+    })  
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('searchtickets:', error.message)
     throw new Error('Error al buscar tickets')
@@ -47,12 +46,8 @@ export const ticketGetById = async({id}) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json()
-    return newFormatterTicket(data)
+    })
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('ticketGetById:', error.message)
     throw new Error('Error al obtener la ticket')
@@ -67,10 +62,7 @@ export const ticketSave = async(method, ticket) => {
       },
       body: JSON.stringify(ticket)
     });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json()
+    return ApiResponseAdapter(await response.json())
   } catch (error) {
     console.log('ticketsave:', error.message)
     throw new Error('Error al guardar la ticket')
@@ -137,10 +129,3 @@ const formatteTickets =(tickets) =>{
   })
 }
 
-const newFormatterTicket = (data) => {
-  return {...data, //ticketFecha: obtenerFechaLocal(data.ticketFecha ),
-    ticketCamionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
-    ticketVehiculoPeso : FormatteDecimalMath(data.ticketVehiculoPeso, 3),
-    ticketPesoBruto : FormatteDecimalMath(data.ticketPesoBruto, 3)
-  }
-}

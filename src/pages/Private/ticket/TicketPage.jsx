@@ -8,6 +8,9 @@ import { searchTickets, ticketGetById } from '~services/ticket'
 import { 
   ContainerPageCustom, Footer, FooterButton, Header, Main
 } from '~components/common'
+import { TicketAdapterGetData } from './adapter/TicketAdapter'
+import { toast, Toaster } from 'sonner'
+import { TicketAdapterList } from '~/adapters/AdapterTicket'
 
 const TicketPage = () => {
   const handleGoBack = useClosePage()
@@ -26,11 +29,15 @@ const TicketPage = () => {
     fechaDesde=obtenerFechaInicialMes(), 
     fechaHasta=obtenerSoloFechaLocal({date: new Date()}), estado='',
   }) => {
+    const toastLoadingCustom = toast.loading('Cargando...')
     const tickets = await searchTickets({
       ingenio, transportista, viaje, fechaDesde,
       fechaHasta, estado
     })
-    setListTicket(tickets|| [])
+    if(tickets.result === false)
+      return toast.error(tickets.message, {id: toastLoadingCustom, style: { color:'red' }})
+    toast.success(tickets.message, {id: toastLoadingCustom})
+    setListTicket(TicketAdapterList(tickets.data)|| [])
   }
 
   // Listado Filtro
@@ -39,14 +46,18 @@ const TicketPage = () => {
   // Obtener
   const handleRowSelect = async(rowData) => {
     if(rowData.ticketId != null){
+      const toastLoadingCustom = toast.loading('Cargando...')
       const ticket = await ticketGetById({id:rowData.ticketId})
-      setSelectedRowData(ticket)
+      if(ticket.result === false)
+        return toast.error(ticket.message, {id: toastLoadingCustom, style: { color:'red' }})
+      toast.success(ticket.message, {id: toastLoadingCustom})
+      setSelectedRowData(TicketAdapterGetData(ticket.data))
     }else setSelectedRowData(null)  
     setShowModel(false)
   }
   // Guardar
   const handleShowModel = (data) => {
-    if(data.ticketId>0) getTickets({})
+    if(data.result) getTickets({})
     setShowModel(true)
   }
   // Eliminar
@@ -55,7 +66,7 @@ const TicketPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.ticketId > 0) getTickets({})
+    if(data.result) getTickets({})
     setShowModalDelete(false)
   }
   return (
@@ -74,6 +85,7 @@ const TicketPage = () => {
         <TicketForm onShowModel={handleShowModel} data={selectedRowData}/>        
       }       
       {showModalDelete ? <TicketFormDelete onShowModel={handleShowModelDelete} data={modalDelete}/> : ''}
+      <Toaster />
       </Main>
     </ContainerPageCustom>
   )

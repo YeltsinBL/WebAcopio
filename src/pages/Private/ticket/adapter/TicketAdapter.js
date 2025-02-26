@@ -1,10 +1,19 @@
-import { obtenerFechaLocal } from "~utils/index"
+import { 
+  FormatteDecimalMath, obtenerFechaLocal 
+} from "~utils/index"
 
 export const TicketAdapterFilter = (data) =>{
   return {
     ingenio:data.ingenioFilter, transportista:data.transportistaFilter, 
     viaje:data.viajeFilter, fechaDesde: data.fechaDesdeFilter, 
     fechaHasta: data.fechaHastaFilter, estado:data.estadoFilter,
+  }
+}
+export const TicketAdapterGetData = (data) =>{
+  return {...data,
+    ticketCamionPeso : FormatteDecimalMath(data.ticketCamionPeso, 3),
+    ticketVehiculoPeso : FormatteDecimalMath(data.ticketVehiculoPeso, 3),
+    ticketPesoBruto : FormatteDecimalMath(data.ticketPesoBruto, 3)
   }
 }
 export const TicketAdapterGuardar = (data) =>{

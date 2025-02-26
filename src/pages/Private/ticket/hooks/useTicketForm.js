@@ -71,12 +71,12 @@ export const useTicketForm = (data) => {
   const listCarguillos = async() =>{
     const carguillos = await searchCarguilloList({
       tipoCarguilloId:2, titular:'', estado:true})
-    const formatter = carguillos.map(carguillo => 
+    const formatter = carguillos.data.map(carguillo => 
       (formatterDataCombo(carguillo.carguilloId,carguillo.carguilloTitular)))
     setCarguilloList(formatter)
     const paleros = await searchCarguilloList({
         tipoCarguilloId:1, titular:'', estado:true})
-      const formatterPalero = paleros.map(carguillo => 
+      const formatterPalero = paleros.data.map(carguillo => 
         (formatterDataCombo(carguillo.carguilloId,carguillo.carguilloTitular)))
       setCarguilloPaleroList(formatterPalero)
   }
