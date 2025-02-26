@@ -1,81 +1,29 @@
-import { useEffect, useState } from 'react'
-import { ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom, InputTextCustom, MessageValidationInput, SectionModel } from '../../../../components/common'
-import { searchAsignaTierra } from '../../../../services/asignartierra'
-import { cosechaSave, searchCosechaTipo } from '../../../../services/cosecha'
-import { formatterDataCombo, obtenerFechaLocal } from '../../../../utils'
+import { 
+  ComboBoxCustom, FilterOption, Footer, FooterButton, InputDateCustom, InputTextCustom, 
+  MessageValidationInput, SectionModel 
+} from '~components/common'
+import { cosechaSave } from '~services/cosecha'
+import { useCosechaForm, useCosechaValidation } from '../hooks'
+import { CosechaAdapterSave } from '../adapter/CosechaAdapter'
 
 export const CosechaModel = ({ onShowModel, data }) => {
-  const [idModel, setIdModel] = useState(0)
-  const [ucModel, setUCModel] = useState('')
-  const [campoModel, setCampoModel] = useState('')
-  const [utModel, setUTModel] = useState({proveedorId: 0, ut: '' })
-  const [fechaModel, setFechaModel] = useState(obtenerFechaLocal({date: new Date()}).split('T')[0])
-  const [supervisorModel, setSupervisorModel] = useState('')
-  const [hasModel, setHasModel] = useState('')
-  const [sacModel, setSacModel] = useState('')
-  const [redModel, setRedModel] = useState('')
-  const [humedadModel, setHumedadModel] = useState('')
-  const [cosechaModel, setCosechaModel] = useState('')
-
-  const [tierras, setTierras] = useState([])
-  const [cosechaTipo, setCosechaTipo] = useState([])
-  const [listAsigna, setListAsigna] = useState([])
+  const {
+    idModel, ucModel, setUCModel,
+    campoModel, setCampoModel,
+    utModel, setUTModel,
+    fechaModel, setFechaModel,
+    supervisorModel, setSupervisorModel,
+    hasModel, setHasModel,
+    sacModel, setSacModel,
+    redModel, setRedModel,
+    humedadModel, setHumedadModel,
+    cosechaModel, setCosechaModel,
+    tierras, cosechaTipo, listAsigna, 
+    seleccionTierra, seleccionCosechaTipo,
+  } = useCosechaForm(data)
   
-  const seleccionTierra = data?.cosechaTierraId ? {id: data?.cosechaTierraId, uc: data?.cosechaTierraUC } : null
-  const seleccionProveedor = {proveedorId: data?.cosechaProveedorId ?? 0, ut: data?.cosechaProveedorUT ?? '' }
-  const seleccionCosechaTipo = data?.cosechaCosechaId ? {id: data?.cosechaCosechaId, uc: data?.cosechaCosechaTipo } : null
+  const {validate, errores} = useCosechaValidation()
 
-
-  const [errores, setErrores] = useState({})
-
-  useEffect(() => {
-    fetchListAsigna()
-    fetchOptionCosechaTipo()
-    if (data) {
-      setIdModel(data.cosechaId || 0);
-      setUCModel(data.cosechaTierraId || 0);
-      setCampoModel(data.cosechaTierraCampo || '');
-      setUTModel(seleccionProveedor);
-      setFechaModel(data.cosechaFecha || obtenerFechaLocal({date: new Date()}).split('T')[0])
-      setSupervisorModel(data.cosechaSupervisor || '');
-      setHasModel(data.cosechaHAS || '');
-      setSacModel(data.cosechaSac || '');
-      setRedModel(data.rcosechaReded || '');
-      setHumedadModel(data.cosechaHumedad || '');
-      setCosechaModel(data.cosechaCosechaId || 0);
-    }
-  }, []);
-
-  const validarCampos = () => {
-    const nuevosErrores = {}
-    //if (!idModel) nuevosErrores.id = "El campo ID es obligatorio."
-    if (!utModel) nuevosErrores.ut = "El campo UT es obligatorio."
-    if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
-    if (!fechaModel) nuevosErrores.fecha = "El campo Fecha es obligatorio."
-    //if (!supervisorModel) nuevosErrores.supervisor = "El campo Supervisor es obligatorio."
-    // if (!hasModel) nuevosErrores.has = "El campo HAS es obligatorio."
-    // if (!sacModel) nuevosErrores.sac = "El campo SAC es obligatorio."
-    // if (!redModel) nuevosErrores.red = "El campo RED es obligatorio."
-    // if (!humedadModel) nuevosErrores.humedad = "El campo Humedad es obligatorio."
-    if (!cosechaModel) nuevosErrores.cosecha = "El campo Tipo Cosecha es obligatorio."
-  
-    setErrores(nuevosErrores)
-  
-    return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
-  }
-  const fetchListAsigna= async() => {
-    const responseTierra = await searchAsignaTierra()
-    setListAsigna(responseTierra)
-    const formatter= responseTierra?.map(tipo =>(
-      formatterDataCombo(tipo.asignarTierraTierraId, tipo.asignarTierraTierraUC)))
-    setTierras(formatter)
-  }
-  const fetchOptionCosechaTipo = async() => {
-    const responseTipo = await searchCosechaTipo()
-    const formatter= responseTipo?.map(tipo =>(
-      formatterDataCombo(tipo.cosechaTipoId, tipo.descripcion)))
-    setCosechaTipo(formatter)
-  }
   const handleSelectionChangeTierra = (option) => {
     setUCModel(option)
     const selected = listAsigna.find(tierra => tierra.asignarTierraTierraId === option)
@@ -85,32 +33,14 @@ export const CosechaModel = ({ onShowModel, data }) => {
   const handleSelectionChangeCosechaTipo = (option) => setCosechaModel(option)
   const handleGuardar = async(e) => {
     e.preventDefault()
-    if (validarCampos()) {
-      let save = {
-        cosechaHas: hasModel || null,
-        cosechaSac: sacModel || null,
-        cosechaRed: redModel || null,
-        cosechaHumedad: humedadModel || null,
-        cosechaCosechaTipoId: cosechaModel,
-      }
-      if(idModel > 0){
-        save = {...save,
-          cosechaId: idModel,
-          userModifiedName: "ADMIN",
-          userModifiedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
-        }        
-        const resp = await cosechaSave('PUT', save)
-       return onShowModel(resp)
-      }
-      save = {...save,
-        cosechaFecha: fechaModel,
-        cosechaSupervisor: supervisorModel || null,
-        cosechaTierraId: ucModel,
-        cosechaProveedorId: utModel.proveedorId,
-        userCreatedName: "ADMIN",
-        userCreatedAt: obtenerFechaLocal({date: new Date()}).split('T')[0]
-      }      
-      const resp = await cosechaSave('POST', save)
+    const save = {
+      idModel, utModel, ucModel, fechaModel, cosechaModel,
+      hasModel, sacModel, redModel, humedadModel,
+      supervisorModel, 
+    }
+    const {isValid} = validate(save)
+    if(isValid){    
+      const resp = await cosechaSave(idModel > 0?'PUT':'POST', CosechaAdapterSave(save))
       return onShowModel(resp)
     }
   }

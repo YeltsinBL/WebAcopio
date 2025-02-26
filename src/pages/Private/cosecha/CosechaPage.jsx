@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react"
 import { 
-  ContainerPageCustom, Footer, FooterButton, Header, Main
-} from "../../../components/common"
+  ContainerPageCustom, Footer, FooterButton, Header, Main 
+} from "~components/common"
 import { 
-  cosechaGetById, searchCosecha
-} from "../../../services/cosecha"
+  cosechaGetById, searchCosecha 
+} from "~services/cosecha"
 import { 
-  CosechaFilter, CosechaModel, CosechaTable
+  CosechaFilter, CosechaModel, CosechaTable 
 } from "./components"
-import { convertirFechaDDMMYYYY } from "../../../utils"
-import { useClosePage } from "../../../hooks/common"
+import { 
+  obtenerFechaInicialMes, obtenerSoloFechaLocal 
+} from "~utils/index"
+import { useClosePage } from "~hooks/common"
+import { CosechaAdapterList } from "./adapter/CosechaAdapter"
+
 
 const CosechaPage = () => {
   const handleGoBack = useClosePage()
@@ -20,23 +24,21 @@ const CosechaPage = () => {
   const [selectedRowData, setSelectedRowData] = useState(null)
 
   useEffect(()=> {
-    getProducts()
+    getProducts({})
   }, [])
-  const getProducts = async(search=null) => {
-    const cosechas = await searchCosecha(search)
-    const formatteCosecha = cosechas.map(cosecha =>{
-      return {...cosecha, 
-        cosechaFecha: convertirFechaDDMMYYYY(cosecha.cosechaFecha)}
+  const getProducts = async({
+    fechaDesde = obtenerFechaInicialMes(),
+    fechaHasta = obtenerSoloFechaLocal({date: new Date()}),
+    uc='', ut='', tipoCosechaId='',
+  }) => {
+    const cosechas = await searchCosecha({
+      fechaDesde, fechaHasta, uc, ut, tipoCosechaId
     })
-    setFilteredProducts(formatteCosecha)
+    setFilteredProducts(CosechaAdapterList(cosechas))
   }
 
-  const handleDataFromChild = (data) => {
-    const {ut, uc, fechaDesde, fechaHasta, tipoCosechaId} = data
-    if(ut=='' && uc=='' && fechaDesde=='' && fechaHasta=='' && tipoCosechaId=='')
-      return getProducts()
-    return getProducts(data)
-  }
+  const handleDataFromChild = (data) => getProducts(data)
+
   // Funciones para manejar botones de la tabla
   const handleRowSelect = async(rowData) => {
     if(rowData.cosechaId != null){
@@ -46,7 +48,7 @@ const CosechaPage = () => {
     setShowModel(false)
   }
   const handleShowModel = (data) => {
-    if(data.cosechaId>0) getProducts()    
+    if(data.cosechaId>0) getProducts({})    
     setShowModel(true)
   }
   return (

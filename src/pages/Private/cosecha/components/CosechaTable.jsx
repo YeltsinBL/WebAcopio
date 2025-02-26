@@ -1,7 +1,6 @@
 
 import { Edit } from "lucide-react"
-import { NoRegistros, Table, TableButton, TableTd } from "../../../../components/common"
-
+import { NoRegistros, Table, TableButton, TableTd } from "~components/common"
 export const CosechaTable = ({Cosecha_DATA, onRowSelect}) => {
   const header = ['Fecha.', 'UC', 'Valle', 'Sector', 'UT', 'Campo', 'Activo', 'Acciones']
   

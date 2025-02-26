@@ -1,36 +1,31 @@
-import { useEffect, useState } from "react"
-import { searchCosechaTipo } from "../../../../services/cosecha"
-import { ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, InputTextCustom, SectionFilter } from "../../../../components/common"
-import { formatterDataCombo } from "../../../../utils"
+import { useCosechaFilter } from "../hooks"
+import { CosechaAdapterFilter } from "../adapter/CosechaAdapter"
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, InputTextCustom, 
+  SectionFilter 
+} from "~components/common"
 
 export const CosechaFilter = ({onFiltersValue}) => {
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [utFilter, setUTFilter] = useState('')
-  const [ucFilter, setUCFilter] = useState('')
-  const [cosechaTipoFilter, setCosechaTipoFilter] = useState('')
-  const [cosechaTipo, setCosechaTipo] = useState([])
+  const {
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    utFilter, setUTFilter,
+    ucFilter, setUCFilter,
+    cosechaTipoFilter, setCosechaTipoFilter,
+    cosechaTipo,
+  } = useCosechaFilter()
 
-  useEffect(() => {
-      fetchOptionCosechaTipo()
-  }, [])
-
-  const handleSearchCosecha = (event) => {
-    event.preventDefault()
-    onFiltersValue({uc:ucFilter, ut:utFilter, 
-        fechaDesde:fechaDesdeFilter, fechaHasta: fechaHastaFilter,
-        tipoCosechaId:cosechaTipoFilter
-    })
-  }
-  const fetchOptionCosechaTipo = async() => {
-    const responseTipo = await searchCosechaTipo()
-    const formatter= responseTipo?.map(tipo =>(
-      formatterDataCombo(tipo.cosechaTipoId, tipo.descripcion)))
-    setCosechaTipo(formatter)
-  }
   const handleSelectionChangeCosechaTipo = (option) => 
     setCosechaTipoFilter((option==''|| isNaN(option))?'':option)
   
+  const handleSearchCosecha = (event) => {
+    event.preventDefault()
+    onFiltersValue(CosechaAdapterFilter({
+      ucFilter, utFilter, fechaDesdeFilter,  fechaHastaFilter,
+      cosechaTipoFilter
+    }))
+  }
+
   return (
     <SectionFilter>
       <FilterOption htmlFor={'FechaInicioFilter'} name={'Fecha Inicio'}>
@@ -46,7 +41,7 @@ export const CosechaFilter = ({onFiltersValue}) => {
           placeholder='Ingrese el código UC' onChange={setUCFilter} />
       </FilterOption>
       <FilterOption htmlFor="CosechaUT" name={'UT'}>
-        <InputTextCustom textValue={ucFilter} 
+        <InputTextCustom textValue={utFilter} 
           placeholder='Ingrese el código UT' onChange={setUTFilter} />
       </FilterOption>
       <FilterOption htmlFor="CosechaTipo" name={'Tipo Cosecha'}>
