@@ -95,6 +95,7 @@ export const useInformeIngresoGastoInitialForm = (data) => {
     return total + parseFloat(num.informeFacturaImporte)
   }
   useEffect(()=>{
+    const count = servicioTransporteSeleccionadosList.length
     const sumaTotales = servicioTransporteSeleccionadosList.reduce((acumulador, servicio) => {
       return {
         precioTotal: acumulador.precioTotal + parseFloat(servicio.servicioPrecio),
@@ -103,11 +104,12 @@ export const useInformeIngresoGastoInitialForm = (data) => {
       };
     }, { precioTotal: 0, pesoBrutoTotal: 0, total: 0 })
     setSumaPesoBrutoTransporteModel(FormatteDecimalMath(sumaTotales.pesoBrutoTotal, 3))
-    setSumaPrecioTransporteModel(FormatteDecimalMath(sumaTotales.precioTotal, 2))
+    setSumaPrecioTransporteModel(FormatteDecimalMath(sumaTotales.precioTotal/count, 2))
     setSumaTotalTransporteModel(FormatteDecimalMath(sumaTotales.total, 2))
   },[servicioTransporteSeleccionadosList])
 
   useEffect(()=>{
+    const count = servicioPaleroSeleccionadosList.length
     const sumaTotales = servicioPaleroSeleccionadosList.reduce((acumulador, servicio) => {
       return {
         precioTotal: acumulador.precioTotal + parseFloat(servicio.servicioPrecio),
@@ -116,7 +118,7 @@ export const useInformeIngresoGastoInitialForm = (data) => {
       };
     }, { precioTotal: 0, pesoBrutoTotal: 0, total: 0 })
     setSumaPesoBrutoPaleroModel(FormatteDecimalMath(sumaTotales.pesoBrutoTotal, 3))
-    setSumaPrecioPaleroModel(FormatteDecimalMath(sumaTotales.precioTotal, 2))
+    setSumaPrecioPaleroModel(FormatteDecimalMath(sumaTotales.precioTotal/count, 2))
     setSumaTotalPaleroModel(FormatteDecimalMath(sumaTotales.total, 2))
   },[servicioPaleroSeleccionadosList])
   useEffect(()=>{
