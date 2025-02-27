@@ -15,7 +15,7 @@ const CorteTicketPopup = ({onShowModel, headers, proveedorId= null}) => {
       const tickets = await searchTickets(
         {ingenio:'', transportista:'', viaje:'', fechaDesde:'', fechaHasta:'',estado:1}
       )
-      return setTICKET_DATA(tickets)
+      return setTICKET_DATA(tickets.data)
     }
     const tickets = await searchTicketsByProveedor(proveedorId)
     setTICKET_DATA(tickets)    

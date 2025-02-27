@@ -13,6 +13,7 @@ import { CorteExcelFile, CortePdfFile } from './reports'
 import { 
   corteAdapterGetData, corteAdapterList 
 } from './adapter/CorteAdapter'
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from '~utils/index'
 
 
 const CortePage = () => {
@@ -23,21 +24,18 @@ const CortePage = () => {
   const [showModelDelete, setShowModelDelete] = useState(false)
   const [modelDataDelete, setModelDataDelete] = useState(false)
   useEffect(() => {
-    getCortes()
+    getCortes({})
   },[])
-  const getCortes = async(filter=null) =>{
-    const tickets = await searchCortes(filter)
+  const getCortes = async({
+    fechaDesde=obtenerFechaInicialMes(), 
+    fechaHasta=obtenerSoloFechaLocal({date:new Date()}), 
+    tierraId='', estadoId=''
+  }) =>{
+    const tickets = await searchCortes({fechaDesde, fechaHasta, tierraId, estadoId})
     setCorteList(corteAdapterList(tickets) || [])
   }
-  const handleDataFromChild = (data) => {
-    const {
-      tierraId, fechaDesde, fechaHasta, estadoId
-    } = data
-    if(tierraId=='' && fechaDesde=='' && fechaHasta=='' && estadoId==''){
-      return getCortes()
-    }
-    return getCortes({tierraId, fechaDesde, fechaHasta, estadoId})
-  }
+  const handleDataFromChild = (data) => getCortes(data)
+
   const handleRowSelect = async(rowData) => {
     if(rowData.corteId != null){
       const resp = await corteGetById({id: rowData.corteId})
@@ -46,9 +44,8 @@ const CortePage = () => {
     setShowModel(true)
   }
   const handleShowModel = (data) => {
-    if(data.result) {
-      getCortes()
-    }
+    if(data.result) getCortes({})
+    
     setShowModel(false)
   }
   const handleRowExportExcel = async(corteId) =>{
@@ -64,9 +61,8 @@ const CortePage = () => {
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result){
-      getCortes()
-    }
+    if(data.result) getCortes()
+    
     setShowModelDelete(false)
   }
   return (

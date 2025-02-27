@@ -1,50 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { searchCorteEstados } from '../../../../services/corte'
-import { searchAsignaTierra } from '../../../../services/asignartierra'
+import { useCorteFilter } from '../hooks'
+import { CorteAdapterFilter } from '../adapter/CorteAdapter'
 import { 
-  ButtonCustom, ComboBoxCustom, FilterOption, SectionFilter
-} from '../../../../components/common'
-import { formatterDataCombo } from '../../../../utils'
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter 
+} from '~components/common'
 
 export const CorteFilter = ({onFiltersValue}) => {
-  const [ucFilter, setUcFilter] = useState('')
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [estadoFilter, setEstadoFilter] = useState('')
-
-  const [ucLista, setUcLista] = useState([])
-  const [estadoLista, setEstadoLista] = useState([])
-
-  useEffect(()=> {
-    getListCombos()
-  },[])
-  const getListCombos = async() => {
-    const ucs = await searchAsignaTierra()
-    const formatter= ucs?.map(tipo =>
-      (formatterDataCombo(tipo.asignarTierraTierraId,tipo.asignarTierraTierraUC)))
-    setUcLista(formatter)
-
-    const estados = await searchCorteEstados()
-    const formatterEstados= estados?.map(tipo =>
-      (formatterDataCombo(tipo.corteTipoId,tipo.corteDescripcion)))
-    setEstadoLista(formatterEstados)
-  }
-  const handleSelectionChange = (option) => 
-    setUcFilter((option==''|| isNaN(option))?'':option)
+  const {
+    ucFilter, setUcFilter,
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    estadoFilter, setEstadoFilter,
+    ucLista, estadoLista, 
+  } = useCorteFilter()
+  const handleSelectionChange = (option) => setUcFilter(option)
   
-  const handleSelectionChangeEstado = (option) => 
-    setEstadoFilter((option==''|| isNaN(option))?'':option)
+  const handleSelectionChangeEstado = (option) => setEstadoFilter(option)
   
   const handleSearch = (e) => {
     e.preventDefault()
-    onFiltersValue({
-      tierraId:ucFilter, 
-      fechaDesde:fechaDesdeFilter, fechaHasta:fechaHastaFilter, 
-      estadoId:estadoFilter}
-    )
+    onFiltersValue(CorteAdapterFilter({
+      ucFilter, fechaDesdeFilter, fechaHastaFilter, estadoFilter
+    }))
   }
   return (
     <SectionFilter>
+      <FilterOption htmlFor={'FechaDesdeFilter'} name={'Fecha Desde'} >
+        <InputDateCustom fechaValue={fechaDesdeFilter} 
+          setFechaValue={setFechaDesdeFilter}/>
+      </FilterOption>
+      <FilterOption htmlFor={'FechaHastaFilter'} name={'Fecha Hasta'} >
+        <InputDateCustom fechaValue={fechaHastaFilter} 
+          setFechaValue={setFechaHastaFilter}/>
+      </FilterOption>
       <FilterOption htmlFor={'UCFilter'} name={'UC'} >
         <ComboBoxCustom  initialOptions={ucLista} disabled={false}
           onSelectionChange={handleSelectionChange}
@@ -52,10 +39,6 @@ export const CorteFilter = ({onFiltersValue}) => {
           colorOptions={"text-black"}
         />
       </FilterOption>
-      <FilterOption htmlFor={'FechaDesdeFilter'} name={'Fecha Desde'} type={'date'}
-        placeholder={'Ejm: 20/11/2024'} value={fechaDesdeFilter} onChange={setFechaDesdeFilter}/>
-      <FilterOption htmlFor={'FechaHastaFilter'} name={'Fecha Hasta'} type={'date'}
-        placeholder={'Ejm: 20/11/2024'} value={fechaHastaFilter} onChange={setFechaHastaFilter}/>
       <FilterOption htmlFor={'EstadoFilter'} name={'Estado'} >
         <ComboBoxCustom  initialOptions={estadoLista} disabled={false}
           onSelectionChange={handleSelectionChangeEstado}

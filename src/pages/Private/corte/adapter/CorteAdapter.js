@@ -1,5 +1,15 @@
-import { convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, obtenerFechaLocal } from "~utils/index"
+import { 
+  convertirFechaDDMMYYYY, convertirFechaToYMD, FormatteDecimalMath, obtenerFechaLocal 
+} from "~utils/index"
 
+export const CorteAdapterFilter = (data) => {
+  console.log(data)
+  return {
+    tierraId: (data.ucFilter==''|| isNaN(data.ucFilter))?'':data.ucFilter, 
+    fechaDesde: data.fechaDesdeFilter, fechaHasta: data.fechaHastaFilter, 
+    estadoId: (data.estadoFilter==''|| isNaN(data.estadoFilter))?'':data.estadoFilter
+  }
+}
 export const corteAdapterList = (data) => {
     return data?.map(corte => (formattercorte(corte))) 
 }
