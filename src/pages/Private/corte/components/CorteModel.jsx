@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
 import { Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { corteSave } from '~services/corte'
-import { searchAsignaTierra } from '~services/asignartierra'
 import { 
   ButtonCustom, ComboBoxCustom, FilterOption, Footer, FooterButton, 
   InputDateCustom, InputTextCustom, MessageValidationInput, 
@@ -10,84 +8,24 @@ import {
   TableContainerCustom, TableFooterCustom, TableHeaderCustom,
   TableTd, TitleCustom
 } from '~components/common'
-import { 
-  convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerFechaLocal 
-} from '~utils/index'
 import CorteTicketPopup from '~components/corte/CorteTicketPopup'
 import { corteAdpterSave } from '../adapter/CorteAdapter'
+import { useCorteForm, useCorteValidation } from '../hooks'
 
 export const CorteModel = ({ onShowModel, data }) => {
-  const [idModel, setIdModel] = useState(0)
-  const [ucModel, setUcModel] = useState('')
-  const [campoModel, setCampoModel] = useState('')
-  const [fechaModel, setFechaModel] = useState('')
-  const [precioModel, setPrecioModel] = useState('')
-  const [sumaPesoBrutoModel, setSumaPesoBrutoModel] = useState('')
-  const [totalModel, setTotalModel] = useState('')
-  const [estadoModel, setEstadoModel] = useState('Activo')
-  const [proveedoresModel, setProvedoresModel] = useState('')
-  const [ticketSelected, setTicketSelected] = useState([])
-  const [errores, setErrores] = useState({})
-  const [showPopup, setShowPopup] = useState(false)
+  const {
+    idModel, ucModel, setUcModel,
+    campoModel, setCampoModel,
+    fechaModel, setFechaModel,
+    precioModel, setPrecioModel,
+    sumaPesoBrutoModel, totalModel,
+    estadoModel, proveedoresModel, setProvedoresModel,
+    ticketSelected, setTicketSelected,
+    showPopup, setShowPopup,
+    ucLista, ucListaCombo, seleccionTierra, headers,
+  } = useCorteForm(data)
+  const {validate, errores} = useCorteValidation()
 
-  const seleccionTierra = data.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
-  const [ucLista, setUcLista] = useState([])
-  const [ucListaCombo, setUcListaCombo] = useState([])
-  const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
-    'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Palero','Campo', 'Estado','Acción']
-
-  useEffect(()=> {
-    getListUC()
-  },[])
-  useEffect(()=>{
-    if(data){
-      setIdModel(data.corteId || 0)
-      setUcModel(data.tierraUC || '')
-      setCampoModel(data.tierraCampo || '')
-      setFechaModel(
-        data.corteFecha ? convertirFechaToYMD(data.corteFecha) : 
-        obtenerFechaLocal({date: new Date()}).split('T')[0]
-      )
-      setPrecioModel(data.cortePrecio || '')
-      setSumaPesoBrutoModel(data.cortePesoBrutoTotal || '')
-      setTotalModel(data.corteTotal || '')
-      setEstadoModel(data.corteEstadoDescripcion || 'Activo')
-      setTicketSelected(data.corteDetail || [])
-      setProvedoresModel(data.proveedoresNombres || '')
-    }
-  }, [data])
-  useEffect(() => {
-    const total = ticketSelected.reduce(getSum, 0)
-    if(total>0) return setSumaPesoBrutoModel(FormatteDecimalMath(total,3))
-    return setSumaPesoBrutoModel('')
-  }, [ticketSelected])
-  useEffect(()=>{
-    if(precioModel > 0 && sumaPesoBrutoModel > 0) 
-      return setTotalModel(FormatteDecimalMath(precioModel * sumaPesoBrutoModel,2))
-    return setTotalModel('')
-  },[precioModel, sumaPesoBrutoModel])
-  const getSum=(total, num) =>{
-    return total + parseFloat(num.ticketPesoBruto)
-  }
-  const getListUC = async() => {
-    const ucs = await searchAsignaTierra()
-    setUcLista(ucs)
-    const formatter= ucs?.map(tipo =>
-      (formatterDataCombo(tipo.asignarTierraTierraId, tipo.asignarTierraTierraUC)))
-    setUcListaCombo(formatter)
-  }
-  const validarCampos = () => {
-    const nuevosErrores = {}
-    if (!ucModel) nuevosErrores.uc = "El campo UC es obligatorio."
-    if (!fechaModel) nuevosErrores.fecha = "El campo FECHA es obligatorio."
-    if (!precioModel) nuevosErrores.precio = "El campo PRECIO es obligatorio."
-    if (!sumaPesoBrutoModel) nuevosErrores.suma = "El campo SUMA PESO BRUTO es obligatorio."
-    if (!totalModel) nuevosErrores.total = "El campo TOTAL es obligatorio."
-  
-    setErrores(nuevosErrores)
-  
-    return Object.keys(nuevosErrores).length === 0 // Solo es válido si no hay errores
-  }
   const handleSelectionChange = (option) => {
     setUcModel(option)
     var uc = ucLista.find((item) => item.asignarTierraTierraId === option)
@@ -110,11 +48,13 @@ export const CorteModel = ({ onShowModel, data }) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
-    if (validarCampos()) {
-      const corte = await corteSave(idModel>0? 'PUT':'POST', corteAdpterSave({
-        idModel, fechaModel, ucModel, precioModel, sumaPesoBrutoModel, 
-        totalModel, ticketSelected, estadoModel
-      }))
+    const save = {
+      idModel, fechaModel, ucModel, precioModel, sumaPesoBrutoModel, 
+      totalModel, ticketSelected, estadoModel
+    }
+    const {isValid} = validate(save)
+    if(isValid){    
+      const corte = await corteSave(idModel>0? 'PUT':'POST', corteAdpterSave(save))
       if(!corte.result) 
         return toast.error(corte.message, { id: toastLoadingCustom, style: { color:'red' }})
       toast.success(corte.message,{id:toastLoadingCustom})
@@ -205,12 +145,12 @@ export const CorteModel = ({ onShowModel, data }) => {
       <TableFooterCustom>  
         <FilterOption htmlFor={'PesoBrutoModel'} name={'Suma Peso Bruto'}>
           <InputTextCustom textValue={sumaPesoBrutoModel} placeholder='Automático'
-            readOnly />
+            valueError={errores.suma} readOnly />
           {errores.suma && <MessageValidationInput mensaje={errores.suma} />}
         </FilterOption>
         <FilterOption htmlFor={'totalModel'} name={'Total'}>
           <InputTextCustom textValue={totalModel} placeholder='Automático'
-            readOnly />
+            valueError={errores.total} readOnly />
           {errores.total && <MessageValidationInput mensaje={errores.total} />}
         </FilterOption>
       </TableFooterCustom>

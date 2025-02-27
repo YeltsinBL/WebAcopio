@@ -40,7 +40,7 @@ const CortePage = () => {
     if(rowData.corteId != null){
       const resp = await corteGetById({id: rowData.corteId})
       setSelectedRowData(corteAdapterGetData(resp))
-    }else setSelectedRowData(rowData)  
+    }else setSelectedRowData(null)  
     setShowModel(true)
   }
   const handleShowModel = (data) => {
