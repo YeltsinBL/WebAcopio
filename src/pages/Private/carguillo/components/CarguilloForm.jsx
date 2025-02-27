@@ -37,7 +37,7 @@ const CarguilloForm = ({ onShowModel, data }) => {
     e.preventDefault()
     const {isValid} = validate(
       {isPlaca:true, values:{
-        titular, tipoId, tipoTransporteId, placa, tipoTransporteId, placasList
+        titular, tipoId, tipoTransporteId, placa, placasList
       }}
     )
     if(isValid){
