@@ -2,18 +2,14 @@ import { toast } from "sonner"
 import { 
   Footer, FooterButton, ModalDelete 
 } from "~components/common"
-import { corteSave } from "~services/corte"
-import { obtenerFechaLocal } from "~utils/index"
+import { corteDelete } from "~services/corte"
+import { corteAdapterDelete } from "../adapter/CorteAdapter"
 
 export const CorteModelDelete = ({onShowModel, data}) => {
   const handleGuardar =async(e)=>{
     e.preventDefault()
     const toastLoadingCustom = toast.loading('Cargando...')
-    const corte = await corteSave('DELETE', {
-      corteId: data.corteId,
-      userModifiedName: "ADMIN",
-      userModifiedAt: obtenerFechaLocal({date: new Date()})
-    })
+    const corte = await corteDelete('DELETE', corteAdapterDelete(data))
     if(!corte.result) 
       return toast.error(corte.message, { id: toastLoadingCustom, style: { color:'red' }})
     toast.success(corte.message, {id: toastLoadingCustom})

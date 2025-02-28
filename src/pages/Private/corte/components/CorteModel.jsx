@@ -9,8 +9,13 @@ import {
   TableTd, TitleCustom
 } from '~components/common'
 import CorteTicketPopup from '~components/corte/CorteTicketPopup'
-import { corteAdpterSave } from '../adapter/CorteAdapter'
+import { corteAdapterSave } from '../adapter/CorteAdapter'
 import { useCorteForm, useCorteValidation } from '../hooks'
+import { CorteFormImage } from './CorteFormImage'
+import { createImage } from '~utils/util'
+import { AdvancedImage } from '@cloudinary/react'
+import { Cloudinary } from '@cloudinary/url-gen'
+import { scale } from '@cloudinary/url-gen/actions/resize'
 
 export const CorteModel = ({ onShowModel, data }) => {
   const {
@@ -23,6 +28,9 @@ export const CorteModel = ({ onShowModel, data }) => {
     ticketSelected, setTicketSelected,
     showPopup, setShowPopup,
     ucLista, ucListaCombo, seleccionTierra, headers,
+    listaImagenes, setListaImagenes,
+    showPopupImagen, setShowPopupImagen, listaImagenesFile, 
+    setListaImagenesFile, listaComentarios, setListaComentarios
   } = useCorteForm(data)
   const {validate, errores} = useCorteValidation()
 
@@ -50,11 +58,12 @@ export const CorteModel = ({ onShowModel, data }) => {
     const toastLoadingCustom = toast.loading('Cargando...')
     const save = {
       idModel, fechaModel, ucModel, precioModel, sumaPesoBrutoModel, 
-      totalModel, ticketSelected, estadoModel
+      totalModel, ticketSelected, estadoModel, listaImagenesFile,
+      listaComentarios, 
     }
-    const {isValid} = validate(save)
-    if(isValid){    
-      const corte = await corteSave(idModel>0? 'PUT':'POST', corteAdpterSave(save))
+    const {isValid} = validate({values: save})
+    if(isValid){
+      const corte = await corteSave(idModel>0? 'PUT':'POST', corteAdapterSave(save))
       if(!corte.result) 
         return toast.error(corte.message, { id: toastLoadingCustom, style: { color:'red' }})
       toast.success(corte.message,{id:toastLoadingCustom})
@@ -70,6 +79,42 @@ export const CorteModel = ({ onShowModel, data }) => {
   }
   const onRowDelete= (data)=>{
     setTicketSelected(ticketSelected.filter(ticket => ticket.ticketId !== data.ticketId))
+    
+  }
+  const handleShowModelImagen = (e) =>{
+    e.preventDefault()
+    setShowPopupImagen(true)
+  }
+  const responseShowModelImagen = async(data) =>{
+    if(data) {
+      setListaImagenesFile([...listaImagenesFile, await createImage(data.image)])
+      setListaComentarios([...listaComentarios, data.comentario])
+      const updatePlacaList = [...listaImagenes, { 
+        imagenId: `temp-${Date.now()}`,
+        imagenUrl: data.image,
+        imagenComentario: data.comentario,
+      }]
+      setListaImagenes(updatePlacaList)
+    }
+    setShowPopupImagen(false)
+  }
+  const onRowDeleteImagen = (data) =>{
+    if (typeof data.imagenId === "string" && data.imagenId.startsWith("temp")){
+      // Obtener el índice de la imagen eliminada dentro de listaImagenes
+      const indexToRemove = listaImagenes?.filter((item) => 
+        typeof item.imagenId === "string" &&
+        item.imagenId.startsWith('temp')).findIndex(item => item.imagenId === data.imagenId)
+      if (indexToRemove !== -1) {
+        // Eliminar la imagen de listaImagenes
+        setListaImagenes(listaImagenes.filter((item) => item.imagenId !== data.imagenId))
+
+        // Eliminar la imagen correspondiente en listaImagenesFile
+        setListaImagenesFile(listaImagenesFile.filter((_, index) => index !== indexToRemove))
+
+        // Eliminar el comentario correspondiente en listaComentarios
+        setListaComentarios(listaComentarios.filter((_, index) => index !== indexToRemove))
+      }
+    }
   }
   return (
     <>
@@ -155,12 +200,66 @@ export const CorteModel = ({ onShowModel, data }) => {
         </FilterOption>
       </TableFooterCustom>
 	  </TableContainerCustom>
-
+    <TableContainerCustom>
+      <TableHeaderCustom grid>
+        <div className={'grid grid-cols-1 gap-6 md:flex justify-between items-center mb-6 '}>
+        <TitleCustom titulo={'Lista de Imágenes'}  />  
+          <ButtonCustom extraClassName={`${estadoModel == 'Anulado' ? 'hidden' : ''}`} 
+            name={'Seleccionar'} onClick={handleShowModelImagen} />    
+        </div>
+      </TableHeaderCustom>
+      <div className="w-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-4 flex flex-col border border-gray-700">
+        <div className="flex gap-4 pt-3 overflow-x-auto whitespace-nowrap">
+        {listaImagenes.length > 0 ? (
+          listaImagenes.map((imagen) => (
+            <div key={imagen.imagenId} className='flex flex-col items-center min-w-[160px] mb-3'>
+              {
+                typeof imagen.imagenId === "string" ?
+                (<img src={imagen.imagenUrl} alt={imagen.imagenComentario} className='w-40 h-52 object-cover rounded-lg' />)
+                :(
+                <OptimizarImagen imagenUrl={imagen.imagenUrl} imagenComentario={imagen.imagenComentario} />)
+              }              
+              <p className='w-40 text-left border border-red-600 text-sm break-words whitespace-normal p-1'>{imagen.imagenComentario}</p>
+              { typeof imagen.imagenId === "string" &&
+                <TableButton className='text-red-400 hover:text-red-300'
+                  onRowSelect={()=>onRowDeleteImagen(imagen)} >
+                  <Trash2 size={18} />
+                </TableButton>
+              }
+            </div>
+          ))
+        ): ( <span  className="text-center py-4">No hay registros</span> )}
+        </div>
+      </div>
+    </TableContainerCustom>
     <Footer>
-      { estadoModel == 'Activo'  && (<FooterButton accion={handleGuardar} name={"Guardar"}/>) }
+      { estadoModel == 'Anulado'  || (<FooterButton accion={handleGuardar} name={"Guardar"}/>) }
       <FooterButton accion={handleCancelar} name={"Cancelar"}/>
     </Footer>
-    {showPopup ? <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers}/>    : ''}
+    {showPopup && <CorteTicketPopup onShowModel={resspuestaShowModel} headers={headers}/> }    
+    {showPopupImagen && <CorteFormImage onImageCharge={responseShowModelImagen} />}
     </>
   )
+}
+
+const OptimizarImagen = ({imagenUrl, imagenComentario}) => {
+  const parts = imagenUrl.split("/") // Divide la URL en partes por "/"
+  const lastPart = parts[parts.length - 1].split(".")[0] // Obtiene la última parte sin la extensión
+  const folder = parts[parts.length - 2] // Obtiene el nombre de la carpeta
+
+  const cloudinary = new Cloudinary({ cloud: { cloudName: 'dkd0jybv9' } })
+  const cld = cloudinary
+    .image(`${folder}/${lastPart}`)
+    .delivery('q_auto')
+    .format('auto')
+    .resize(scale().height(460))
+ return (
+  <AdvancedImage
+    key={lastPart}
+    width={160}
+    height={160}
+    cldImg={cld}
+    alt={imagenComentario}
+  />
+ )
 }

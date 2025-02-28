@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { searchAsignaTierra } from "~services/asignartierra"
-import { convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, obtenerSoloFechaLocal } from "~utils/index"
+import { 
+  convertirFechaToYMD, FormatteDecimalMath, formatterDataCombo, 
+  obtenerSoloFechaLocal 
+} from "~utils/index"
 
 export const useCorteForm = (data) => {
   const [idModel, setIdModel] = useState(0)
@@ -14,15 +17,21 @@ export const useCorteForm = (data) => {
   const [proveedoresModel, setProvedoresModel] = useState('')
   const [ticketSelected, setTicketSelected] = useState([])
   const [showPopup, setShowPopup] = useState(false)
+  const [showPopupImagen, setShowPopupImagen] = useState(false)
 
   const seleccionTierra = data?.tierraId ? {id: data.tierraId, nombre: data.tierraUC } : null
   const [ucLista, setUcLista] = useState([])
   const [ucListaCombo, setUcListaCombo] = useState([])
+  const [listaImagenes, setListaImagenes] = useState([])
+  const [listaImagenesFile, setListaImagenesFile] = useState([])
+  const [listaComentarios, setListaComentarios] = useState([])
   const headers = ['Ingenio', 'Viaje', 'Fecha', 'Vehículo', 'Camión', 'Transportista', 
     'Vehículo Peso', 'Camión Peso', 'Peso Bruto','Palero','Campo', 'Estado','Acción']
 
   useEffect(()=> {
     getListUC()
+    setListaImagenesFile([])
+    setListaComentarios([])
   },[])
   useEffect(()=>{
     if(data){
@@ -36,6 +45,7 @@ export const useCorteForm = (data) => {
       setEstadoModel(data.corteEstadoDescripcion)
       setTicketSelected(data.corteDetail)
       setProvedoresModel(data.proveedoresNombres)
+      setListaImagenes(data.corteImagenes)
     }
   }, [data])
 
@@ -71,5 +81,8 @@ export const useCorteForm = (data) => {
     ticketSelected, setTicketSelected,
     showPopup, setShowPopup,
     ucLista, ucListaCombo, seleccionTierra, headers,
+    listaImagenes, setListaImagenes,
+    showPopupImagen, setShowPopupImagen, listaImagenesFile, 
+    setListaImagenesFile, listaComentarios, setListaComentarios,
   }
 }

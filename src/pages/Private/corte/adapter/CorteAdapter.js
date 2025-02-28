@@ -3,7 +3,6 @@ import {
 } from "~utils/index"
 
 export const CorteAdapterFilter = (data) => {
-  console.log(data)
   return {
     tierraId: (data.ucFilter==''|| isNaN(data.ucFilter))?'':data.ucFilter, 
     fechaDesde: data.fechaDesdeFilter, fechaHasta: data.fechaHastaFilter, 
@@ -29,7 +28,8 @@ export const corteAdapterGetData = (corte) => {
     cortePesoBrutoTotal : FormatteDecimalMath(corte.cortePesoBrutoTotal,3),
     corteTotal          : FormatteDecimalMath(corte.corteTotal,2),
     carguilloPrecio     : FormatteDecimalMath(corte.carguilloPrecio, 2),
-    corteDetail : formatter
+    corteDetail : formatter,
+    corteImagenes: corte.corteImagenes,
   }
 }
 const formatterticket = (ticket) => {
@@ -41,8 +41,7 @@ const formatterticket = (ticket) => {
   }
 }
 
-
-export const corteAdpterSave =(data) =>{
+export const corteAdapterSave = (data) => {
   let save ={
     cortePrecio: data.precioModel,
     corteTotal: data.totalModel,
@@ -58,12 +57,47 @@ export const corteAdpterSave =(data) =>{
     save = {...save,
       corteFecha: data.fechaModel,
       tierraId: data.ucModel,
-      //cortePrecio: data.precioModel,
       cortePesoBrutoTotal: data.sumaPesoBrutoModel,
       userCreatedName: 'ADMIN',
       userCreatedAt: obtenerFechaLocal({date: new Date()}),
-      corteDetail: data.ticketSelected?.map(ticket => ({ticketId :ticket.ticketId}))
     }
   }
-  return save
+
+  const formData = new FormData()
+
+  // 📌 Agregar valores simples
+  Object.keys(save).forEach(key => {
+    formData.append(key, save[key])
+  })
+
+  // 📌 Agregar corteDetail
+  if (data.idModel ==0 && data.ticketSelected?.length > 0) {
+    data.ticketSelected.forEach((ticket, index) => {
+      formData.append(`CorteDetail[${index}].ticketId`, ticket.ticketId)
+    })
+  } else formData.append('CorteDetail', [])
+  // 📌 Agregar imágenes
+  if (data.listaImagenesFile?.length > 0) {
+    data.listaImagenesFile.forEach((imagen) => {
+      if (imagen instanceof File) {
+        formData.append(`imagenes`, imagen)
+      }
+    })
+  } else formData.append('imagenes', [])
+  // 📌 Agregar descripciones
+  if (data.listaComentarios?.length > 0) {
+    data.listaComentarios.forEach((descripcion, index) => {
+      formData.append(`descripciones[${index}]`, descripcion)
+    })
+  } else formData.append('descripciones', [])
+
+  return formData
+}
+
+export const corteAdapterDelete = (data) =>{
+  return {
+    corteId: data.corteId,
+    userModifiedName: "ADMIN",
+    userModifiedAt: obtenerFechaLocal({date: new Date()})
+  }
 }

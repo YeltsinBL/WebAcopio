@@ -61,8 +61,7 @@ const CortePage = () => {
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result) getCortes()
-    
+    if(data.result) getCortes({})    
     setShowModelDelete(false)
   }
   return (

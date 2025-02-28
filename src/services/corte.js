@@ -57,6 +57,18 @@ export const corteSave = async(method, corte) => {
   try {
     const response = await fetch(`${appSetting.apiUrl}Corte`, {
       method: method,
+      body: corte
+    })  
+    return ApiResponseAdapter(await response.json())
+  } catch (error) {
+    console.log('corteSave:', error.message)
+    return ResponseErrorServidor
+  }
+}
+export const corteDelete = async(method, corte) => {
+  try {
+    const response = await fetch(`${appSetting.apiUrl}Corte`, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -64,7 +76,7 @@ export const corteSave = async(method, corte) => {
     })  
     return ApiResponseAdapter(await response.json())
   } catch (error) {
-    console.log('corteSave:', error.message)
+    console.log('corteDelete:', error.message)
     return ResponseErrorServidor
   }
 }
