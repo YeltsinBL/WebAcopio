@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { Toaster } from "sonner"
 import { 
   ContainerPageCustom, Footer, FooterButton, Header, Main 
 } from "~components/common"
 import { useClosePage } from "~hooks/common"
-import { convertirFechaDDMMYYYY } from "~utils/index"
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from "~utils/index"
 import { liquidacionGetById, liquidacionSearch } from "~services/liquidacion"
 import { ExportToExcel, ExportToPdf } from "~components/download"
 import { 
-  LiquidacionFilter, LiquidacionTable, LiquidacionModel,
-  LiquidacionExcelFile, LiquidacionPdfFile,
-  LiquidacionModelDelete,
- } from "~components/liquidacion"
+  LiquidacionAdapterList
+} from "./adapter/LiquidacionAdapter"
+import { LiquidacionFilter, LiquidacionModel, LiquidacionTable, 
+  LiquidacionModelDelete 
+} from "./components"
+import { LiquidacionExcelFile, LiquidacionPdfFile } from "./reports"
 
 function LiquidacionPage() {
   const handleGoBack = useClosePage()
@@ -22,34 +24,28 @@ function LiquidacionPage() {
   const [modelDataDelete, setModelDataDelete] = useState(false)
 
   useEffect(()=>{
-    getLiquidacion()
+    getLiquidacion({})
   }, [])
-  const getLiquidacion = async(filters) =>{
-    const liquidacionesList = await liquidacionSearch(filters)
-    const formatteliquidaciones = liquidacionesList.map(liquidacion =>{
-      return {...liquidacion, 
-        liquidacionFechaInicio: convertirFechaDDMMYYYY(liquidacion.liquidacionFechaInicio),
-        liquidacionFechaFin   : convertirFechaDDMMYYYY(liquidacion.liquidacionFechaFin)}
-    })
-    setLiquidacionList(formatteliquidaciones)
+  const getLiquidacion = async({
+    fechaDesdeFilter=obtenerFechaInicialMes(),
+    fechaHastaFilter=obtenerSoloFechaLocal({date: new Date()}),
+    utFilter='', estadoFilter='',
+  }) =>{
+    const liquidacionesList = await liquidacionSearch({
+      fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter})
+    setLiquidacionList(LiquidacionAdapterList(liquidacionesList))
   }
-  const handleDataFromChild = (data)=>{
-    const {
-      fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter
-    } = data
-    if(fechaDesdeFilter=='' && fechaHastaFilter=='' && utFilter =='' && estadoFilter=='')
-      return getLiquidacion()
-    return getLiquidacion({fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter})
-  }
+  const handleDataFromChild = (data)=> getLiquidacion(data)
+
   const handleRowSelect = async(rowData) =>{
     if(rowData.liquidacionId){
       const servicio = await liquidacionGetById({id:rowData.liquidacionId})
       setSelectedRowData(servicio)
-    }else setSelectedRowData(rowData)
+    }else setSelectedRowData(null)
     setShowModal(true)
   }  
   const handleSaveModel = (data) =>{
-    if(data.result) getLiquidacion()    
+    if(data.result) getLiquidacion({})    
     setShowModal(false)
   }
   const handleRowDelete = (data) =>{
@@ -57,7 +53,7 @@ function LiquidacionPage() {
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.result) getLiquidacion()    
+    if(data.result) getLiquidacion({})    
     setShowModelDelete(false)
   }
   const handleRowExportExcel = async(liquidacionId) =>{

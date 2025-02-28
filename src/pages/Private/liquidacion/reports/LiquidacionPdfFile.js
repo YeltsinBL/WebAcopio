@@ -1,4 +1,4 @@
-import { convertirFechaDDMMYYYY } from "../../utils";
+import { convertirFechaDDMMYYYY } from "~utils/index"
 
 export const LiquidacionPdfFile = (data) => {
   const detalleFilasFinancia = data.liquidacionFinanciamiento.length > 0?

@@ -1,34 +1,16 @@
-import { useEffect, useState } from "react";
-import { liquidacionEstadosList } from "../../services/liquidacion";
-import { ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter } from "../common";
-import { formatterDataCombo } from "../../utils";
-import { searchAsignaTierra } from "~services/asignartierra";
+import { 
+  ButtonCustom, ComboBoxCustom, FilterOption, InputDateCustom, SectionFilter 
+} from "~components/common"
+import { LiquidacionAdapterFilter } from "../adapter/LiquidacionAdapter"
+import { useLiquidacionFilter } from "../hooks"
 
 export function LiquidacionFilter({onFiltersValue}) {
-  const [utList, setUtList] = useState([])
-  const [liquidacionEstadoList, setLiquidacionEstadoList] = useState([])
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [utFilter, setUtFilter] = useState('')
-  const [estadoFilter, setEstadoFilter] = useState('')
-  useEffect(()=>{
-    getUts()
-    getTicketEstados()
-  }, [])
-
-  const getUts = async() => {
-    const uts = await searchAsignaTierra()
-    const formatter= uts?.map(ut =>(
-      formatterDataCombo(ut.asignarTierraProveedorId, ut.asignarTierraProveedorUT)))
-    setUtList(formatter)
-    
-  }
-  const getTicketEstados = async() => {
-    const estados = await liquidacionEstadosList()
-    const formatter= estados?.map(estado =>(
-      formatterDataCombo(estado.estadoId, estado.estadoDescripcion)))
-    setLiquidacionEstadoList(formatter)
-  }
+  const {
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    utFilter, setUtFilter, estadoFilter, setEstadoFilter,
+    utList, liquidacionEstadoList,
+  } = useLiquidacionFilter()
   const handleSelectionUTChange = (option) =>{
     setUtFilter(option)
   }
@@ -37,11 +19,9 @@ export function LiquidacionFilter({onFiltersValue}) {
   }
   const handleSeachCarguillo = (e) =>{
     e.preventDefault()
-    onFiltersValue({
-      fechaDesdeFilter, fechaHastaFilter,
-      utFilter:(utFilter==''|| isNaN(utFilter))?'':utFilter,
-      estadoFilter:(estadoFilter==''|| isNaN(estadoFilter))?'':estadoFilter
-    })
+    onFiltersValue(LiquidacionAdapterFilter({
+      fechaDesdeFilter, fechaHastaFilter, utFilter, estadoFilter
+    }))
   }
   return (
     <SectionFilter>

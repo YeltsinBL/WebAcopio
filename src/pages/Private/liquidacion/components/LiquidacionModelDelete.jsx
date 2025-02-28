@@ -1,9 +1,9 @@
-import { toast } from "sonner";
+import { toast } from "sonner"
 import { 
   Footer, FooterButton, ModalDelete 
-} from "~components/common";
-import { liquidacionSave } from "~services/liquidacion";
-import { obtenerFechaLocal } from "~utils/index";
+} from "~components/common"
+import { liquidacionSave } from "~services/liquidacion"
+import { LiquidacionAdapterDelete } from "../adapter/LiquidacionAdapter"
 
 export function LiquidacionModelDelete({onShowModel, data}) {
   const handleGuardar = async (e) => {
@@ -11,11 +11,7 @@ export function LiquidacionModelDelete({onShowModel, data}) {
     const toastLoadingCustom = toast.loading('Cargando...')
     const proveedor = await liquidacionSave({
       method:'DELETE', 
-      liquidacion:{
-        liquidacionId: data.liquidacionId,
-        userModifiedName: "ADMIN",
-        userModifiedAt: obtenerFechaLocal({date: new Date()})
-      }
+      liquidacion:LiquidacionAdapterDelete(data)
     })
     if (!proveedor.result) 
       return toast.error(proveedor.message, { id: toastLoadingCustom, style: { color:'red' }})
