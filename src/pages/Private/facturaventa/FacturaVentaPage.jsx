@@ -24,10 +24,7 @@ const FacturaVentaPage = () => {
     const facturas = await FacturaVentaSearch(filters)
     setInformeList(FacturaVentaAdapterList(facturas))
   }
-  const handleDataFilter = (data) => {
-    console.log(data)
-    getFactura(data)
-  }
+  const handleDataFilter = (data) => getFactura(data)  
 
   const handleRowSelect = async(rowData) => {
     if(rowData.facturaVentaId != null){

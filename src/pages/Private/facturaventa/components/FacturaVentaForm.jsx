@@ -67,8 +67,7 @@ export const FacturaVentaForm = ({onShowModel, data}) => {
     const { isValid } = validate({values:valueData})
     
     if(isValid){
-      const save = InformeIngresoGastoAdapterSave(valueData)    
-      console.log(save)
+      const save = InformeIngresoGastoAdapterSave(valueData)
       const response = await FacturaVentaSave(facturaVentaId > 0? 'PUT':'POST', save)
       if(!response.result)
         return toast.error(response.message, { id: toastLoadingCustom, style: { color:'red' }})

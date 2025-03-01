@@ -1,7 +1,6 @@
 import { convertirFechaDDMMYYYY, FormatteDecimalMath, obtenerFechaLocal } from "~utils/index"
 
 export const FacturaVentaAdapterFilter =({fechaDesdeFilter ='', fechaHastaFilter ='', numberFilter ='', estadoFilter=0})=>{
-  console.log(fechaDesdeFilter, fechaHastaFilter, numberFilter, estadoFilter)
   return {fechaDesde:fechaDesdeFilter, fechaHasta:fechaHastaFilter, numero:numberFilter, estadoId:estadoFilter}
 }
 export const FacturaVentaAdapterList = (data) => {

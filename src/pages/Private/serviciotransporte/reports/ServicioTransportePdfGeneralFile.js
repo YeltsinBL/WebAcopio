@@ -7,7 +7,6 @@ export const ServicioTransportePdfGeneralFile = (data) => {
   } = data.reduce(
     (acc, liquidacion) => {
       // Sumar valores
-      console.log(liquidacion.servicioEstadoDescripcion)
         if(liquidacion.servicioEstadoDescripcion === "Anulado"){
           acc.totalPesoBrutoAnulado += parseFloat(liquidacion.servicioPesoBruto) || 0;
           acc.totalAnulado  += parseFloat(liquidacion.servicioTotal) || 0;
