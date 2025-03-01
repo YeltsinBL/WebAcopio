@@ -1,15 +1,11 @@
-import { Footer, FooterButton, ModalDelete } from "../../../../components/common"
-import { asignaTierraSave } from "../../../../services/asignartierra"
-import { obtenerFechaLocal } from "../../../../utils"
+import { asignaTierraSave } from "~services/asignartierra"
+import { AsignaTierraAdapterDelete } from "../adapter/AsignarTierraAdapter"
+import { Footer, FooterButton, ModalDelete } from "~components/common"
 
 export const AsignaTierraFormDelete = ({onShowModel, data}) => {
   const handleGuardar = async(e) => {
     e.preventDefault()
-    const asigna = await asignaTierraSave('DELETE',{
-      asignarTierraId:data.asignarTierraId,
-      userModifiedName: "ADMIN",
-      userModifiedAt: obtenerFechaLocal({date: new Date()})
-    })
+    const asigna = await asignaTierraSave('DELETE',AsignaTierraAdapterDelete(data))
     if(asigna) return sendDataDismissModel(data.asignarTierraId)
     return sendDataDismissModel(0)
   }

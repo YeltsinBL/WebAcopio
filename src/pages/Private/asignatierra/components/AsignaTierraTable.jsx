@@ -1,6 +1,6 @@
 
 import { Edit, Trash2 } from "lucide-react"
-import { NoRegistros, Table, TableTd } from "../../../../components/common"
+import { NoRegistros, Table, TableTd } from "~components/common"
 
 export const AsignaTierraTable = ({AsignaTierra_DATA, onRowSelect, eliminarAsigna}) => {
   const headers =['Fecha', 'UC', 'Campo', 'UT', 'Estado','Acciones']

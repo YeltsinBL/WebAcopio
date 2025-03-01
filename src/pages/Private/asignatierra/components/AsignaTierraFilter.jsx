@@ -1,19 +1,22 @@
-import { useState } from "react"
+import { AsignaTierraAdapterFilter } from "../adapter/AsignarTierraAdapter"
 import { 
-  ButtonCustom, FilterOption, InputDateCustom, InputTextCustom, SectionFilter 
-} from "../../../../components/common"
+  ButtonCustom, FilterOption, InputDateCustom, InputTextCustom, SectionFilter  
+} from "~components/common"
+import { useAsignaTierraFilter } from "../hooks"
 
 export const AsignaTierraFilter = ({onFiltersValue}) => {
-  const [ucFilter, setUCFilter] = useState('')
-  const [utFilter, setUTFilter] = useState('')
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
+  const {
+    fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    ucFilter, setUCFilter,
+    utFilter, setUTFilter,
+  } = useAsignaTierraFilter()
+
   const sendDataToParent = (event) => {
     event.preventDefault()
-    onFiltersValue({
-      uc:ucFilter, ut:utFilter, 
-      fechaDesde:fechaDesdeFilter, 
-      fechaHasta: fechaHastaFilter})
+    onFiltersValue(AsignaTierraAdapterFilter({
+      ucFilter, utFilter, fechaDesdeFilter, fechaHastaFilter
+    }))
   }
   return (
     <SectionFilter>

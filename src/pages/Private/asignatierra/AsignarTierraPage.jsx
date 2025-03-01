@@ -3,11 +3,14 @@ import {
   AsignaTierraFilter, AsignaTierraForm, AsignaTierraFormDelete, AsignaTierraTable 
 } from "./components"
 import { 
-  ContainerPageCustom, Footer, FooterButton, Header, Main
-} from "../../../components/common"
-import { useClosePage } from "../../../hooks/common"
-import { asignaTierraGetById, searchAsignaTierra } from "../../../services/asignartierra"
-import { convertirFechaDDMMYYYY } from "../../../utils"
+  ContainerPageCustom, Footer, FooterButton, Header, Main 
+} from "~components/common"
+import { useClosePage } from "~hooks/common"
+import { asignaTierraGetById, searchAsignaTierra } from "~services/asignartierra"
+import { 
+  obtenerFechaInicialMes, obtenerSoloFechaLocal 
+} from "~utils/index"
+import { AsignaTierraAdapterList } from "./adapter/AsignarTierraAdapter"
 
 const AsignarTierraPage = () => {
   const handleGoBack = useClosePage()
@@ -20,28 +23,24 @@ const AsignarTierraPage = () => {
   const [modalDelete, setModalDelete] = useState(0)
 
   useEffect(()=> {
-    getProducts()
+    getTierraAsignada({})
   }, [])
-  const getProducts = async(search = null) => {
-    const searchAsignaTierras = await searchAsignaTierra(search)
-    const formattetesorerias = searchAsignaTierras.map(asigna =>{
-      return {...asigna, 
-        asignarTierraFecha: convertirFechaDDMMYYYY(asigna.asignarTierraFecha)}
+  const getTierraAsignada = async({
+    uc='', ut='', fechaDesde=obtenerFechaInicialMes(), 
+    fechaHasta=obtenerSoloFechaLocal({date: new Date()})
+  }) => {
+    const searchAsignaTierras = await searchAsignaTierra({
+      uc, ut, fechaDesde, fechaHasta
     })
-    setFilteredProducts(formattetesorerias)
+    setFilteredProducts(AsignaTierraAdapterList(searchAsignaTierras))
   }
-  const handleDataFromChild = (data) => {
-    const {ut, uc, fechaDesde, fechaHasta} = data
-    if(ut=='' & uc=='' & fechaDesde=='' & fechaHasta=='')
-      return getProducts()    
-    getProducts(data)
-  }
+  const handleDataFromChild = (data) => getTierraAsignada(data)
   // Funciones para manejar botones de la tabla
   const handleRowSelect = async(rowData) => {
     if(rowData.asignarTierraId != null) {
        const asignartierraId = await asignaTierraGetById({id:rowData.asignarTierraId})
        setSelectedRowData(asignartierraId)
-    } else setSelectedRowData(rowData)
+    } else setSelectedRowData(null)
     setShowModal(true)
   }
   const eliminarAsigna = (data) => {
@@ -49,11 +48,11 @@ const AsignarTierraPage = () => {
     setShowModalDelete(true)
   }
   const handleShowModel = (data) => {
-    if(data.asignarTierraId > 0) getProducts()
+    if(data.asignarTierraId > 0) getTierraAsignada({})
     setShowModal(false)
   }
   const handleShowModelDelete = (data) =>{
-    if(data.asignarTierraId > 0) getProducts()
+    if(data.asignarTierraId > 0) getTierraAsignada({})
     setShowModalDelete(false)
   }
   return (
