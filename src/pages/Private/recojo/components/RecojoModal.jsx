@@ -1,14 +1,12 @@
 import { 
   InputDateCustom, FilterOption, Footer, FooterButton, SectionModel, 
   InputDecimalCustom, InputTextCustom
-} from '../../../../components/common'
+} from '~components/common'
 import { 
   useCalcularRecojoTotal, useInitialRecojoModal, useValidateRecojoModal
 } from '../hooks'
-import { recojoSave } from '../../../../services/recojo'
-import { 
-  convertirFechaDDMMYYYY, obtenerFechaLocal 
-} from '../../../../utils'
+import { recojoSave } from '~services/recojo'
+import { RecojoAdapterSave } from '../adapter/RecojoAdapter'
 
 export const RecojoModal = ({onShowModel, data}) => {
   /**Custom Hooks**/
@@ -29,41 +27,19 @@ export const RecojoModal = ({onShowModel, data}) => {
   )
 
   const handleGuardar = async(e) =>{
-    e.preventDefault()
-    const { isValid } = validate({
-        fechaInicioModel,fechaFinModel,
-        cantidadCamionModel,
-        precioCamionModel,cantidadDiasModel,
-        precioDiasModel,recojoTotalModel
-    })
+    e.preventDefault()    
+    let recojoModel={
+      fechaInicioModel, fechaFinModel, cantidadCamionModel,
+      precioCamionModel, cantidadDiasModel, precioDiasModel,
+      recojoTotalModel, campoModel, recojoId, recojoEstado
+    }
+    const { isValid } = validate(recojoModel)
     if(isValid){
-      let recojoModel={
-        recojoFechaInicio: fechaInicioModel,
-        recojoFechaFin: fechaFinModel,
-        recojoCamionesCantidad: cantidadCamionModel,
-        recojoCamionesPrecio: precioCamionModel,
-        recojoDiasCantidad: cantidadDiasModel,
-        recojoDiasPrecio: precioDiasModel,
-        recojoTotalPrecio: recojoTotalModel,
-        recojoCampo: campoModel
-      }
-      if(recojoId > 0){
-        recojoModel.recojoId= recojoId
-        recojoModel.recojoEstadoDescripcion= recojoEstado
-        recojoModel.userModifiedAt = obtenerFechaLocal({date: new Date()})
-        recojoModel.userModifiedName= "ADMIN"
-        const recojo = await recojoSave({method:'PUT', recojo: recojoModel})
-        return onShowModel({...recojo, 
-                recojoFechaInicio: convertirFechaDDMMYYYY(recojo.recojoFechaInicio),
-                recojoFechaFin   : convertirFechaDDMMYYYY(recojo.recojoFechaFin)})
-      }else{
-        recojoModel.userCreatedAt = obtenerFechaLocal({date: new Date()})
-        recojoModel.userCreatedName= "ADMIN"
-        const recojo = await recojoSave({method:'POST', recojo: recojoModel})
-        return onShowModel({...recojo, 
-          recojoFechaInicio: convertirFechaDDMMYYYY(recojo.recojoFechaInicio),
-          recojoFechaFin   : convertirFechaDDMMYYYY(recojo.recojoFechaFin)})
-      }
+      const recojo = await recojoSave({
+        method:recojoId > 0?'PUT':'POST', 
+        recojo: RecojoAdapterSave(recojoModel)
+      })
+      return onShowModel(recojo)
     }
   }
   const handleCancelar = (e) =>{
@@ -73,7 +49,7 @@ export const RecojoModal = ({onShowModel, data}) => {
 
   return (
     <>
-      <SectionModel title={(data.recojoId > 0 ? 'Información del':'Registrar') + ' Recojo'}>
+      <SectionModel title={(recojoId > 0 ? 'Información del':'Registrar') + ' Recojo'}>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4 pt-3'>
           <FilterOption htmlFor={'FechaInicioModel'} name={'Fecha Inicio'}>
             <>

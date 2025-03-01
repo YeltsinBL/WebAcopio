@@ -1,18 +1,13 @@
 import { 
   Footer, FooterButton, ModalDelete 
-} from '../../../../components/common'
-import { recojoSave } from '../../../../services/recojo'
-import { obtenerFechaLocal } from '../../../../utils'
+} from '~components/common'
+import { recojoSave } from '~services/recojo'
+import { RecojoAdapterDelete } from '../adapter/RecojoAdapter'
 
 export const RecojoModalDelete = ({onShowModel, id}) => {
   const handleGuardar = async(e)=>{
     e.preventDefault()
-    const recojoDto={
-      recojoId: id,
-      userModifiedAt : obtenerFechaLocal({date: new Date()}),
-      userModifiedName: "ADMIN"
-    }
-    const recojo = await recojoSave({ method:'DELETE', recojo: recojoDto })
+    const recojo = await recojoSave({ method:'DELETE', recojo: RecojoAdapterDelete(id) })
     if (recojo) return sendDataDismissModel(id)
     return sendDataDismissModel(0)
   }

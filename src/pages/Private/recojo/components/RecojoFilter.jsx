@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from 'react'
 import { 
   ButtonCustom, InputDateCustom, FilterOption, SectionFilter, ComboBoxCustom 
-} from '../../../../components/common'
-import { useFetchData } from '../../../../hooks/common'
-import { formatterDataCombo } from '../../../../utils'
+} from '~components/common'
+import { useRecojoFilter } from '../hooks/useRecojoFilter'
+import { RecojoAdapterFilter } from '../adapter/RecojoAdapter'
 
 export const RecojoFilter = ({onFiltersValue}) => {
-  const [recojoEstadoList, setRecojoEstadoList] = useState([])
-  const [fechaDesdeFilter, setFechaDesdeFilter] = useState('')
-  const [fechaHastaFilter, setFechaHastaFilter] = useState('')
-  const [estadoFilter, setEstadoFilter] = useState('')
-
-  const { data } = useFetchData()
-
-  useEffect(()=>{
-    if(data) getTicketEstados()
-  }, [data])
-
-  const getTicketEstados = async() => {
-    const formatter= data?.map(tipo =>(
-      formatterDataCombo(tipo.recojoEstadoId, tipo.recojoEstadoDescripcion)))
-    setRecojoEstadoList(formatter)
-  }
+  const {
+    recojoEstadoList, fechaDesdeFilter, setFechaDesdeFilter,
+    fechaHastaFilter, setFechaHastaFilter,
+    estadoFilter, setEstadoFilter,
+  } = useRecojoFilter()
   const handleSelectionChange = (option) =>
     setEstadoFilter((option==''|| isNaN(option))?'':option)
   
   const handleSeachCarguillo = (e) =>{
     e.preventDefault()
-    onFiltersValue({
+    onFiltersValue(RecojoAdapterFilter({
       fechaDesdeFilter, fechaHastaFilter, estadoFilter
-    })
+    }))
   }
   return (
     <SectionFilter>

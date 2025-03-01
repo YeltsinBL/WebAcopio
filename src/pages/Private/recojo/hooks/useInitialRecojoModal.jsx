@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import { obtenerFechaLocal } from "../../../../utils"
+import { obtenerSoloFechaLocal } from "~utils/index"
 
 export const useInitialRecojoModal = (data) => {
   const [recojoId, setRecojoId] = useState("")
-  const [fechaInicioModel, setFechaInicioModel] = useState("")
-  const [fechaFinModel, setFechaFinModel] = useState("")
+  const [fechaInicioModel, setFechaInicioModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
+  const [fechaFinModel, setFechaFinModel] = useState(obtenerSoloFechaLocal({date: new Date()}))
   const [campoModel, setCampoModel] = useState("")
   const [cantidadCamionModel, setCantidadCamionModel] = useState("")
   const [precioCamionModel, setPrecioCamionModel] = useState("")
@@ -14,21 +14,15 @@ export const useInitialRecojoModal = (data) => {
 
   useEffect(() => {
     if (data) {
-      setRecojoId(data.recojoId || "")
-      setCampoModel(data.recojoCampo || "")
-      setFechaInicioModel(
-        data.recojoFechaInicio
-          || obtenerFechaLocal({ date: new Date() }).split("T")[0]
-      )
-      setFechaFinModel(
-        data.recojoFechaFin
-          || obtenerFechaLocal({ date: new Date() }).split("T")[0]
-      )
-      setCantidadCamionModel(data.recojoCamionesCantidad || "")
-      setPrecioCamionModel(data.recojoCamionesPrecio || "")
-      setCantidadDiasModel(data.recojoDiasCantidad || "")
-      setPrecioDiasModel(data.recojoDiasPrecio || "")
-      setRecojoEstado(data.recojoEstadoDescripcion || "Activo")
+      setRecojoId(data.recojoId )
+      setCampoModel(data.recojoCampo )
+      setFechaInicioModel(data.recojoFechaInicio)
+      setFechaFinModel(data.recojoFechaFin)
+      setCantidadCamionModel(data.recojoCamionesCantidad)
+      setPrecioCamionModel(data.recojoCamionesPrecio)
+      setCantidadDiasModel(data.recojoDiasCantidad)
+      setPrecioDiasModel(data.recojoDiasPrecio)
+      setRecojoEstado(data.recojoEstadoDescripcion)
     }
   }, [data])
 

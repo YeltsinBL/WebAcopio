@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { ContainerPageCustom, Footer, FooterButton, Header, Main } from '../../../components/common'
+import { ContainerPageCustom, Footer, FooterButton, Header, Main } from '~components/common'
 import { RecojoFilter, RecojoModal, RecojoModalDelete, RecojoTable } from './components'
-import { useClosePage } from '../../../hooks/common'
-import { recojoGetById, searchRecojos } from '../../../services/recojo'
-import { convertirFechaDDMMYYYY } from '../../../utils'
+import { useClosePage } from '~hooks/common'
+import { recojoGetById, searchRecojos } from '~services/recojo'
+import { RecojoAdapterList } from './adapter/RecojoAdapter'
+import { obtenerFechaInicialMes, obtenerSoloFechaLocal } from '~utils/index'
 
 const RecojoPage = () => {
   const handleGoBack = useClosePage()
@@ -13,45 +14,30 @@ const RecojoPage = () => {
   const [showModelDelete, setShowModelDelete] = useState(false)
   const [idModelDelete, setIdModelDelete] = useState(false)
   
-  
   useEffect(()=>{
-    getRecojos()
+    getRecojos({})
   }, [])
-  const getRecojos = async(filters) =>{
-    const recojosList = await searchRecojos(filters)
-    const formatteRecojos = recojosList.map(recojo =>{
-      return {...recojo, 
-        recojoFechaInicio: convertirFechaDDMMYYYY(recojo.recojoFechaInicio),
-        recojoFechaFin   : convertirFechaDDMMYYYY(recojo.recojoFechaFin)}
+  const getRecojos = async({
+    fechaDesdeFilter= obtenerFechaInicialMes(), 
+    fechaHastaFilter = obtenerSoloFechaLocal({date: new Date()}), 
+    estadoFilter=''}) =>{
+    const recojosList = await searchRecojos({
+      fechaDesdeFilter, fechaHastaFilter, estadoFilter
     })
-    setRecojoList(formatteRecojos)
+    setRecojoList(RecojoAdapterList(recojosList))
   }
 
-  const handleDataFromChild = (data) => {
-    const {
-        fechaDesdeFilter, fechaHastaFilter, estadoFilter
-    } = data
-    if(fechaDesdeFilter=='' && fechaHastaFilter=='' && estadoFilter==''){
-      return getRecojos()
-    }
-    return getRecojos({fechaDesdeFilter, fechaHastaFilter, estadoFilter})
-  }
+  const handleDataFromChild = (data) => getRecojos(data)
+
   const handleRowSelect = async(rowData) =>{
     if(rowData.recojoId) {
       const recojo = await recojoGetById({id: rowData.recojoId})
       setSelectedRowData(recojo)
-    } else setSelectedRowData(rowData)
+    } else setSelectedRowData(null)
     setShowModal(true)
   }
   const handleSaveModel = (data)=>{
-    if(data.recojoId > 0) {
-      const existingIndex = recojoList.findIndex((item) => item.recojoId === data.recojoId)
-      if (existingIndex >= 0) {
-        const updatedList = [...recojoList]
-        updatedList[existingIndex] = data
-        setRecojoList(updatedList)
-      } else setRecojoList([...recojoList, data])
-    }
+    if(data.recojoId > 0) getRecojos({})
     setShowModal(false)
   }
   const handleRowDelete = (id) =>{
@@ -59,7 +45,7 @@ const RecojoPage = () => {
     setShowModelDelete(true)
   }
   const handleShowModelDelete = (recojoId) =>{
-    if(recojoId > 0) getRecojos()
+    if(recojoId > 0) getRecojos({})
     setShowModelDelete(false)
   }
   return (

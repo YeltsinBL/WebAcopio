@@ -1,7 +1,7 @@
 import { Edit, Trash2 } from 'lucide-react'
 import { 
   NoRegistros, Table, TableButton, TableTd
-} from '../../../../components/common'
+} from '~components/common'
 
 export const RecojoTable = ({data, onRowSelect, onRowDelete}) => {
   const headers = ['Fecha Inicio', 'Fecha Final', 'Campo',
